@@ -27,13 +27,13 @@ def jira_issue_browse_url(key: str) -> str:
 
 def jql_search(jql: str, start_at: int = 0, max_results: int = 100):
     url = f"{JIRA_BASE_URL}/rest/api/3/search"
-    payload = {
+    params = {
         "jql": jql,
         "startAt": start_at,
         "maxResults": max_results,
-        "fields": ["summary", "description", "assignee", "updated", STORY_POINTS_FIELD],
+        "fields": ",".join(["summary", "description", "assignee", "updated", STORY_POINTS_FIELD]),
     }
-    r = requests.post(url, headers=jira_headers(), json=payload, timeout=30)
+    r = requests.get(url, headers=jira_headers(), params=params, timeout=30)
     r.raise_for_status()
     return r.json()
 
