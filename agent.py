@@ -3,7 +3,7 @@ import base64
 import datetime as dt
 import requests
 
-# --- Environment / Secrets (strip to avoid hidden newlines like %0a) ---
+# Harden against secrets accidentally containing whitespace/newlines
 JIRA_BASE_URL = os.environ["JIRA_BASE_URL"].strip().rstrip("/")
 JIRA_EMAIL = os.environ["JIRA_EMAIL"].strip()
 JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
@@ -11,10 +11,10 @@ CHAT_WEBHOOK_URL = os.environ["CHAT_WEBHOOK_URL"].strip()
 JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY"].strip()
 STORY_POINTS_FIELD = os.environ["JIRA_STORY_POINTS_FIELD"].strip()
 
-# --- Rules / Thresholds (your choices) ---
 DESCRIPTION_MIN_CHARS = 30
-OVERSIZED_SP = 28      # 28 hours ~ 4 days (your "max" pain point)
+OVERSIZED_SP = 28
 AGING_DAYS = 30
+
 
 def jira_headers() -> dict:
     token = base64.b64encode(f"{JIRA_EMAIL}:{JIRA_API_TOKEN}".encode("utf-8")).decode("utf-8")
@@ -24,41 +24,59 @@ def jira_headers() -> dict:
         "Content-Type": "application/json",
     }
 
+
 def jira_issue_browse_url(key: str) -> str:
     return f"{JIRA_BASE_URL}/browse/{key}"
 
-def jql_search(jql: str, start_at: int = 0, max_results: int = 100):
+
+def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 100):
     """
-    Use GET /rest/api/3/search for maximum compatibility.
+    Jira Cloud: /rest/api/3/search is being removed; use /rest/api/3/search/jql instead.
+    Pagination uses nextPageToken + isLast (not startAt/total).
     """
-    url = f"{JIRA_BASE_URL}/rest/api/3/search"
+    url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
+
+    # IMPORTANT: new endpoint expects "fields" as an array (repeated query param),
+    # requests will encode lists correctly.
     params = {
         "jql": jql,
-        "startAt": start_at,
         "maxResults": max_results,
-        "fields": ",".join(["summary", "description", "assignee", "updated", STORY_POINTS_FIELD]),
+        "fields": ["summary", "description", "assignee", "updated", STORY_POINTS_FIELD],
     }
+    if next_page_token:
+        params["nextPageToken"] = next_page_token
+
     r = requests.get(url, headers=jira_headers(), params=params, timeout=30)
     r.raise_for_status()
     return r.json()
 
+
 def get_all_issues(jql: str):
     issues = []
-    start_at = 0
+    token = None
+
     while True:
-        data = jql_search(jql, start_at=start_at)
-        batch = data.get("issues", [])
+        data = jql_search(jql, next_page_token=token)
+        batch = data.get("issues", []) or []
         issues.extend(batch)
-        start_at += len(batch)
-        if start_at >= data.get("total", 0) or len(batch) == 0:
+
+        # New API uses isLast + nextPageToken
+        if data.get("isLast") is True:
             break
+
+        token = data.get("nextPageToken")
+        if not token:
+            # Defensive fallback: if Jira doesn't return a token, stop
+            break
+
+        # Extra defensive: if no issues returned, stop
+        if len(batch) == 0:
+            break
+
     return issues
 
+
 def safe_len_description(desc) -> int:
-    """
-    Jira Cloud description is usually Atlassian Document Format (ADF) dict.
-    We flatten ADF to plain text length.
-    """
     if desc is None:
         return 0
     if isinstance(desc, str):
@@ -79,17 +97,13 @@ def safe_len_description(desc) -> int:
         return len(text.strip())
     return 0
 
+
 def days_since_iso(updated_iso: str) -> int:
-    """
-    Jira returns timestamps like: 2026-02-16T10:20:30.123+0000
-    We parse the first 19 chars: YYYY-MM-DDTHH:MM:SS
-    """
-    if not updated_iso:
-        return 0
-    base = updated_iso[:19]
+    base = updated_iso[:19]  # YYYY-MM-DDTHH:MM:SS
     updated_dt = dt.datetime.strptime(base, "%Y-%m-%dT%H:%M:%S")
     now = dt.datetime.utcnow()
     return (now - updated_dt).days
+
 
 def build_digest(issues):
     missing_desc, missing_sp, unassigned, oversized, aging = [], [], [], [], []
@@ -103,7 +117,7 @@ def build_digest(issues):
         sp = f.get(STORY_POINTS_FIELD)
         assignee = f.get("assignee")
         updated = f.get("updated") or ""
-        age_days = days_since_iso(updated)
+        age_days = days_since_iso(updated) if updated else 0
 
         if desc_len < DESCRIPTION_MIN_CHARS:
             missing_desc.append((key, summary))
@@ -121,10 +135,10 @@ def build_digest(issues):
             return "• None 🎉"
         lines = []
         for row in rows[:limit]:
-            key = row[0]
-            lines.append(f"• {key} – {row[1]} ({jira_issue_browse_url(key)})")
+            k = row[0]
+            lines.append(f"• {k} – {row[1]} ({jira_issue_browse_url(k)})")
         if len(rows) > limit:
-            lines.append(f"• +{len(rows) - limit} more…")
+            lines.append(f"• +{len(rows)-limit} more…")
         return "\n".join(lines)
 
     msg = []
@@ -142,10 +156,10 @@ def build_digest(issues):
     msg.append(f"⚠ *Oversized (≥ {OVERSIZED_SP} SP ≈ 4+ days)* ({len(oversized)})")
     if oversized:
         lines = []
-        for key, summary, sp in oversized[:15]:
-            lines.append(f"• {key} – {summary} (SP: {sp}) ({jira_issue_browse_url(key)})")
+        for k, summary, sp in oversized[:15]:
+            lines.append(f"• {k} – {summary} (SP: {sp}) ({jira_issue_browse_url(k)})")
         if len(oversized) > 15:
-            lines.append(f"• +{len(oversized) - 15} more…")
+            lines.append(f"• +{len(oversized)-15} more…")
         msg.append("\n".join(lines))
     else:
         msg.append("• None 🎉")
@@ -153,25 +167,27 @@ def build_digest(issues):
     msg.append(f"🧟 *Aging (no updates ≥ {AGING_DAYS} days)* ({len(aging)})")
     if aging:
         lines = []
-        for key, summary, d in aging[:15]:
-            lines.append(f"• {key} – {summary} (last update: {d}d) ({jira_issue_browse_url(key)})")
+        for k, summary, d in aging[:15]:
+            lines.append(f"• {k} – {summary} (last update: {d}d) ({jira_issue_browse_url(k)})")
         if len(aging) > 15:
-            lines.append(f"• +{len(aging) - 15} more…")
+            lines.append(f"• +{len(aging)-15} more…")
         msg.append("\n".join(lines))
     else:
         msg.append("• None 🎉")
 
     return "\n".join(msg)
 
+
 def post_to_chat(text: str):
     r = requests.post(CHAT_WEBHOOK_URL, json={"text": text}, timeout=30)
     r.raise_for_status()
 
+
 def main():
-    # "Backlog + inactive sprints" (exclude open sprints)
     jql = f"project = {JIRA_PROJECT_KEY} AND sprint NOT IN openSprints() ORDER BY updated DESC"
     issues = get_all_issues(jql)
     post_to_chat(build_digest(issues))
+
 
 if __name__ == "__main__":
     main()
