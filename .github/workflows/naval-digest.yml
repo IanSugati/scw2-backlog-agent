@@ -1,0 +1,35 @@
+name: Naval Personal Digest
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 17 * * 1-5"  # 17:00 UTC Mon–Fri
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run Naval digest
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY_TICKETS: ${{ secrets.JIRA_PROJECT_KEY_TICKETS }}
+          NAVAL_TICKETS_CHAT_WEBHOOK_URL: ${{ secrets.NAVAL_TICKETS_CHAT_WEBHOOK_URL }}
+          NAVAL_ASSIGNED_LIMIT: "15"
+          NAVAL_TIMELOG_LIMIT: "50"
+        run: |
+          python naval_digest.py
