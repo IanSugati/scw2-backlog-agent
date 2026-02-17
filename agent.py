@@ -11,6 +11,11 @@ CHAT_WEBHOOK_URL = os.environ["CHAT_WEBHOOK_URL"].strip()
 JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY"].strip()
 STORY_POINTS_FIELD = os.environ["JIRA_STORY_POINTS_FIELD"].strip()
 
+# New required fields (Jira custom fields) for hygiene checks
+PRO_SERVICES_WORK_TYPE_FIELD = os.environ["JIRA_PRO_SERVICES_WORK_TYPE_FIELD"].strip()
+SPRINT_ORIGIN_FIELD = os.environ["JIRA_SPRINT_ORIGIN_FIELD"].strip()
+SPRINT_FIELD = os.environ["JIRA_SPRINT_FIELD"].strip()  # e.g. customfield_10020
+
 DESCRIPTION_MIN_CHARS = 30
 OVERSIZED_SP = 28
 AGING_DAYS = 30
@@ -39,7 +44,19 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
     params = {
         "jql": jql,
         "maxResults": max_results,
-        "fields": ["summary", "description", "assignee", "updated", "status", "issuetype", STORY_POINTS_FIELD],
+        "fields": [
+            "summary",
+            "description",
+            "assignee",
+            "updated",
+            "status",
+            "issuetype",
+            "labels",
+            SPRINT_FIELD,
+            STORY_POINTS_FIELD,
+            PRO_SERVICES_WORK_TYPE_FIELD,
+            SPRINT_ORIGIN_FIELD,
+        ],
     }
 
     if next_page_token:
@@ -78,6 +95,7 @@ def safe_len_description(desc) -> int:
     if isinstance(desc, str):
         return len(desc.strip())
     if isinstance(desc, dict):
+
         def walk(node):
             if isinstance(node, dict):
                 t = ""
@@ -89,6 +107,7 @@ def safe_len_description(desc) -> int:
             if isinstance(node, list):
                 return "".join(walk(x) for x in node)
             return ""
+
         text = walk(desc)
         return len(text.strip())
     return 0
@@ -101,8 +120,38 @@ def days_since_iso(updated_iso: str) -> int:
     return (now - updated_dt).days
 
 
+def has_any_sprint_value(sprint_field_value) -> bool:
+    """
+    Jira 'Sprint' custom field can come back as:
+    - None
+    - a list of sprint objects
+    - occasionally a string (older formats)
+    We treat "has a sprint" as any non-empty value/list.
+    """
+    if sprint_field_value is None:
+        return False
+    if isinstance(sprint_field_value, list):
+        return len(sprint_field_value) > 0
+    if isinstance(sprint_field_value, str):
+        return len(sprint_field_value.strip()) > 0
+    # fallback: some other truthy value
+    return bool(sprint_field_value)
+
+
+def is_blank(value) -> bool:
+    """True if None, empty string, or empty list."""
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return len(value.strip()) == 0
+    if isinstance(value, list):
+        return len(value) == 0
+    return False
+
+
 def build_digest(issues):
     missing_desc, missing_sp, unassigned, oversized, aging = [], [], [], [], []
+    missing_ps_work_type, missing_labels, missing_sprint_origin = [], [], []
 
     for it in issues:
         key = it["key"]
@@ -115,6 +164,12 @@ def build_digest(issues):
         updated = f.get("updated") or ""
         age_days = days_since_iso(updated) if updated else 0
 
+        labels = f.get("labels") or []
+        ps_work_type = f.get(PRO_SERVICES_WORK_TYPE_FIELD)
+        sprint_origin = f.get(SPRINT_ORIGIN_FIELD)
+        sprint_value = f.get(SPRINT_FIELD)
+
+        # Existing checks
         if desc_len < DESCRIPTION_MIN_CHARS:
             missing_desc.append((key, summary))
         if sp is None:
@@ -125,6 +180,15 @@ def build_digest(issues):
             oversized.append((key, summary, sp))
         if age_days >= AGING_DAYS:
             aging.append((key, summary, age_days))
+
+        # New checks
+        if is_blank(ps_work_type):
+            missing_ps_work_type.append((key, summary))
+        if is_blank(labels):
+            missing_labels.append((key, summary))
+        # Sprint Origin only required IF Sprint field has a value
+        if has_any_sprint_value(sprint_value) and is_blank(sprint_origin):
+            missing_sprint_origin.append((key, summary))
 
     def bullets(rows, limit=15):
         if not rows:
@@ -140,6 +204,19 @@ def build_digest(issues):
     msg = []
     msg.append("📚 *SCW2 Backlog Health Check*")
     msg.append("")
+
+    # New sections first (so people see metadata hygiene quickly)
+    msg.append(f"🚨 *Missing Pro Services Work Type* ({len(missing_ps_work_type)})")
+    msg.append(bullets(missing_ps_work_type))
+    msg.append("")
+    msg.append(f"🚨 *Missing Labels* ({len(missing_labels)})")
+    msg.append(bullets(missing_labels))
+    msg.append("")
+    msg.append(f"🚨 *Missing Sprint Origin (only when Sprint is set)* ({len(missing_sprint_origin)})")
+    msg.append(bullets(missing_sprint_origin))
+    msg.append("")
+
+    # Existing sections
     msg.append(f"🚨 *Missing / thin description (<{DESCRIPTION_MIN_CHARS} chars)* ({len(missing_desc)})")
     msg.append(bullets(missing_desc))
     msg.append("")
