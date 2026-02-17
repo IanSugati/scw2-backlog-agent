@@ -1,0 +1,29 @@
+name: Tickets Digest
+
+on:
+  workflow_dispatch: {}   # allows manual runs
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run tickets digest
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY_TICKETS: ${{ secrets.JIRA_PROJECT_KEY_TICKETS }}
+          TICKETS_CHAT_WEBHOOK_URL: ${{ secrets.TICKETS_CHAT_WEBHOOK_URL }}
+        run: python tickets_digest.py
