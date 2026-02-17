@@ -9,12 +9,12 @@ JIRA_EMAIL = os.environ["JIRA_EMAIL"].strip()
 JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
 CHAT_WEBHOOK_URL = os.environ["CHAT_WEBHOOK_URL"].strip()
 JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY"].strip()
-STORY_POINTS_FIELD = os.environ["JIRA_STORY_POINTS_FIELD"].strip()
 
-# New required fields (Jira custom fields) for hygiene checks
-PRO_SERVICES_WORK_TYPE_FIELD = os.environ["JIRA_PRO_SERVICES_WORK_TYPE_FIELD"].strip()
-SPRINT_ORIGIN_FIELD = os.environ["JIRA_SPRINT_ORIGIN_FIELD"].strip()
-SPRINT_FIELD = os.environ["JIRA_SPRINT_FIELD"].strip()  # e.g. customfield_10020
+# Field IDs (now hard-wired from your /rest/api/3/field dump)
+STORY_POINTS_FIELD = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()  # fallback if env not set
+SPRINT_FIELD = "customfield_10020"
+SPRINT_ORIGIN_FIELD = "customfield_10104"
+PRO_SERVICES_WORK_TYPE_FIELD = "customfield_10459"
 
 DESCRIPTION_MIN_CHARS = 30
 OVERSIZED_SP = 28
@@ -41,6 +41,8 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
     """
     url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
 
+    # IMPORTANT: new endpoint expects "fields" as an array (repeated query param),
+    # requests will encode lists correctly.
     params = {
         "jql": jql,
         "maxResults": max_results,
@@ -49,16 +51,15 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
             "description",
             "assignee",
             "updated",
+            "labels",
             "status",
             "issuetype",
-            "labels",
-            SPRINT_FIELD,
             STORY_POINTS_FIELD,
-            PRO_SERVICES_WORK_TYPE_FIELD,
+            SPRINT_FIELD,
             SPRINT_ORIGIN_FIELD,
+            PRO_SERVICES_WORK_TYPE_FIELD,
         ],
     }
-
     if next_page_token:
         params["nextPageToken"] = next_page_token
 
@@ -76,13 +77,16 @@ def get_all_issues(jql: str):
         batch = data.get("issues", []) or []
         issues.extend(batch)
 
+        # New API uses isLast + nextPageToken
         if data.get("isLast") is True:
             break
 
         token = data.get("nextPageToken")
         if not token:
+            # Defensive fallback: if Jira doesn't return a token, stop
             break
 
+        # Extra defensive: if no issues returned, stop
         if len(batch) == 0:
             break
 
@@ -134,7 +138,6 @@ def has_any_sprint_value(sprint_field_value) -> bool:
         return len(sprint_field_value) > 0
     if isinstance(sprint_field_value, str):
         return len(sprint_field_value.strip()) > 0
-    # fallback: some other truthy value
     return bool(sprint_field_value)
 
 
@@ -205,7 +208,7 @@ def build_digest(issues):
     msg.append("📚 *SCW2 Backlog Health Check*")
     msg.append("")
 
-    # New sections first (so people see metadata hygiene quickly)
+    # New metadata hygiene sections
     msg.append(f"🚨 *Missing Pro Services Work Type* ({len(missing_ps_work_type)})")
     msg.append(bullets(missing_ps_work_type))
     msg.append("")
@@ -227,7 +230,6 @@ def build_digest(issues):
     msg.append(bullets(unassigned))
     msg.append("")
     msg.append(f"⚠ *Oversized (≥ {OVERSIZED_SP} SP ≈ 4+ days)* ({len(oversized)})")
-
     if oversized:
         lines = []
         for k, summary, sp in oversized[:15]:
@@ -240,7 +242,6 @@ def build_digest(issues):
 
     msg.append("")
     msg.append(f"🧟 *Aging (no updates ≥ {AGING_DAYS} days)* ({len(aging)})")
-
     if aging:
         lines = []
         for k, summary, d in aging[:15]:
@@ -260,6 +261,7 @@ def post_to_chat(text: str):
 
 
 def main():
+    # Exclude Done + Sprint Meeting
     jql = (
         f"project = {JIRA_PROJECT_KEY} "
         f"AND sprint NOT IN openSprints() "
