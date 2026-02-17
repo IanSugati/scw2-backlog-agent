@@ -11,16 +11,15 @@ from collections import defaultdict
 JIRA_BASE_URL = os.environ["JIRA_BASE_URL"].strip().rstrip("/")
 JIRA_EMAIL = os.environ["JIRA_EMAIL"].strip()
 JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
-JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY_TICKETS"].strip()
 
 # Naval-specific webhook
 CHAT_WEBHOOK_URL = os.environ["NAVAL_TICKETS_CHAT_WEBHOOK_URL"].strip()
 
-# Naval Jira accountId (hard-wired from your API lookup)
+# Naval Jira accountId
 NAVAL_ACCOUNT_ID = "5b45c29d20d02f2c16bcc37e"
 
-LIST_LIMIT_ASSIGNED = int(os.environ.get("NAVAL_ASSIGNED_LIMIT", "15"))
-LIST_LIMIT_TIMELOG = int(os.environ.get("NAVAL_TIMELOG_LIMIT", "50"))
+LIST_LIMIT_ASSIGNED = int(os.environ.get("NAVAL_ASSIGNED_LIMIT", "25"))
+LIST_LIMIT_TIMELOG = int(os.environ.get("NAVAL_TIMELOG_LIMIT", "75"))
 
 
 def jira_headers():
@@ -86,7 +85,7 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
     params = {
         "jql": jql,
         "maxResults": max_results,
-        "fields": ["summary", "status", "priority", "updated"],
+        "fields": ["summary", "status", "priority", "updated", "project"],
     }
     if next_page_token:
         params["nextPageToken"] = next_page_token
@@ -127,19 +126,20 @@ def bullets(rows, limit: int):
     if not rows:
         return "• None 🎉"
     lines = []
-    for k, summary, status, extra in rows[:limit]:
+    for k, summary, status, project_key, extra in rows[:limit]:
         suffix = f" — {extra}" if extra else ""
-        lines.append(f"• {k} – {summary} *(Status: {status})*{suffix} ({jira_issue_browse_url(k)})")
+        lines.append(
+            f"• {k} – {summary} *(Status: {status}, Project: {project_key})*{suffix} ({jira_issue_browse_url(k)})"
+        )
     if len(rows) > limit:
         lines.append(f"• +{len(rows) - limit} more…")
     return "\n".join(lines)
 
 
-def build_assigned_section():
-    # All open work currently assigned to Naval (across project)
+def build_assigned_section_all_jira():
+    # ✅ ALL PROJECTS: remove "project = X"
     jql = (
-        f"project = {JIRA_PROJECT_KEY} "
-        f"AND assignee = {NAVAL_ACCOUNT_ID} "
+        f"assignee = {NAVAL_ACCOUNT_ID} "
         f"AND statusCategory != Done "
         f"ORDER BY priority DESC, updated DESC"
     )
@@ -153,22 +153,21 @@ def build_assigned_section():
         summary = (f.get("summary") or "").strip()
         status = (f.get("status") or {}).get("name") or ""
         priority = (f.get("priority") or {}).get("name") or ""
+        project_key = (f.get("project") or {}).get("key") or "?"
         extra = f"(Priority: {priority})" if priority else None
-        rows.append((key, summary, status, extra))
+        rows.append((key, summary, status, project_key, extra))
 
-    return issues, rows
+    return rows
 
 
-def build_timelog_section():
+def build_timelog_section_all_jira():
     tz = ZoneInfo("Europe/London")
     now_utc = dt.datetime.now(dt.timezone.utc)
     week_start_utc, week_end_utc, start_date, end_date, week_start_local, week_end_local = week_window_london(now_utc)
 
-    # Find tickets where Naval logged work this week
-    # worklogAuthor requires accountId
+    # ✅ ALL PROJECTS: remove "project = X"
     jql = (
-        f'project = {JIRA_PROJECT_KEY} '
-        f'AND worklogAuthor = {NAVAL_ACCOUNT_ID} '
+        f'worklogAuthor = {NAVAL_ACCOUNT_ID} '
         f'AND worklogDate >= "{start_date}" '
         f'AND worklogDate < "{end_date}" '
         f'ORDER BY updated DESC'
@@ -176,7 +175,6 @@ def build_timelog_section():
 
     issues = get_all_issues(jql)
 
-    # Group by day
     by_day = defaultdict(lambda: {"total": 0, "items": []})
     week_total = 0
 
@@ -185,6 +183,7 @@ def build_timelog_section():
         f = it.get("fields", {}) or {}
         summary = (f.get("summary") or "").strip()
         status = (f.get("status") or {}).get("name") or ""
+        project_key = (f.get("project") or {}).get("key") or "?"
 
         worklogs = fetch_worklogs_for_issue(key)
         per_day_seconds = defaultdict(int)
@@ -213,21 +212,23 @@ def build_timelog_section():
         if per_day_seconds:
             for day_key, secs in per_day_seconds.items():
                 by_day[day_key]["total"] += secs
-                by_day[day_key]["items"].append((secs, key, summary, status))
+                by_day[day_key]["items"].append((secs, key, summary, status, project_key))
             week_total += sum(per_day_seconds.values())
 
-    return issues, by_day, week_total, week_start_local, week_end_local
+    # sort each day's items by time desc
+    for day_key in by_day:
+        by_day[day_key]["items"].sort(reverse=True, key=lambda x: x[0])
+
+    return by_day, week_total, week_start_local, week_end_local
 
 
 def main():
-    # Section 1: Assigned open work
-    _, assigned_rows = build_assigned_section()
+    assigned_rows = build_assigned_section_all_jira()
 
-    # Section 2: Naval's timelog this week (Mon→Mon)
-    _, by_day, week_total, week_start_local, week_end_local = build_timelog_section()
+    by_day, week_total, week_start_local, week_end_local = build_timelog_section_all_jira()
 
     msg = []
-    msg.append("🧑‍💻 *Naval – Personal Digest*")
+    msg.append("🧑‍💻 *Naval – Personal Digest (All Jira)*")
     msg.append("")
 
     msg.append(f"📌 *Assigned to Naval (Open)* ({len(assigned_rows)})")
@@ -249,14 +250,13 @@ def main():
         day_date = dt.date.fromisoformat(day_key)
         day_total = by_day[day_key]["total"]
         items = by_day[day_key]["items"]
-        items.sort(reverse=True, key=lambda x: x[0])
 
         msg.append(f"📅 *{day_date:%a %d %b}* — *{format_seconds(day_total)}*")
-        for secs, key, summary, status in items:
+        for secs, key, summary, status, project_key in items:
             if shown >= LIST_LIMIT_TIMELOG:
                 continue
             msg.append(
-                f"• {key} – {summary} *(Status: {status})* — *{format_seconds(secs)}* ({jira_issue_browse_url(key)})"
+                f"• {key} – {summary} *(Status: {status}, Project: {project_key})* — *{format_seconds(secs)}* ({jira_issue_browse_url(key)})"
             )
             shown += 1
 
