@@ -13,7 +13,7 @@ JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
 JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY_TICKETS"].strip()
 TICKETS_CHAT_WEBHOOK_URL = os.environ["TICKETS_CHAT_WEBHOOK_URL"].strip()
 
-LIST_LIMIT = int(os.environ.get("TIMELOG_LIST_LIMIT", "30"))  # how many tickets to show
+LIST_LIMIT = int(os.environ.get("TIMELOG_LIST_LIMIT", "30"))  # tickets to show
 
 
 def jira_headers():
@@ -34,30 +34,32 @@ def post_to_chat(text: str):
     r.raise_for_status()
 
 
-def start_of_week_london(now_utc: dt.datetime):
+def week_window_london(now_utc: dt.datetime):
     """
-    Return (week_start_utc, week_end_utc) for Monday->Monday,
-    where 'Monday 00:00' is defined in Europe/London local time.
+    Monday 00:00 (Europe/London) -> next Monday 00:00, returned as:
+      (week_start_utc, week_end_utc, week_start_date_str, week_end_date_str)
+    The date strings are used in JQL worklogDate comparisons.
     """
     tz = ZoneInfo("Europe/London")
     now_local = now_utc.astimezone(tz)
 
-    # Monday = 0 ... Sunday = 6
-    days_since_monday = now_local.weekday()
+    days_since_monday = now_local.weekday()  # Mon=0
     week_start_local = (now_local - dt.timedelta(days=days_since_monday)).replace(
         hour=0, minute=0, second=0, microsecond=0
     )
     week_end_local = week_start_local + dt.timedelta(days=7)
 
+    # For JQL worklogDate we pass dates (not datetimes)
+    week_start_date_str = week_start_local.date().isoformat()  # YYYY-MM-DD
+    week_end_date_str = week_end_local.date().isoformat()
+
     week_start_utc = week_start_local.astimezone(dt.timezone.utc)
     week_end_utc = week_end_local.astimezone(dt.timezone.utc)
-    return week_start_utc, week_end_utc
+
+    return week_start_utc, week_end_utc, week_start_date_str, week_end_date_str, week_start_local, week_end_local
 
 
 def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 100):
-    """
-    Jira Cloud: /rest/api/3/search/jql uses nextPageToken + isLast
-    """
     url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
     params = {
         "jql": jql,
@@ -68,16 +70,17 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
         params["nextPageToken"] = next_page_token
 
     r = requests.get(url, headers=jira_headers(), params=params, timeout=30)
-    r.raise_for_status()
+    # If Jira returns 400, include the response body for easier debugging
+    if r.status_code >= 400:
+        raise requests.HTTPError(f"{r.status_code} {r.reason}: {r.text}", response=r)
     return r.json()
 
 
 def get_all_issues(jql: str):
     issues = []
     token = None
-
     while True:
-        data = jql_search(jql, next_page_token=token)
+        data = jql_search(jql, next_page_token=token, max_results=100)
         batch = data.get("issues", []) or []
         issues.extend(batch)
 
@@ -92,13 +95,10 @@ def get_all_issues(jql: str):
 
 
 def fetch_worklogs_for_issue(issue_key: str):
-    """
-    Fetch all worklogs for an issue.
-    Note: Jira returns worklog.started as e.g. "2026-02-17T10:30:00.000+0000"
-    """
     url = f"{JIRA_BASE_URL}/rest/api/3/issue/{issue_key}/worklog"
     r = requests.get(url, headers=jira_headers(), timeout=30)
-    r.raise_for_status()
+    if r.status_code >= 400:
+        raise requests.HTTPError(f"{r.status_code} {r.reason}: {r.text}", response=r)
     return (r.json() or {}).get("worklogs", []) or []
 
 
@@ -113,7 +113,6 @@ def parse_jira_datetime(s: str) -> dt.datetime | None:
 
 
 def format_seconds(total_seconds: int) -> str:
-    # show as H:MM
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60
     return f"{hours}:{minutes:02d}"
@@ -121,21 +120,24 @@ def format_seconds(total_seconds: int) -> str:
 
 def main():
     now_utc = dt.datetime.now(dt.timezone.utc)
-    week_start_utc, week_end_utc = start_of_week_london(now_utc)
+    week_start_utc, week_end_utc, start_date, end_date, week_start_local, week_end_local = week_window_london(now_utc)
 
-    # JQL finds issues with work logged in the current calendar week.
-    # This is server-side filtering so we don’t loop every ticket in SSH.
+    # ✅ Valid JQL using explicit dates
     jql = (
-        f"project = {JIRA_PROJECT_KEY} "
-        f"AND worklogDate >= startOfWeek() "
-        f"AND worklogDate < startOfWeek(+7d) "
-        f"ORDER BY updated DESC"
+        f'project = {JIRA_PROJECT_KEY} '
+        f'AND worklogDate >= "{start_date}" '
+        f'AND worklogDate < "{end_date}" '
+        f'ORDER BY updated DESC'
     )
 
     issues = get_all_issues(jql)
 
     if not issues:
-        post_to_chat("🕒 *SSH Weekly Worklog Digest*\n\n• No work logged this week 🎉")
+        post_to_chat(
+            "🕒 *SSH Weekly Worklog Digest*\n"
+            f"Week: {week_start_local:%a %d %b} → {week_end_local:%a %d %b} (Mon→Mon)\n\n"
+            "• No work logged this week 🎉"
+        )
         return
 
     rows = []
@@ -155,18 +157,10 @@ def main():
             if week_start_utc <= started < week_end_utc:
                 total_seconds += int(wl.get("timeSpentSeconds") or 0)
 
-        # Worklog endpoint can include older logs too; if Jira/JQL returned it, we *should* have some,
-        # but keep defensive:
         if total_seconds > 0:
             rows.append((total_seconds, key, summary, status))
 
-    # Sort by most time logged
     rows.sort(reverse=True, key=lambda x: x[0])
-
-    # Build message
-    tz = ZoneInfo("Europe/London")
-    week_start_local = week_start_utc.astimezone(tz)
-    week_end_local = week_end_utc.astimezone(tz)
 
     msg = []
     msg.append("🕒 *SSH Weekly Worklog Digest*")
@@ -180,7 +174,9 @@ def main():
 
     limit = min(LIST_LIMIT, len(rows))
     for total_seconds, key, summary, status in rows[:limit]:
-        msg.append(f"• {key} – {summary} *(Status: {status})* — *{format_seconds(total_seconds)}* ({jira_issue_browse_url(key)})")
+        msg.append(
+            f"• {key} – {summary} *(Status: {status})* — *{format_seconds(total_seconds)}* ({jira_issue_browse_url(key)})"
+        )
 
     if len(rows) > limit:
         msg.append(f"• +{len(rows) - limit} more…")
