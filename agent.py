@@ -36,13 +36,12 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
     """
     url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
 
-    # IMPORTANT: new endpoint expects "fields" as an array (repeated query param),
-    # requests will encode lists correctly.
     params = {
         "jql": jql,
         "maxResults": max_results,
-        "fields": ["summary", "description", "assignee", "updated", STORY_POINTS_FIELD],
+        "fields": ["summary", "description", "assignee", "updated", "status", "issuetype", STORY_POINTS_FIELD],
     }
+
     if next_page_token:
         params["nextPageToken"] = next_page_token
 
@@ -60,16 +59,13 @@ def get_all_issues(jql: str):
         batch = data.get("issues", []) or []
         issues.extend(batch)
 
-        # New API uses isLast + nextPageToken
         if data.get("isLast") is True:
             break
 
         token = data.get("nextPageToken")
         if not token:
-            # Defensive fallback: if Jira doesn't return a token, stop
             break
 
-        # Extra defensive: if no issues returned, stop
         if len(batch) == 0:
             break
 
@@ -154,6 +150,7 @@ def build_digest(issues):
     msg.append(bullets(unassigned))
     msg.append("")
     msg.append(f"⚠ *Oversized (≥ {OVERSIZED_SP} SP ≈ 4+ days)* ({len(oversized)})")
+
     if oversized:
         lines = []
         for k, summary, sp in oversized[:15]:
@@ -163,8 +160,10 @@ def build_digest(issues):
         msg.append("\n".join(lines))
     else:
         msg.append("• None 🎉")
+
     msg.append("")
     msg.append(f"🧟 *Aging (no updates ≥ {AGING_DAYS} days)* ({len(aging)})")
+
     if aging:
         lines = []
         for k, summary, d in aging[:15]:
@@ -184,7 +183,14 @@ def post_to_chat(text: str):
 
 
 def main():
-    jql = f"project = {JIRA_PROJECT_KEY} AND sprint NOT IN openSprints() ORDER BY updated DESC"
+    jql = (
+        f"project = {JIRA_PROJECT_KEY} "
+        f"AND sprint NOT IN openSprints() "
+        f"AND statusCategory != Done "
+        f"AND issuetype != \"Sprint Meeting\" "
+        f"ORDER BY updated DESC"
+    )
+
     issues = get_all_issues(jql)
     post_to_chat(build_digest(issues))
 
