@@ -4,22 +4,18 @@
 # REQUIRED ENV VARS:
 #   JIRA_EMAIL
 #   JIRA_API_TOKEN
-#   GOOGLE_CHAT_STANDUP_WEBHOOK
+#   STAND_UP                      <-- Google Chat incoming webhook URL
 #
 # OPTIONAL ENV VARS:
-#   ENFORCE_9AM_LONDON=true|false   (default true)  -> avoids double-run when you schedule 08:00+09:00 UTC for DST
+#   ENFORCE_9AM_LONDON=true|false  (default true) -> avoids double-run when scheduled 08:00+09:00 UTC for DST
 #
 # NOTES:
-# - Jira Cloud /rest/api/3/search is called via POST (not GET) to avoid 410 Gone / long URL issues.
-# - This MVP includes:
+# - Jira Cloud /rest/api/3/search is called via POST (fixes 410 Gone seen with GET query params).
+# - MVP includes:
 #   ✅ Time logged yesterday (per issue)
 #   ✅ Pushed to QA yesterday (DEPLOYED TO QA)
 #   ✅ Overdue list with 🧟 / 💀 indicators
 #   ✅ Live sprint remaining (In Progress + Up Next)
-#
-# Next enhancements (when you're ready):
-# - Status changes yesterday (by Andy) with from→to
-# - Mentions yesterday + unanswered mentions
 
 import os
 import sys
@@ -27,13 +23,13 @@ import requests
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-# ---- Config (edit these if needed) ----
+# ---- Config (edit if needed) ----
 JIRA_BASE = "https://sugatitravel.atlassian.net"
 DEV_ACCOUNT_ID = "5be5be3875085254a6a76016"
 DEV_NAME = "Andy Edmonds"
 PROJECT_KEY = "SPD"
 QA_STATUS = "DEPLOYED TO QA"
-# --------------------------------------
+# --------------------------------
 
 LONDON = ZoneInfo("Europe/London")
 
@@ -51,7 +47,7 @@ def enforce_9am_london() -> bool:
 
 
 def should_run_now() -> bool:
-    """Used to avoid duplicate posts when GitHub cron runs at both 08:00 and 09:00 UTC for DST safety."""
+    """Avoid duplicate posts when GitHub cron runs at both 08:00 and 09:00 UTC for DST safety."""
     if not enforce_9am_london():
         return True
     now = datetime.now(LONDON)
@@ -69,10 +65,8 @@ def seconds_to_pretty(seconds: int) -> str:
 
 
 def zombie_indicator(days_overdue: int) -> str:
-    # 1 zombie per 10 days (cap at 100 days => 10 zombies)
-    zombies = min(days_overdue // 10, 10)
-    # skull per 100 days overdue (from 100 onward)
-    skulls = days_overdue // 100 if days_overdue >= 100 else 0
+    zombies = min(days_overdue // 10, 10)              # 1 per 10 days, capped at 10 (100 days)
+    skulls = (days_overdue // 100) if days_overdue >= 100 else 0  # 1 per 100 days
     return ("🧟" * zombies) + ((" " + ("💀" * skulls)) if skulls else "")
 
 
@@ -84,13 +78,8 @@ def yesterday_window_london():
 
 
 def jira_search(jql: str, fields="summary,status,duedate", max_results: int = 50):
-    """
-    Jira Cloud search via POST (fixes 410 Gone seen with GET query params).
-    Returns issues list.
-    """
+    """Jira Cloud search via POST (fixes 410 Gone issues with GET)."""
     url = f"{JIRA_BASE}/rest/api/3/search"
-
-    # Normalise multi-line / indented JQL into a single clean string
     jql_clean = " ".join([line.strip() for line in jql.splitlines() if line.strip()])
 
     payload = {
@@ -130,8 +119,12 @@ def time_logged_yesterday(issues):
             if author != DEV_ACCOUNT_ID or not started:
                 continue
 
-            # Jira returns offset like +0000; Python wants +00:00
-            started_norm = started[:-2] + ":" + started[-2:] if started.endswith(("+0000", "+0100", "+0200", "+0300")) else started
+            # Jira gives +0000 (no colon). Python wants +00:00.
+            if len(started) >= 5 and (started[-5] in ["+", "-"]) and started[-2:].isdigit():
+                started_norm = started[:-2] + ":" + started[-2:]
+            else:
+                started_norm = started
+
             started_dt = datetime.fromisoformat(started_norm).astimezone(LONDON)
 
             if start_yesterday <= started_dt < start_today:
@@ -197,7 +190,6 @@ def sprint_remaining():
         status_name = i["fields"]["status"]["name"].strip().lower()
         line = f"• {i['key']} – {i['fields']['summary']}"
 
-        # tweak these buckets any time you want
         if status_name in {"in progress", "in review", "ready for integration"}:
             in_progress.append(line)
         else:
@@ -207,7 +199,6 @@ def sprint_remaining():
 
 
 def build_digest():
-    # Issues that have a worklog by Andy yesterday (issue set)
     yesterday_jql = f"""
         project = {PROJECT_KEY}
         AND worklogAuthor = {DEV_ACCOUNT_ID}
@@ -228,7 +219,7 @@ def build_digest():
     msg += "\n".join(time_lines) if time_lines else "• No time logged"
     msg += "\n\n"
 
-    msg += "🚀 Pushed to QA (yesterday)\n"
+    msg += f"🚀 Pushed to QA (yesterday)\n"
     msg += "\n".join(qa_lines) if qa_lines else "• Nothing pushed to QA"
     msg += "\n\n"
 
@@ -238,15 +229,12 @@ def build_digest():
 
     msg += "📌 Live Sprint – Remaining\n\n"
 
-    if in_prog:
-        msg += "🔥 In Progress\n" + "\n".join(in_prog) + "\n\n"
-    else:
-        msg += "🔥 In Progress\n• None\n\n"
+    msg += "🔥 In Progress\n"
+    msg += "\n".join(in_prog) if in_prog else "• None"
+    msg += "\n\n"
 
-    if next_up:
-        msg += "📋 Up Next\n" + "\n".join(next_up)
-    else:
-        msg += "📋 Up Next\n• None"
+    msg += "📋 Up Next\n"
+    msg += "\n".join(next_up) if next_up else "• None"
 
     return msg
 
@@ -258,10 +246,9 @@ def send_to_chat(text: str):
 
 if __name__ == "__main__":
     try:
-        # required env
         JIRA_EMAIL = _require_env("JIRA_EMAIL")
         JIRA_API_TOKEN = _require_env("JIRA_API_TOKEN")
-        WEBHOOK_URL = _require_env("GOOGLE_CHAT_STANDUP_WEBHOOK")
+        WEBHOOK_URL = _require_env("STAND_UP")  # <-- your secret name, as requested
         AUTH = (JIRA_EMAIL, JIRA_API_TOKEN)
 
         if not should_run_now():
@@ -273,6 +260,5 @@ if __name__ == "__main__":
         print("Digest sent ✅")
 
     except Exception as e:
-        # Fail loud in Actions logs
         print(f"ERROR: {e}")
         raise
