@@ -1,13 +1,9 @@
 name: Standup Digest
 
 on:
-  push:
-    branches:
-      - main
-
   schedule:
-    - cron: "0 8,9 * * 1-5"
-
+    # 09:00 UTC (adjust later if you want DST precision)
+    - cron: "0 9 * * 1-5"
   workflow_dispatch:
 
 jobs:
@@ -15,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -23,13 +19,17 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      - name: Install dependencies
         run: pip install requests
 
-      - name: Run digest
-        run: python standup_digest.py
+      - name: Run Standup Digest
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           STAND_UP: ${{ secrets.STAND_UP }}
+
+          AT_API_TOKEN: ${{ secrets.AT_API_TOKEN }}
+          AT_USERNAME_ANDY: ${{ secrets.AT_USERNAME_ANDY }}
+
+        run: python standup_digest.py
