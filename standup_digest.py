@@ -7,10 +7,10 @@
 #   STAND_UP                      <-- Google Chat incoming webhook URL
 #
 # OPTIONAL ENV VARS:
-#   ENFORCE_9AM_LONDON=true|false  (default true) -> avoids double-run when scheduled 08:00+09:00 UTC for DST
+#   ENFORCE_9AM_LONDON=true|false  (default true)
 #
 # NOTES:
-# - Jira Cloud /rest/api/3/search is called via POST (fixes 410 Gone seen with GET query params).
+# - Uses POST /rest/api/3/search/jql (some Jira tenants return 410 for /search)
 # - MVP includes:
 #   ✅ Time logged yesterday (per issue)
 #   ✅ Pushed to QA yesterday (DEPLOYED TO QA)
@@ -47,7 +47,6 @@ def enforce_9am_london() -> bool:
 
 
 def should_run_now() -> bool:
-    """Avoid duplicate posts when GitHub cron runs at both 08:00 and 09:00 UTC for DST safety."""
     if not enforce_9am_london():
         return True
     now = datetime.now(LONDON)
@@ -65,8 +64,8 @@ def seconds_to_pretty(seconds: int) -> str:
 
 
 def zombie_indicator(days_overdue: int) -> str:
-    zombies = min(days_overdue // 10, 10)              # 1 per 10 days, capped at 10 (100 days)
-    skulls = (days_overdue // 100) if days_overdue >= 100 else 0  # 1 per 100 days
+    zombies = min(days_overdue // 10, 10)  # 1 per 10 days, cap at 10 (100 days)
+    skulls = (days_overdue // 100) if days_overdue >= 100 else 0
     return ("🧟" * zombies) + ((" " + ("💀" * skulls)) if skulls else "")
 
 
@@ -77,31 +76,56 @@ def yesterday_window_london():
     return start_yesterday, start_today
 
 
+def _raise_for_status_with_body(r: requests.Response):
+    if r.ok:
+        return
+    snippet = (r.text or "")[:500]
+    raise requests.HTTPError(f"{r.status_code} {r.reason} for {r.url} :: {snippet}")
+
+
 def jira_search(jql: str, fields="summary,status,duedate", max_results: int = 50):
-    """Jira Cloud search via POST (fixes 410 Gone issues with GET)."""
-    url = f"{JIRA_BASE}/rest/api/3/search"
+    """
+    Jira search via POST.
+
+    Some Jira Cloud tenants return 410 Gone for POST /rest/api/3/search.
+    Use POST /rest/api/3/search/jql instead (newer endpoint).
+    """
     jql_clean = " ".join([line.strip() for line in jql.splitlines() if line.strip()])
+    fields_list = fields.split(",") if isinstance(fields, str) else fields
+
+    headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
     payload = {
         "jql": jql_clean,
         "maxResults": max_results,
-        "fields": fields.split(",") if isinstance(fields, str) else fields,
-    }
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
+        "fields": fields_list,
     }
 
+    # Preferred endpoint
+    url = f"{JIRA_BASE}/rest/api/3/search/jql"
     r = requests.post(url, auth=AUTH, headers=headers, json=payload, timeout=30)
-    r.raise_for_status()
+
+    # Fallback (just in case)
+    if r.status_code == 404:
+        url2 = f"{JIRA_BASE}/rest/api/3/search"
+        r = requests.post(url2, auth=AUTH, headers=headers, json=payload, timeout=30)
+
+    _raise_for_status_with_body(r)
     return r.json().get("issues", [])
 
 
 def get_worklogs(issue_key: str):
     url = f"{JIRA_BASE}/rest/api/3/issue/{issue_key}/worklog"
     r = requests.get(url, auth=AUTH, params={"maxResults": 5000}, timeout=30)
-    r.raise_for_status()
+    _raise_for_status_with_body(r)
     return r.json().get("worklogs", [])
+
+
+def _parse_jira_datetime(started: str) -> datetime:
+    # Jira often gives "...+0000" (no colon). Python wants "+00:00".
+    if len(started) >= 5 and (started[-5] in ["+", "-"]) and started[-2:].isdigit():
+        started = started[:-2] + ":" + started[-2:]
+    return datetime.fromisoformat(started)
 
 
 def time_logged_yesterday(issues):
@@ -119,13 +143,7 @@ def time_logged_yesterday(issues):
             if author != DEV_ACCOUNT_ID or not started:
                 continue
 
-            # Jira gives +0000 (no colon). Python wants +00:00.
-            if len(started) >= 5 and (started[-5] in ["+", "-"]) and started[-2:].isdigit():
-                started_norm = started[:-2] + ":" + started[-2:]
-            else:
-                started_norm = started
-
-            started_dt = datetime.fromisoformat(started_norm).astimezone(LONDON)
+            started_dt = _parse_jira_datetime(started).astimezone(LONDON)
 
             if start_yesterday <= started_dt < start_today:
                 total_seconds += int(wl.get("timeSpentSeconds", 0))
@@ -219,7 +237,7 @@ def build_digest():
     msg += "\n".join(time_lines) if time_lines else "• No time logged"
     msg += "\n\n"
 
-    msg += f"🚀 Pushed to QA (yesterday)\n"
+    msg += "🚀 Pushed to QA (yesterday)\n"
     msg += "\n".join(qa_lines) if qa_lines else "• Nothing pushed to QA"
     msg += "\n\n"
 
@@ -241,14 +259,14 @@ def build_digest():
 
 def send_to_chat(text: str):
     r = requests.post(WEBHOOK_URL, json={"text": text}, timeout=30)
-    r.raise_for_status()
+    _raise_for_status_with_body(r)
 
 
 if __name__ == "__main__":
     try:
         JIRA_EMAIL = _require_env("JIRA_EMAIL")
         JIRA_API_TOKEN = _require_env("JIRA_API_TOKEN")
-        WEBHOOK_URL = _require_env("STAND_UP")  # <-- your secret name, as requested
+        WEBHOOK_URL = _require_env("STAND_UP")  # your secret name
         AUTH = (JIRA_EMAIL, JIRA_API_TOKEN)
 
         if not should_run_now():
