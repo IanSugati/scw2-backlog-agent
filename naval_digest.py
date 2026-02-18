@@ -56,6 +56,11 @@ def format_seconds(total_seconds: int) -> str:
     return f"{hours}:{minutes:02d}"
 
 
+def is_weekday(d: dt.date) -> bool:
+    # Mon=0 ... Sun=6
+    return d.weekday() < 5
+
+
 def week_window_london(now_utc: dt.datetime):
     """
     Monday 00:00 (Europe/London) -> next Monday 00:00
@@ -132,7 +137,7 @@ def safe_str(v) -> str:
 
 def bullets(rows, limit: int):
     if not rows:
-        return "• None 🎉"
+        return "• None ✅"
 
     lines = []
     for row in rows[:limit]:
@@ -157,7 +162,6 @@ def main():
     # -------------------------------------------------
     # A) Assigned tasks (open) for later "bottom section"
     # -------------------------------------------------
-    # ALL projects
     jql_assigned_open = (
         f"assignee = {NAVAL_ACCOUNT_ID} "
         f"AND statusCategory != Done "
@@ -179,7 +183,6 @@ def main():
     # -------------------------------------------------
     # B) Time logged by Naval this week (Mon->Mon)
     # -------------------------------------------------
-    # ALL projects
     jql_worked_this_week = (
         f'worklogAuthor = {NAVAL_ACCOUNT_ID} '
         f'AND worklogDate >= "{start_date}" '
@@ -189,7 +192,8 @@ def main():
     worked_issues = get_all_issues(jql_worked_this_week)
 
     by_day = defaultdict(lambda: {"total": 0, "items": []})  # day_key -> total + list of (secs,key,summary,status,project)
-    week_total = 0
+    week_total_all_days = 0
+    weekend_total = 0
 
     # For "no time logged on due date" we need per-ticket-per-day seconds
     naval_ticket_day_seconds = defaultdict(lambda: defaultdict(int))  # key -> day_key -> secs
@@ -236,25 +240,32 @@ def main():
 
         if per_day_seconds:
             ticket_week = sum(per_day_seconds.values())
-            week_total += ticket_week
+            week_total_all_days += ticket_week
 
             m = worked_meta[key]
             for day_key, secs in per_day_seconds.items():
+                d_local = dt.date.fromisoformat(day_key)
                 naval_ticket_day_seconds[key][day_key] += secs
-                by_day[day_key]["total"] += secs
-                by_day[day_key]["items"].append((secs, key, m["summary"], m["status"], m["project"]))
+
+                if is_weekday(d_local):
+                    by_day[day_key]["total"] += secs
+                    by_day[day_key]["items"].append((secs, key, m["summary"], m["status"], m["project"]))
+                else:
+                    weekend_total += secs
 
     for day_key in by_day:
         by_day[day_key]["items"].sort(reverse=True, key=lambda x: x[0])
 
+    weekday_total = sum(by_day[d]["total"] for d in by_day)
+
     # -------------------------------------------------
-    # C) Remaining days this week: due date = day, and 0 time logged that day
-    #    (Using Due date as "assigned for the day")
+    # C) Remaining days this week (weekdays only): due date = day, and 0 time logged that day
     # -------------------------------------------------
     remaining_days = []
     d = today_local + dt.timedelta(days=1)
     while d < week_end_local.date():
-        remaining_days.append(d)
+        if is_weekday(d):
+            remaining_days.append(d)
         d += dt.timedelta(days=1)
 
     due_day_no_time = defaultdict(list)  # due_date -> list of rows
@@ -305,20 +316,21 @@ def main():
     other_not_this_week.sort(key=lambda r: r[0])
 
     # -------------------------------------------------
-    # Build message (no "assigned open" block at the top)
+    # Build message (no weekend days displayed)
     # -------------------------------------------------
     msg = []
     msg.append("🧑‍💻 *Naval – Personal Digest (All Jira)*")
     msg.append("")
 
-    # Time log section
     msg.append("🕒 *Time logged by Naval (this week)*")
     msg.append(f"Week: {week_start_local:%a %d %b} → {week_end_local:%a %d %b} (Mon→Mon)")
-    msg.append(f"Total logged this week: *{format_seconds(week_total)}*")
+    msg.append(f"Total logged this week (Mon–Fri): *{format_seconds(weekday_total)}*")
+    if weekend_total > 0:
+        msg.append(f"Weekend time logged (Sat/Sun): *{format_seconds(weekend_total)}* (not shown day-by-day)")
     msg.append("")
 
     if not by_day:
-        msg.append("• No time logged this week 🎉")
+        msg.append("• No time logged this week (Mon–Fri) ✅")
         msg.append("")
     else:
         shown = 0
@@ -343,25 +355,23 @@ def main():
 
             msg.append("")
 
-    # Remaining-days due-date section
     msg.append("📆 *Remaining days this week — due-date tasks with no time logged that day*")
-    msg.append("(Uses *Due date* as “assigned for the day”)")
+    msg.append("(Weekdays only; uses *Due date* as “assigned for the day”)")
     msg.append("")
 
     if not remaining_days:
-        msg.append("• No remaining days in this week 🎉")
+        msg.append("• No remaining weekdays in this week ✅")
         msg.append("")
     else:
         for due_date in remaining_days:
             items = due_day_no_time.get(due_date, [])
             msg.append(f"📅 *{due_date:%a %d %b}* ({len(items)})")
             if not items:
-                msg.append("• None 🎉")
+                msg.append("• None ✅")
             else:
                 msg.append(bullets(items, limit=LIST_LIMIT_DUE_PER_DAY))
             msg.append("")
 
-    # Bottom: other tasks not due this week
     msg.append("📦 *Other open tasks assigned to Naval (not due this week)*")
     msg.append("(Due date outside this Mon→Mon week, or blank)")
     msg.append("")
