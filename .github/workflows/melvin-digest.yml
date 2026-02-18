@@ -1,0 +1,37 @@
+name: Melvin Personal Digest
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 13 * * 1-5"   # 13:00 UTC Mon–Fri (1:00pm UK in winter)
+    - cron: "30 17 * * 1-5"  # 17:30 UTC Mon–Fri (5:30pm UK in winter)
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run Melvin digest
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          MELVIN_TIMELOG_WEBHOOK: ${{ secrets.MELVIN_TIMELOG_WEBHOOK }}
+          MELVIN_TIMELOG_LIMIT: "75"
+          MELVIN_DUE_PER_DAY_LIMIT: "15"
+          MELVIN_OTHER_NOT_THIS_WEEK_LIMIT: "25"
+        run: |
+          python melvin_digest.py
