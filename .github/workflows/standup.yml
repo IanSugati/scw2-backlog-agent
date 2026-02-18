@@ -2,7 +2,7 @@ name: Standup Digest
 
 on:
   schedule:
-    - cron: "0 8,9 * * 1-5"  # runs twice to survive UK DST; script only posts at 9am London
+    - cron: "0 8,9 * * 1-5"  # runs twice to survive UK DST; script posts at 9am London
   workflow_dispatch:
 
 jobs:
@@ -27,3 +27,5 @@ jobs:
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           STAND_UP: ${{ secrets.STAND_UP }}
+          # Allow manual runs to post immediately (schedule runs still protected by the script's 9am check)
+          ENFORCE_9AM_LONDON: "false"
