@@ -1,5 +1,4 @@
 # standup_digest.py
-# Posts a 9am standup prep digest for one dev into a Google Chat space.
 #
 # REQUIRED ENV VARS:
 #   JIRA_EMAIL
@@ -8,14 +7,6 @@
 #
 # OPTIONAL ENV VARS:
 #   ENFORCE_9AM_LONDON=true|false  (default true)
-#
-# NOTES:
-# - Uses POST /rest/api/3/search/jql (some Jira tenants return 410 for /search)
-# - MVP includes:
-#   ✅ Time logged yesterday (per issue)
-#   ✅ Pushed to QA yesterday (DEPLOYED TO QA)
-#   ✅ Overdue list with 🧟 / 💀 indicators
-#   ✅ Live sprint remaining (In Progress + Up Next)
 
 import os
 import sys
@@ -64,7 +55,7 @@ def seconds_to_pretty(seconds: int) -> str:
 
 
 def zombie_indicator(days_overdue: int) -> str:
-    zombies = min(days_overdue // 10, 10)  # 1 per 10 days, cap at 10 (100 days)
+    zombies = min(days_overdue // 10, 10)  # 1 per 10 days, cap at 10
     skulls = (days_overdue // 100) if days_overdue >= 100 else 0
     return ("🧟" * zombies) + ((" " + ("💀" * skulls)) if skulls else "")
 
@@ -79,39 +70,50 @@ def yesterday_window_london():
 def _raise_for_status_with_body(r: requests.Response):
     if r.ok:
         return
-    snippet = (r.text or "")[:500]
+    snippet = (r.text or "")[:800]
     raise requests.HTTPError(f"{r.status_code} {r.reason} for {r.url} :: {snippet}")
 
 
-def jira_search(jql: str, fields="summary,status,duedate", max_results: int = 50):
-    """
-    Jira search via POST.
+def jira_myself():
+    url = f"{JIRA_BASE}/rest/api/3/myself"
+    r = requests.get(url, auth=AUTH, headers={"Accept": "application/json"}, timeout=30)
+    _raise_for_status_with_body(r)
+    return r.json()
 
-    Some Jira Cloud tenants return 410 Gone for POST /rest/api/3/search.
-    Use POST /rest/api/3/search/jql instead (newer endpoint).
+
+def jira_search(jql: str, fields="summary,status,duedate", max_results: int = 100):
     """
+    Uses /rest/api/3/search/jql (the legacy /search endpoint is removed in many tenants).
+    """
+    url = f"{JIRA_BASE}/rest/api/3/search/jql"
     jql_clean = " ".join([line.strip() for line in jql.splitlines() if line.strip()])
-    fields_list = fields.split(",") if isinstance(fields, str) else fields
-
-    headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
     payload = {
         "jql": jql_clean,
         "maxResults": max_results,
-        "fields": fields_list,
+        "fields": fields.split(",") if isinstance(fields, str) else fields,
     }
 
-    # Preferred endpoint
-    url = f"{JIRA_BASE}/rest/api/3/search/jql"
-    r = requests.post(url, auth=AUTH, headers=headers, json=payload, timeout=30)
-
-    # Fallback (just in case)
-    if r.status_code == 404:
-        url2 = f"{JIRA_BASE}/rest/api/3/search"
-        r = requests.post(url2, auth=AUTH, headers=headers, json=payload, timeout=30)
-
+    r = requests.post(
+        url,
+        auth=AUTH,
+        headers={"Accept": "application/json", "Content-Type": "application/json"},
+        json=payload,
+        timeout=30,
+    )
     _raise_for_status_with_body(r)
-    return r.json().get("issues", [])
+    data = r.json()
+    return data.get("issues", []), data.get("total"), data.get("nextPageToken")
+
+
+def debug_jql(label: str, jql: str):
+    issues, total, next_token = jira_search(jql, fields="summary,status,duedate", max_results=20)
+    keys = [i["key"] for i in issues[:10]]
+    print(f"\n--- DEBUG: {label} ---")
+    print(f"JQL: { ' '.join([line.strip() for line in jql.splitlines() if line.strip()]) }")
+    print(f"Returned: {len(issues)} issues (total={total}, nextPageToken={next_token})")
+    print(f"Sample keys: {keys if keys else '[]'}")
+    return issues
 
 
 def get_worklogs(issue_key: str):
@@ -122,7 +124,7 @@ def get_worklogs(issue_key: str):
 
 
 def _parse_jira_datetime(started: str) -> datetime:
-    # Jira often gives "...+0000" (no colon). Python wants "+00:00".
+    # Jira often gives +0000; Python wants +00:00
     if len(started) >= 5 and (started[-5] in ["+", "-"]) and started[-2:].isdigit():
         started = started[:-2] + ":" + started[-2:]
     return datetime.fromisoformat(started)
@@ -162,7 +164,7 @@ def pushed_to_qa_yesterday():
         DURING (startOfDay(-1), startOfDay())
         ORDER BY updated DESC
     """
-    issues = jira_search(jql)
+    issues, _, _ = jira_search(jql, fields="summary,status,duedate", max_results=100)
     return [f"• {i['key']} – {i['fields']['summary']}" for i in issues]
 
 
@@ -174,7 +176,7 @@ def overdue_issues():
         AND statusCategory != Done
         ORDER BY duedate ASC
     """
-    issues = jira_search(jql)
+    issues, _, _ = jira_search(jql, fields="summary,status,duedate", max_results=200)
 
     today = datetime.now(LONDON).date()
     results = []
@@ -199,7 +201,7 @@ def sprint_remaining():
         AND statusCategory != Done
         ORDER BY Rank ASC
     """
-    issues = jira_search(jql)
+    issues, _, _ = jira_search(jql, fields="summary,status,duedate", max_results=200)
 
     in_progress = []
     up_next = []
@@ -224,7 +226,7 @@ def build_digest():
         AND worklogDate < startOfDay()
         ORDER BY updated DESC
     """
-    yesterday_issues = jira_search(yesterday_jql)
+    yesterday_issues, _, _ = jira_search(yesterday_jql, fields="summary,status,duedate", max_results=200)
     time_lines = time_logged_yesterday(yesterday_issues)
 
     qa_lines = pushed_to_qa_yesterday()
@@ -266,8 +268,43 @@ if __name__ == "__main__":
     try:
         JIRA_EMAIL = _require_env("JIRA_EMAIL")
         JIRA_API_TOKEN = _require_env("JIRA_API_TOKEN")
-        WEBHOOK_URL = _require_env("STAND_UP")  # your secret name
+        WEBHOOK_URL = _require_env("STAND_UP")
         AUTH = (JIRA_EMAIL, JIRA_API_TOKEN)
+
+        # Always print who the API token user is
+        me = jira_myself()
+        print(f"\nAPI USER: {me.get('displayName')} | accountId={me.get('accountId')} | email={me.get('emailAddress')}\n")
+
+        # Debug the exact queries
+        debug_jql("Sanity: any SPD issues visible?", f"project = {PROJECT_KEY} ORDER BY updated DESC")
+        debug_jql("Sprint remaining (Andy)", f"""
+            project = {PROJECT_KEY}
+            AND sprint in openSprints()
+            AND assignee = {DEV_ACCOUNT_ID}
+            AND statusCategory != Done
+            ORDER BY Rank ASC
+        """)
+        debug_jql("Overdue (Andy)", f"""
+            project = {PROJECT_KEY}
+            AND assignee = {DEV_ACCOUNT_ID}
+            AND duedate < startOfDay()
+            AND statusCategory != Done
+            ORDER BY duedate ASC
+        """)
+        debug_jql("Worklog yesterday (issue set)", f"""
+            project = {PROJECT_KEY}
+            AND worklogAuthor = {DEV_ACCOUNT_ID}
+            AND worklogDate >= startOfDay(-1)
+            AND worklogDate < startOfDay()
+            ORDER BY updated DESC
+        """)
+        debug_jql("Pushed to QA yesterday", f"""
+            project = {PROJECT_KEY}
+            AND assignee = {DEV_ACCOUNT_ID}
+            AND status CHANGED TO "{QA_STATUS}"
+            DURING (startOfDay(-1), startOfDay())
+            ORDER BY updated DESC
+        """)
 
         if not should_run_now():
             print("Not 9am London (or weekend) — exiting without posting.")
@@ -275,7 +312,7 @@ if __name__ == "__main__":
 
         digest = build_digest()
         send_to_chat(digest)
-        print("Digest sent ✅")
+        print("\nDigest sent ✅")
 
     except Exception as e:
         print(f"ERROR: {e}")
