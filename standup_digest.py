@@ -1,288 +1,177 @@
-# standup_digest.py
-#
-# Secrets / env vars (EXACT):
-#   JIRA_BASE_URL
-#   JIRA_EMAIL
-#   JIRA_API_TOKEN
-#   STAND_UP
-#
-# Optional:
-#   ENFORCE_9AM_LONDON=true|false  (default false)
-
 import os
-import sys
 import requests
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-# ---- Config ----
-DEV_ACCOUNT_ID = "5be5be3875085254a6a76016"
-DEV_NAME = "Andy Edmonds"
-PROJECT_KEY = "SPD"
-QA_STATUS = "DEPLOYED TO QA"
-# ---------------
-
 LONDON = ZoneInfo("Europe/London")
 
-
-def req_env(name: str) -> str:
-    v = os.environ.get(name)
-    if v is None or v == "":
-        raise RuntimeError(f"Missing env var: {name}")
-    return v
+DEV_NAME = "Andy Edmonds"
+DEV_ACCOUNT_ID = "5be5be3875085254a6a76016"
+PROJECT_KEY = "SPD"
 
 
-def present(name: str) -> str:
-    v = os.environ.get(name)
-    return "SET" if (v is not None and v != "") else "MISSING"
+def env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing environment variable: {name}")
+    return value.strip()
 
 
-def enforce_9am_london() -> bool:
-    raw = os.environ.get("ENFORCE_9AM_LONDON", "false").strip().lower()
-    return raw in ("1", "true", "yes", "y", "on")
-
-
-def should_run_now() -> bool:
-    if not enforce_9am_london():
-        return True
-    now = datetime.now(LONDON)
-    return now.weekday() < 5 and now.hour == 9
-
-
-def _raise(r: requests.Response):
-    if r.ok:
-        return
-    raise requests.HTTPError(f"{r.status_code} {r.reason} for {r.url} :: {(r.text or '')[:800]}")
-
-
-def api_get(auth, base_url: str, path: str):
-    url = f"{base_url}{path}"
-    r = requests.get(url, auth=auth, headers={"Accept": "application/json"}, timeout=30)
-    _raise(r)
-    return r.json()
-
-
-def jira_search(auth, base_url: str, jql: str, fields=None, max_results: int = 200):
-    url = f"{base_url}/rest/api/3/search/jql"
-    jql_clean = " ".join(line.strip() for line in jql.splitlines() if line.strip())
+def jira_search(base_url, auth, jql):
+    url = f"{base_url}/rest/api/3/search"
     payload = {
-        "jql": jql_clean,
-        "maxResults": max_results,
-        "fields": fields or ["summary", "status", "duedate"],
+        "jql": " ".join(jql.split()),
+        "maxResults": 50,
+        "fields": ["summary", "status", "duedate"]
     }
-    r = requests.post(
-        url,
-        auth=auth,
-        headers={"Accept": "application/json", "Content-Type": "application/json"},
-        json=payload,
-        timeout=30,
-    )
-    _raise(r)
+    r = requests.post(url, json=payload, auth=auth, timeout=30)
+    r.raise_for_status()
     return r.json().get("issues", [])
 
 
-def issue_link(base_url: str, key: str) -> str:
-    """
-    Google Chat link format: <url|text>
-    """
-    return f"<{base_url}/browse/{key}|{key}>"
-
-
-def parse_jira_dt(started: str) -> datetime:
-    if len(started) >= 5 and (started[-5] in ["+", "-"]) and started[-2:].isdigit():
-        started = started[:-2] + ":" + started[-2:]
-    return datetime.fromisoformat(started)
-
-
-def yesterday_window_london():
-    now = datetime.now(LONDON)
-    start_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    start_yesterday = start_today - timedelta(days=1)
-    return start_yesterday, start_today
-
-
-def get_worklogs(auth, base_url: str, issue_key: str):
+def jira_worklogs(base_url, auth, issue_key):
     url = f"{base_url}/rest/api/3/issue/{issue_key}/worklog"
-    r = requests.get(url, auth=auth, params={"maxResults": 5000}, timeout=30)
-    _raise(r)
+    r = requests.get(url, auth=auth, timeout=30)
+    r.raise_for_status()
     return r.json().get("worklogs", [])
 
 
-def seconds_to_pretty(seconds: int) -> str:
-    h = seconds // 3600
-    m = (seconds % 3600) // 60
-    if h and m:
-        return f"{h}h {m}m"
-    if h:
-        return f"{h}h"
-    return f"{m}m"
+def issue_link(base, key):
+    return f"<{base}/browse/{key}|{key}>"
 
 
-def zombie_indicator(days: int) -> str:
-    zombies = min(days // 10, 10)  # cap at 100 days
-    skulls = (days // 100) if days >= 100 else 0
-    # no extra spaces at the end
-    return ("🧟" * zombies) + ((" " + ("💀" * skulls)) if skulls else "")
-
-
-def time_logged_yesterday(auth, base_url: str):
+def yesterday_logged(base_url, auth):
     jql = f"""
-        project = {PROJECT_KEY}
-        AND worklogAuthor = {DEV_ACCOUNT_ID}
+        worklogAuthor = "{DEV_ACCOUNT_ID}"
         AND worklogDate >= startOfDay(-1)
         AND worklogDate < startOfDay()
-        AND statusCategory != Done
-        ORDER BY updated DESC
     """
-    issues = jira_search(auth, base_url, jql, fields=["summary", "status"], max_results=200)
+    issues = jira_search(base_url, auth, jql)
 
-    start_y, start_t = yesterday_window_london()
+    yesterday = datetime.now(LONDON).date() - timedelta(days=1)
     lines = []
 
     for issue in issues:
         key = issue["key"]
         summary = issue["fields"]["summary"]
-        total = 0
 
-        for wl in get_worklogs(auth, base_url, key):
-            if wl.get("author", {}).get("accountId") != DEV_ACCOUNT_ID:
+        total_seconds = 0
+        for wl in jira_worklogs(base_url, auth, key):
+            if wl["author"]["accountId"] != DEV_ACCOUNT_ID:
                 continue
-            started = wl.get("started")
-            if not started:
-                continue
-            dt = parse_jira_dt(started).astimezone(LONDON)
-            if start_y <= dt < start_t:
-                total += int(wl.get("timeSpentSeconds", 0))
 
-        if total:
-            lines.append(f"• {issue_link(base_url, key)} – {summary} ({seconds_to_pretty(total)})")
+            started = datetime.fromisoformat(
+                wl["started"].replace("Z", "+00:00")
+            ).astimezone(LONDON).date()
+
+            if started == yesterday:
+                total_seconds += wl["timeSpentSeconds"]
+
+        if total_seconds:
+            mins = total_seconds // 60
+            h, m = mins // 60, mins % 60
+            duration = f"{h}h {m}m" if h else f"{m}m"
+
+            lines.append(f"• {issue_link(base_url, key)} – {summary} ({duration})")
 
     return lines
 
 
-def pushed_to_qa_yesterday(auth, base_url: str):
+def overdue_items(base_url, auth):
     jql = f"""
-        project = {PROJECT_KEY}
-        AND assignee = {DEV_ACCOUNT_ID}
-        AND status CHANGED TO "{QA_STATUS}"
-        DURING (startOfDay(-1), startOfDay())
-        AND statusCategory != Done
-        ORDER BY updated DESC
-    """
-    issues = jira_search(auth, base_url, jql, fields=["summary"], max_results=200)
-    return [f"• {issue_link(base_url, i['key'])} – {i['fields']['summary']}" for i in issues]
-
-
-def overdue_all_projects(auth, base_url: str):
-    jql = f"""
-        assignee = {DEV_ACCOUNT_ID}
+        assignee = "{DEV_ACCOUNT_ID}"
         AND duedate < startOfDay()
         AND statusCategory != Done
         ORDER BY duedate ASC
     """
-    issues = jira_search(auth, base_url, jql, fields=["summary", "duedate"], max_results=200)
+    issues = jira_search(base_url, auth, jql)
 
     today = datetime.now(LONDON).date()
     lines = []
 
-    for i in issues:
-        key = i["key"]
-        summary = i["fields"]["summary"]
-        due = i["fields"].get("duedate")
-        if not due:
+    for issue in issues:
+        key = issue["key"]
+        summary = issue["fields"]["summary"]
+        duedate = issue["fields"]["duedate"]
+
+        if not duedate:
             continue
-        due_date = datetime.fromisoformat(due).date()
-        days = (today - due_date).days
-        lines.append(f"• {issue_link(base_url, key)} – {summary} ({days} days {zombie_indicator(days)})")
+
+        due = datetime.strptime(duedate, "%Y-%m-%d").date()
+        days = (today - due).days
+
+        lines.append(f"• {issue_link(base_url, key)} – {summary} ({days} days overdue)")
 
     return lines
 
 
-def sprint_remaining(auth, base_url: str):
-    jql = f"""
-        project = {PROJECT_KEY}
-        AND sprint in openSprints()
-        AND assignee = {DEV_ACCOUNT_ID}
-        AND statusCategory != Done
-        ORDER BY Rank ASC
-    """
-    issues = jira_search(auth, base_url, jql, fields=["summary", "status"], max_results=500)
-
-    in_progress = []
-    up_next = []
-
-    for i in issues:
-        key = i["key"]
-        summary = i["fields"]["summary"]
-        status = i["fields"]["status"]["name"].strip().lower()
-        line = f"• {issue_link(base_url, key)} – {summary}"
-
-        if status in {"in progress", "in review", "ready for integration", "ready for package", "deployed to qa"}:
-            in_progress.append(line)
-        else:
-            up_next.append(line)
-
-    return in_progress[:8], up_next[:8]
+def at_timeline(base_url, token, username):
+    url = f"{base_url}/rest/api/1/timeline/{username}"
+    headers = {
+        "Accept": "application/json",
+        "auth-token": token
+    }
+    r = requests.get(url, headers=headers, timeout=30)
+    r.raise_for_status()
+    return r.json()
 
 
-def build_digest(auth, base_url: str):
-    time_lines = time_logged_yesterday(auth, base_url)
-    qa_lines = pushed_to_qa_yesterday(auth, base_url)
-    in_prog, next_up = sprint_remaining(auth, base_url)
-    overdue_lines = overdue_all_projects(auth, base_url)  # moved to bottom
+def scheduled_rest_of_week(base_url, token, username):
+    today = datetime.now(LONDON).date()
+    end_week = today + timedelta(days=(6 - today.weekday()))
 
-    msg = f"🧑‍💻 Standup Prep – {DEV_NAME}\n\n"
+    try:
+        data = at_timeline(base_url, token, username)
+    except Exception:
+        return ["• Unable to read ActivityTimeline schedule"]
 
-    msg += "⏱ Yesterday (time logged)\n"
-    msg += "\n".join(time_lines) if time_lines else "• No time logged"
-    msg += "\n\n"
+    lines = []
 
-    msg += "🚀 Pushed to QA (yesterday)\n"
-    msg += "\n".join(qa_lines) if qa_lines else "• Nothing pushed to QA"
-    msg += "\n\n"
+    for item in data if isinstance(data, list) else []:
+        key = item.get("issueKey") or item.get("key")
+        start = item.get("startDate")
 
-    msg += "📌 Live Sprint – Remaining (SPD)\n\n"
-    msg += "🔥 In Progress\n"
-    msg += "\n".join(in_prog) if in_prog else "• None"
-    msg += "\n\n"
-    msg += "📋 Up Next\n"
-    msg += "\n".join(next_up) if next_up else "• None"
-    msg += "\n\n"
+        if not key or not start:
+            continue
 
-    # Overdue at the bottom as requested
-    msg += "⚠️ Overdue (all projects)\n"
-    msg += "\n".join(overdue_lines) if overdue_lines else "• No overdue items"
+        start_day = datetime.fromisoformat(
+            start.replace("Z", "+00:00")
+        ).astimezone(LONDON).date()
 
-    return msg
+        if today <= start_day <= end_week:
+            day_label = start_day.strftime("%a %d %b")
+            lines.append(f"{day_label} – {issue_link(base_url, key)}")
+
+    return lines if lines else ["• Nothing scheduled"]
 
 
-def send_chat(webhook_url: str, text: str):
-    r = requests.post(webhook_url, json={"text": text}, timeout=30)
-    _raise(r)
+def post_to_chat(webhook, text):
+    r = requests.post(webhook, json={"text": text}, timeout=30)
+    r.raise_for_status()
 
 
 if __name__ == "__main__":
-    # Safe env presence check (no values printed)
-    print("[env] JIRA_BASE_URL =", present("JIRA_BASE_URL"))
-    print("[env] JIRA_EMAIL =", present("JIRA_EMAIL"))
-    print("[env] JIRA_API_TOKEN =", present("JIRA_API_TOKEN"))
-    print("[env] STAND_UP =", present("STAND_UP"))
+    jira_base = env("JIRA_BASE_URL").rstrip("/")
+    jira_email = env("JIRA_EMAIL")
+    jira_token = env("JIRA_API_TOKEN")
+    chat_webhook = env("STAND_UP")
 
-    base_url = req_env("JIRA_BASE_URL").strip().rstrip("/")
-    email = req_env("JIRA_EMAIL").strip()
-    token = req_env("JIRA_API_TOKEN").strip()
-    webhook = req_env("STAND_UP").strip()
+    at_token = env("AT_API_TOKEN")
+    at_username = env("AT_USERNAME_ANDY")
 
-    auth = (email, token)
+    auth = (jira_email, jira_token)
 
-    if not should_run_now():
-        print("Not 9am London (or weekend) — exiting.")
-        sys.exit(0)
+    msg = f"🧑‍💻 Standup Prep – {DEV_NAME}\n\n"
 
-    # Auth sanity
-    me = api_get(auth, base_url, "/rest/api/3/myself")
-    print(f"[sanity] Auth OK. API user={me.get('displayName')} accountId={me.get('accountId')}")
+    msg += "⏱️ Yesterday (time logged)\n"
+    msg += "\n".join(yesterday_logged(jira_base, auth)) + "\n\n"
 
-    digest = build_digest(auth, base_url)
-    send_chat(webhook, digest)
+    msg += "🗓 Scheduled – Rest of Week\n"
+    msg += "\n".join(scheduled_rest_of_week(jira_base, at_token, at_username)) + "\n\n"
+
+    msg += "⚠️ Overdue\n"
+    msg += "\n".join(overdue_items(jira_base, auth)) + "\n"
+
+    post_to_chat(chat_webhook, msg)
+
     print("Digest sent ✅")
