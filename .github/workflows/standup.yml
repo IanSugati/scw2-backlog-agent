@@ -1,0 +1,28 @@
+name: Standup Digest
+
+on:
+  schedule:
+    - cron: "0 8,9 * * 1-5"   # runs twice to survive DST
+  workflow_dispatch:
+
+jobs:
+  standup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install requests
+
+      - name: Run digest
+        run: python standup_digest.py
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          GOOGLE_CHAT_STANDUP_WEBHOOK: ${{ secrets.GOOGLE_CHAT_STANDUP_WEBHOOK }}
