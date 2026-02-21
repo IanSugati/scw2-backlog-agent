@@ -65,7 +65,6 @@ def _raise_http(r: requests.Response):
 
 
 def _sleep_with_jitter(attempt: int, cap: int = 60):
-    # exponential backoff with jitter
     base = BACKOFF_BASE_SECONDS * (2 ** (attempt - 1))
     jitter = random.uniform(0, 1.0)
     time.sleep(min(base + jitter, cap))
@@ -76,8 +75,7 @@ def request_with_retry(method: str, url: str, **kwargs):
     Retries on:
       - 429 (rate limit) respecting Retry-After if present
       - transient 5xx
-      - network flakiness (ChunkedEncodingError / ProtocolError surfaced as ChunkedEncodingError)
-      - ConnectionError / Timeout
+      - network flakiness (ChunkedEncodingError / ConnectionError / Timeouts)
     """
     headers = kwargs.pop("headers", {})
     headers.setdefault("Accept", "application/json")
@@ -109,11 +107,10 @@ def request_with_retry(method: str, url: str, **kwargs):
             return r
 
         except (ChunkedEncodingError, ConnectionError, ReadTimeout, Timeout):
-            # Treat as transient network issue
             _sleep_with_jitter(attempt)
             continue
 
-    # Last attempt failed – re-run once to raise the real exception/response
+    # final attempt to raise the real error
     r = requests.request(
         method,
         url,
@@ -204,6 +201,31 @@ def remaining_capacity_hours() -> int:
 
 
 # ----------------
+# Agile API (to get the active sprint id reliably)
+# ----------------
+def get_board_id_for_project(project_key: str) -> int | None:
+    base = req_env("JIRA_BASE_URL").rstrip("/")
+    url = f"{base}/rest/agile/1.0/board"
+    data = jira_get(url, params={"projectKeyOrId": project_key, "maxResults": 50})
+    values = data.get("values") or []
+    if not values:
+        return None
+    # pick the first board returned for the project
+    return int(values[0]["id"])
+
+
+def get_active_sprint_id(board_id: int) -> int | None:
+    base = req_env("JIRA_BASE_URL").rstrip("/")
+    url = f"{base}/rest/agile/1.0/board/{board_id}/sprint"
+    data = jira_get(url, params={"state": "active", "maxResults": 50})
+    values = data.get("values") or []
+    if not values:
+        return None
+    # usually exactly 1 active sprint
+    return int(values[0]["id"])
+
+
+# ----------------
 # Jira helpers
 # ----------------
 def get_worklogs(issue_key: str):
@@ -237,13 +259,41 @@ def get_sp_hours(issue, sp_field: str) -> float:
 
 
 def sprint_issues_all(sp_field: str):
-    fields = ["summary", "status", sp_field]
-    jql = f"""
-        project = {PROJECT_KEY}
-        AND sprint in openSprints()
-        ORDER BY Rank ASC
     """
-    return jira_search(jql, fields=fields, max_results=500)
+    Prefer sprint=<activeSprintId> (via Agile API).
+    Fallback to sprint in openSprints() if we can't resolve sprint id.
+    """
+    board_id = None
+    sprint_id = None
+
+    try:
+        board_id = get_board_id_for_project(PROJECT_KEY)
+        if board_id is not None:
+            sprint_id = get_active_sprint_id(board_id)
+    except Exception:
+        # If Agile API is unavailable (permissions/licence), we just fallback below.
+        board_id = None
+        sprint_id = None
+
+    fields = ["summary", "status", sp_field]
+
+    if sprint_id is not None:
+        jql = f"""
+            project = {PROJECT_KEY}
+            AND sprint = {sprint_id}
+            ORDER BY Rank ASC
+        """
+    else:
+        jql = f"""
+            project = {PROJECT_KEY}
+            AND sprint in openSprints()
+            ORDER BY Rank ASC
+        """
+
+    issues = jira_search(jql, fields=fields, max_results=500)
+
+    print(f"[debug] board_id={board_id} sprint_id={sprint_id} issues={len(issues)}")
+    return issues
 
 
 def keys_with_worklogs_on_day(day_offset: int):
@@ -281,7 +331,7 @@ def build_daily_history(summary_by_key: dict[str, str]):
     d = today
     while len(day_offsets) < MAX_HISTORY_DAYS:
         if d.weekday() < 5:
-            delta = (today - d).days  # 0=today, 1=yesterday...
+            delta = (today - d).days
             day_offsets.append((d, delta))
         d -= timedelta(days=1)
 
@@ -291,7 +341,6 @@ def build_daily_history(summary_by_key: dict[str, str]):
         start = datetime.combine(day, datetime.min.time(), tzinfo=LONDON)
         end = start + timedelta(days=1)
 
-        # Only fetch heavy details for issues that actually had activity that day
         wl_keys = keys_with_worklogs_on_day(delta) if delta > 0 else set()
         st_keys = keys_with_status_changes_on_day(delta) if delta > 0 else set()
         active_keys = wl_keys.union(st_keys)
@@ -301,7 +350,6 @@ def build_daily_history(summary_by_key: dict[str, str]):
 
         if active_keys:
             for key in sorted(active_keys):
-                # Worklogs (all authors)
                 total_seconds = 0
                 if key in wl_keys:
                     for wl in get_worklogs(key):
@@ -314,7 +362,6 @@ def build_daily_history(summary_by_key: dict[str, str]):
                 if total_seconds:
                     worklog_totals[key] = total_seconds
 
-                # Status changes (collapsed)
                 if key in st_keys:
                     for h in get_changelog_histories(key):
                         created = parse_jira_dt(h["created"]).astimezone(LONDON)
