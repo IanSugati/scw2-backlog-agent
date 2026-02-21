@@ -10,6 +10,9 @@ JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
 CHAT_WEBHOOK_URL = os.environ["CHAT_WEBHOOK_URL"].strip()
 JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY"].strip()
 
+# Optional debug
+DEBUG = os.environ.get("DEBUG", "false").strip().lower() == "true"
+
 # Field IDs (now hard-wired from your /rest/api/3/field dump)
 STORY_POINTS_FIELD = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()  # fallback if env not set
 SPRINT_FIELD = "customfield_10020"
@@ -41,8 +44,6 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
     """
     url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
 
-    # IMPORTANT: new endpoint expects "fields" as an array (repeated query param),
-    # requests will encode lists correctly.
     params = {
         "jql": jql,
         "maxResults": max_results,
@@ -77,16 +78,13 @@ def get_all_issues(jql: str):
         batch = data.get("issues", []) or []
         issues.extend(batch)
 
-        # New API uses isLast + nextPageToken
         if data.get("isLast") is True:
             break
 
         token = data.get("nextPageToken")
         if not token:
-            # Defensive fallback: if Jira doesn't return a token, stop
             break
 
-        # Extra defensive: if no issues returned, stop
         if len(batch) == 0:
             break
 
@@ -125,13 +123,6 @@ def days_since_iso(updated_iso: str) -> int:
 
 
 def has_any_sprint_value(sprint_field_value) -> bool:
-    """
-    Jira 'Sprint' custom field can come back as:
-    - None
-    - a list of sprint objects
-    - occasionally a string (older formats)
-    We treat "has a sprint" as any non-empty value/list.
-    """
     if sprint_field_value is None:
         return False
     if isinstance(sprint_field_value, list):
@@ -142,7 +133,6 @@ def has_any_sprint_value(sprint_field_value) -> bool:
 
 
 def is_blank(value) -> bool:
-    """True if None, empty string, or empty list."""
     if value is None:
         return True
     if isinstance(value, str):
@@ -172,7 +162,6 @@ def build_digest(issues):
         sprint_origin = f.get(SPRINT_ORIGIN_FIELD)
         sprint_value = f.get(SPRINT_FIELD)
 
-        # Existing checks
         if desc_len < DESCRIPTION_MIN_CHARS:
             missing_desc.append((key, summary))
         if sp is None:
@@ -184,12 +173,10 @@ def build_digest(issues):
         if age_days >= AGING_DAYS:
             aging.append((key, summary, age_days))
 
-        # New checks
         if is_blank(ps_work_type):
             missing_ps_work_type.append((key, summary))
         if is_blank(labels):
             missing_labels.append((key, summary))
-        # Sprint Origin only required IF Sprint field has a value
         if has_any_sprint_value(sprint_value) and is_blank(sprint_origin):
             missing_sprint_origin.append((key, summary))
 
@@ -206,9 +193,10 @@ def build_digest(issues):
 
     msg = []
     msg.append("📚 *SCW2 Backlog Health Check*")
+    if DEBUG:
+        msg.append(f"🧾 Debug: scanned issues = {len(issues)}")
     msg.append("")
 
-    # New metadata hygiene sections
     msg.append(f"🚨 *Missing Pro Services Work Type* ({len(missing_ps_work_type)})")
     msg.append(bullets(missing_ps_work_type))
     msg.append("")
@@ -219,7 +207,6 @@ def build_digest(issues):
     msg.append(bullets(missing_sprint_origin))
     msg.append("")
 
-    # Existing sections
     msg.append(f"🚨 *Missing / thin description (<{DESCRIPTION_MIN_CHARS} chars)* ({len(missing_desc)})")
     msg.append(bullets(missing_desc))
     msg.append("")
@@ -262,9 +249,10 @@ def post_to_chat(text: str):
 
 def main():
     # Exclude Done + Sprint Meeting
+    # IMPORTANT: include backlog items with no sprint, otherwise you end up scanning a tiny subset
     jql = (
         f"project = {JIRA_PROJECT_KEY} "
-        f"AND sprint NOT IN openSprints() "
+        f"AND (sprint is EMPTY OR sprint NOT IN openSprints()) "
         f"AND statusCategory != Done "
         f"AND issuetype != \"Sprint Meeting\" "
         f"ORDER BY updated DESC"
