@@ -36,6 +36,11 @@ def req_env(name: str) -> str:
     return v.strip()
 
 
+def present(name: str) -> str:
+    v = os.environ.get(name)
+    return "SET" if (v is not None and v.strip() != "") else "MISSING"
+
+
 def jira_auth():
     return (req_env("JIRA_EMAIL"), req_env("JIRA_API_TOKEN"))
 
@@ -159,7 +164,6 @@ def build_daily_history(issues):
 
         for issue in issues:
             key = issue["key"]
-            summary = issue["fields"]["summary"]
 
             total_seconds = 0
 
@@ -176,6 +180,7 @@ def build_daily_history(issues):
             if total_seconds:
                 worklog_totals[key] = total_seconds
 
+            # Status transitions from changelog
             histories = jira_get(
                 f"{req_env('JIRA_BASE_URL').rstrip('/')}/rest/api/3/issue/{key}",
                 params={"expand": "changelog"},
@@ -196,15 +201,25 @@ def build_daily_history(issues):
 
         block += "⏱ Work logged\n"
         if worklog_totals:
-            for k, sec in list(worklog_totals.items())[:MAX_LINES]:
+            # sort by most time spent that day
+            sorted_items = sorted(worklog_totals.items(), key=lambda x: x[1], reverse=True)
+            for k, sec in sorted_items[:MAX_LINES]:
                 block += f"• {issue_link(k)} – {seconds_to_pretty(sec)}\n"
+            if len(sorted_items) > MAX_LINES:
+                block += f"• +{len(sorted_items) - MAX_LINES} more…\n"
         else:
             block += "• None\n"
 
         block += "\n🔁 Status moves\n"
-        block += "\n".join(transitions[:MAX_LINES]) if transitions else "• None"
+        if transitions:
+            for line in transitions[:MAX_LINES]:
+                block += f"{line}\n"
+            if len(transitions) > MAX_LINES:
+                block += f"• +{len(transitions) - MAX_LINES} more…\n"
+        else:
+            block += "• None\n"
 
-        history_blocks.append(block)
+        history_blocks.append(block.rstrip())
 
     return history_blocks
 
@@ -215,25 +230,23 @@ def build_daily_history(issues):
 def build_digest():
     issues = sprint_issues()
 
-    sp_field = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016")
+    sp_field = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()
 
-    total_sp = sum(
-        float(i["fields"].get(sp_field) or 0)
-        for i in issues
-        if isinstance(i["fields"].get(sp_field), (int, float))
-    )
+    total_sp = 0.0
+    for i in issues:
+        sp = (i.get("fields", {}) or {}).get(sp_field)
+        if isinstance(sp, (int, float)):
+            total_sp += float(sp)
 
     capacity = remaining_capacity_hours()
     overage = total_sp - capacity
 
     msg = "📊 *Sprint Health Digest*\n\n"
-
     msg += "🧮 Capacity vs Commitment\n"
     msg += f"• Remaining capacity: {capacity:.0f}h\n"
     msg += f"• Committed (SP): {total_sp:.1f}h\n"
-    msg += f"{'⚠ Over capacity by %.1fh' % overage if overage > 0 else '✅ Within capacity'}\n\n"
-
-    msg += "──────────────────────────────\n\n"
+    msg += (f"⚠ Over capacity by {overage:.1f}h\n" if overage > 0 else "✅ Within capacity\n")
+    msg += "\n──────────────────────────────\n\n"
     msg += "\n\n".join(build_daily_history(issues))
 
     return msg
@@ -242,7 +255,7 @@ def build_digest():
 def send_chat(text: str):
     r = requests.post(req_env("CHAT_WEBHOOK_URL"), json={"text": text}, timeout=30)
     if not r.ok:
-        raise requests.HTTPError(f"Chat error {r.status_code}: {r.text}")
+        raise requests.HTTPError(f"Chat error {r.status_code}: {r.text[:500]}")
 
 
 if __name__ == "__main__":
