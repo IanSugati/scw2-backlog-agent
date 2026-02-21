@@ -112,7 +112,6 @@ def parse_jira_date(d: str) -> date | None:
 
 
 def pretty_date(d: date) -> str:
-    # e.g. Tue 23 Feb
     return d.strftime("%a %d %b")
 
 
@@ -257,8 +256,8 @@ def upcoming_next_days(auth, base_url: str):
     upcoming_days = int(os.environ.get("UPCOMING_DAYS", "2").strip() or "2")
     start_field = os.environ.get("JIRA_START_DATE_FIELD", "").strip()
 
-    # We’ll use startOfDay(+N+1) so “next 2 days” includes today + tomorrow (and filters cleanly).
-    end_offset = upcoming_days + 1
+    # IMPORTANT: Jira JQL reserves '+'; use positive ints without '+'
+    end_offset = upcoming_days + 1  # include today + next N days cleanly
 
     if start_field:
         jql = f"""
@@ -266,9 +265,9 @@ def upcoming_next_days(auth, base_url: str):
             AND assignee = {DEV_ACCOUNT_ID}
             AND statusCategory != Done
             AND (
-                (duedate >= startOfDay() AND duedate < startOfDay(+{end_offset}))
+                (duedate >= startOfDay() AND duedate < startOfDay({end_offset}))
                 OR
-                ({start_field} >= startOfDay() AND {start_field} < startOfDay(+{end_offset}))
+                ({start_field} >= startOfDay() AND {start_field} < startOfDay({end_offset}))
             )
             ORDER BY duedate ASC
         """
@@ -279,7 +278,7 @@ def upcoming_next_days(auth, base_url: str):
             AND assignee = {DEV_ACCOUNT_ID}
             AND statusCategory != Done
             AND duedate >= startOfDay()
-            AND duedate < startOfDay(+{end_offset})
+            AND duedate < startOfDay({end_offset})
             ORDER BY duedate ASC
         """
         fields = ["summary", "duedate"]
@@ -304,9 +303,7 @@ def upcoming_next_days(auth, base_url: str):
         if due_d and today <= due_d <= end_day:
             parts.append(f"Due: {pretty_date(due_d)}")
 
-        # If Jira returned something weird but issue matched JQL, still show it.
         suffix = f" ({', '.join(parts)})" if parts else ""
-
         lines.append(f"• {issue_link(base_url, key)} – {summary}{suffix}")
 
     return lines
@@ -315,8 +312,8 @@ def upcoming_next_days(auth, base_url: str):
 def build_digest(auth, base_url: str):
     time_lines = time_logged_yesterday(auth, base_url)
     qa_lines = pushed_to_qa_yesterday(auth, base_url)
-    in_prog, next_up = sprint_remaining(auth, base_url)
     upcoming_lines = upcoming_next_days(auth, base_url)
+    in_prog, next_up = sprint_remaining(auth, base_url)
     overdue_lines = overdue_all_projects(auth, base_url)
 
     upcoming_days = int(os.environ.get("UPCOMING_DAYS", "2").strip() or "2")
