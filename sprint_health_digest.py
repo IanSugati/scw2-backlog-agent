@@ -31,7 +31,6 @@
 #
 # Optional:
 #   PROJECT_KEY              default "SPD"
-#   JIRA_STORY_POINTS_FIELD  default "customfield_10016"
 #   TEAM_ACCOUNT_IDS         comma-separated Jira accountIds; if set, only counts worklogs by those users
 #   WORK_HOURS_PER_DAY       default "7"
 #   ENFORCE_9AM_LONDON       true|false (default false) - if true, exits unless weekday 9am London
@@ -504,10 +503,9 @@ def build_capacity_commitment_section(
     Produces the "Capacity vs Commitment (SP=hours)" block with breakdown and flags.
     """
     work_hours_per_day = float(opt_env("WORK_HOURS_PER_DAY", "7"))
-    team_ids_raw = os.environ.get("TEAM_ACCOUNT_IDS", "").strip()
-    team_size = 1
-    if team_ids_raw:
-        team_size = len([x for x in team_ids_raw.split(",") if x.strip()])
+
+    # Team size fixed to 2 (two team members in play)
+    team_size = 2
 
     rem_days = remaining_working_days_in_sprint(window, today)
     remaining_capacity_h = rem_days * work_hours_per_day * team_size
@@ -556,21 +554,34 @@ def build_capacity_commitment_section(
                 at_risk.append((key, extract_summary(it), est_h, spent_h))
 
     # Remaining estimate (not Done)
-    remaining_est = est_by_bucket.get("In Progress", 0.0) + est_by_bucket.get("Unstarted", 0.0) + est_by_bucket.get("Unknown", 0.0)
+    remaining_est = (
+        est_by_bucket.get("In Progress", 0.0)
+        + est_by_bucket.get("Unstarted", 0.0)
+        + est_by_bucket.get("Unknown", 0.0)
+    )
 
-    # Choose a clearer headline metric:
-    #   - Remaining estimate vs remaining capacity (planning)
-    #   - Total spent vs total estimate (burn)
+    # Spent on not-Done (i.e. progress already made on remaining work)
+    spent_not_done = (
+        spent_by_bucket.get("In Progress", 0.0)
+        + spent_by_bucket.get("Unstarted", 0.0)
+        + spent_by_bucket.get("Unknown", 0.0)
+    )
+
+    # True remaining after work done (clamp at 0)
+    true_remaining = max(0.0, remaining_est - spent_not_done)
+
     over_by = remaining_est - remaining_capacity_h
     within = over_by <= 0.0
 
     lines: List[str] = []
     lines.append("🧮 *Capacity vs Commitment (SP = hours)*")
-    lines.append(f"• Sprint: {window.start.strftime('%d %b')} → {window.end.strftime('%d %b')} (working days model)")
-    lines.append(f"• Remaining capacity: {hours_to_1dp(remaining_capacity_h)}  _(={rem_days} working days × {work_hours_per_day:g}h × team {team_size})_")
+    lines.append(f"• Sprint: {window.start.strftime('%d %b')} → {window.end.strftime('%d %b')}")
+    lines.append(f"• Remaining capacity: {hours_to_1dp(remaining_capacity_h)}")
     lines.append(f"• Estimate total (Committed): {hours_to_1dp(total_est)}")
     lines.append(f"• Spent so far (in sprint): {hours_to_1dp(total_spent)}")
     lines.append(f"• Remaining estimate (not Done): {hours_to_1dp(remaining_est)}")
+    lines.append(f"• Spent on not-Done: {hours_to_1dp(spent_not_done)}")
+    lines.append(f"• True remaining (Est - Spent on not-Done): {hours_to_1dp(true_remaining)}")
 
     # Breakdown
     lines.append("")
@@ -786,7 +797,6 @@ def build_digest() -> str:
     print("[env] JIRA_API_TOKEN =", present("JIRA_API_TOKEN"))
     print("[env] CHAT_WEBHOOK_URL =", present("CHAT_WEBHOOK_URL"))
     print("[env] SPRINT_ANCHOR_DATE =", present("SPRINT_ANCHOR_DATE"))
-    print("[env] JIRA_STORY_POINTS_FIELD =", present("JIRA_STORY_POINTS_FIELD"))
     print("[env] TEAM_ACCOUNT_IDS =", "SET" if os.environ.get("TEAM_ACCOUNT_IDS", "").strip() else "MISSING (will count all worklogs)")
 
     base = jira_base_url()
@@ -796,7 +806,7 @@ def build_digest() -> str:
 
     project_key = opt_env("PROJECT_KEY", "SPD").strip()
 
-    # ✅ HARD-CODED story points field (Story point estimate)
+    # Hard-coded Story Point field (Story point estimate)
     sp_field = "customfield_10016"
 
     anchor = date.fromisoformat(req_env("SPRINT_ANCHOR_DATE"))
