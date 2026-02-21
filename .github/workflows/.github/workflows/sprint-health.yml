@@ -1,0 +1,38 @@
+name: Sprint Health Digest
+
+on:
+  schedule:
+    # 09:00 UTC weekdays
+    - cron: "0 9 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  sprint-health:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Sprint Health Digest
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          CHAT_WEBHOOK_URL: ${{ secrets.CHAT_WEBHOOK_URL }}
+
+          # Sprint cadence anchor
+          SPRINT_ANCHOR_DATE: ${{ secrets.SPRINT_ANCHOR_DATE }}
+
+          # Optional (only if your SP field differs)
+          # JIRA_STORY_POINTS_FIELD: ${{ secrets.JIRA_STORY_POINTS_FIELD }}
+
+        run: python sprint_health_digest.py
