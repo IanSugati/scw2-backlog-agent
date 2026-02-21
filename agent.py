@@ -10,11 +10,8 @@ JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
 CHAT_WEBHOOK_URL = os.environ["CHAT_WEBHOOK_URL"].strip()
 JIRA_PROJECT_KEY = os.environ["JIRA_PROJECT_KEY"].strip()
 
-# Optional debug
-DEBUG = os.environ.get("DEBUG", "false").strip().lower() == "true"
+STORY_POINTS_FIELD = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()
 
-# Field IDs (now hard-wired from your /rest/api/3/field dump)
-STORY_POINTS_FIELD = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()  # fallback if env not set
 SPRINT_FIELD = "customfield_10020"
 SPRINT_ORIGIN_FIELD = "customfield_10104"
 PRO_SERVICES_WORK_TYPE_FIELD = "customfield_10459"
@@ -37,11 +34,7 @@ def jira_issue_browse_url(key: str) -> str:
     return f"{JIRA_BASE_URL}/browse/{key}"
 
 
-def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 100):
-    """
-    Jira Cloud: /rest/api/3/search is being removed; use /rest/api/3/search/jql instead.
-    Pagination uses nextPageToken + isLast (not startAt/total).
-    """
+def jql_search(jql: str, next_page_token=None, max_results: int = 100):
     url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
 
     params = {
@@ -53,14 +46,13 @@ def jql_search(jql: str, next_page_token: str | None = None, max_results: int = 
             "assignee",
             "updated",
             "labels",
-            "status",
-            "issuetype",
             STORY_POINTS_FIELD,
             SPRINT_FIELD,
             SPRINT_ORIGIN_FIELD,
             PRO_SERVICES_WORK_TYPE_FIELD,
         ],
     }
+
     if next_page_token:
         params["nextPageToken"] = next_page_token
 
@@ -82,10 +74,7 @@ def get_all_issues(jql: str):
             break
 
         token = data.get("nextPageToken")
-        if not token:
-            break
-
-        if len(batch) == 0:
+        if not token or len(batch) == 0:
             break
 
     return issues
@@ -110,26 +99,25 @@ def safe_len_description(desc) -> int:
                 return "".join(walk(x) for x in node)
             return ""
 
-        text = walk(desc)
-        return len(text.strip())
+        return len(walk(desc).strip())
+
     return 0
 
 
 def days_since_iso(updated_iso: str) -> int:
-    base = updated_iso[:19]  # YYYY-MM-DDTHH:MM:SS
+    base = updated_iso[:19]
     updated_dt = dt.datetime.strptime(base, "%Y-%m-%dT%H:%M:%S")
-    now = dt.datetime.utcnow()
-    return (now - updated_dt).days
+    return (dt.datetime.utcnow() - updated_dt).days
 
 
-def has_any_sprint_value(sprint_field_value) -> bool:
-    if sprint_field_value is None:
+def has_any_sprint_value(val) -> bool:
+    if val is None:
         return False
-    if isinstance(sprint_field_value, list):
-        return len(sprint_field_value) > 0
-    if isinstance(sprint_field_value, str):
-        return len(sprint_field_value.strip()) > 0
-    return bool(sprint_field_value)
+    if isinstance(val, list):
+        return len(val) > 0
+    if isinstance(val, str):
+        return len(val.strip()) > 0
+    return bool(val)
 
 
 def is_blank(value) -> bool:
@@ -183,18 +171,13 @@ def build_digest(issues):
     def bullets(rows, limit=15):
         if not rows:
             return "• None 🎉"
-        lines = []
-        for row in rows[:limit]:
-            k = row[0]
-            lines.append(f"• {k} – {row[1]} ({jira_issue_browse_url(k)})")
+        lines = [f"• {k} – {s} ({jira_issue_browse_url(k)})" for k, s in rows[:limit]]
         if len(rows) > limit:
             lines.append(f"• +{len(rows)-limit} more…")
         return "\n".join(lines)
 
     msg = []
     msg.append("📚 *SCW2 Backlog Health Check*")
-    if DEBUG:
-        msg.append(f"🧾 Debug: scanned issues = {len(issues)}")
     msg.append("")
 
     msg.append(f"🚨 *Missing Pro Services Work Type* ({len(missing_ps_work_type)})")
@@ -206,7 +189,6 @@ def build_digest(issues):
     msg.append(f"🚨 *Missing Sprint Origin (only when Sprint is set)* ({len(missing_sprint_origin)})")
     msg.append(bullets(missing_sprint_origin))
     msg.append("")
-
     msg.append(f"🚨 *Missing / thin description (<{DESCRIPTION_MIN_CHARS} chars)* ({len(missing_desc)})")
     msg.append(bullets(missing_desc))
     msg.append("")
@@ -216,28 +198,6 @@ def build_digest(issues):
     msg.append(f"🚨 *Unassigned* ({len(unassigned)})")
     msg.append(bullets(unassigned))
     msg.append("")
-    msg.append(f"⚠ *Oversized (≥ {OVERSIZED_SP} SP ≈ 4+ days)* ({len(oversized)})")
-    if oversized:
-        lines = []
-        for k, summary, sp in oversized[:15]:
-            lines.append(f"• {k} – {summary} (SP: {sp}) ({jira_issue_browse_url(k)})")
-        if len(oversized) > 15:
-            lines.append(f"• +{len(oversized)-15} more…")
-        msg.append("\n".join(lines))
-    else:
-        msg.append("• None 🎉")
-
-    msg.append("")
-    msg.append(f"🧟 *Aging (no updates ≥ {AGING_DAYS} days)* ({len(aging)})")
-    if aging:
-        lines = []
-        for k, summary, d in aging[:15]:
-            lines.append(f"• {k} – {summary} (last update: {d}d) ({jira_issue_browse_url(k)})")
-        if len(aging) > 15:
-            lines.append(f"• +{len(aging)-15} more…")
-        msg.append("\n".join(lines))
-    else:
-        msg.append("• None 🎉")
 
     return "\n".join(msg)
 
@@ -248,12 +208,11 @@ def post_to_chat(text: str):
 
 
 def main():
-    # Exclude Done + Sprint Meeting
-    # IMPORTANT: include backlog items with no sprint, otherwise you end up scanning a tiny subset
     jql = (
         f"project = {JIRA_PROJECT_KEY} "
         f"AND (sprint is EMPTY OR sprint NOT IN openSprints()) "
         f"AND statusCategory != Done "
+        f"AND issuetype != Epic "
         f"AND issuetype != \"Sprint Meeting\" "
         f"ORDER BY updated DESC"
     )
