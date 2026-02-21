@@ -124,14 +124,17 @@ def remaining_capacity_hours() -> int:
 # ----------------
 # Data collection
 # ----------------
-def sprint_issues():
+def sprint_issues(sp_field: str):
+    # IMPORTANT: request Story Points explicitly so "Committed (SP)" is not 0.0
+    fields = ["summary", "status", "duedate", "timespent", sp_field]
+
     jql = f"""
         project = {PROJECT_KEY}
         AND sprint in openSprints()
         AND statusCategory != Done
         ORDER BY Rank ASC
     """
-    return jira_search(jql)
+    return jira_search(jql, fields=fields, max_results=500)
 
 
 def get_worklogs(issue_key: str):
@@ -155,32 +158,39 @@ def build_daily_history(issues):
 
     history_blocks = []
 
+    # build quick lookup for summaries to avoid re-parsing everywhere
+    summary_by_key = {}
+    for it in issues:
+        k = it.get("key")
+        f = it.get("fields", {}) or {}
+        summary_by_key[k] = (f.get("summary") or "").strip()
+
     for day in days:
         start = datetime.combine(day, datetime.min.time(), tzinfo=LONDON)
         end = start + timedelta(days=1)
 
-        worklog_totals = {}
-        transitions = []
+        # key -> seconds (total work logged that day)
+        worklog_totals: dict[str, int] = {}
+        transitions: list[str] = []
 
         for issue in issues:
             key = issue["key"]
+            summary = summary_by_key.get(key, "")
 
+            # ---- Worklogs (ALL authors) ----
             total_seconds = 0
-
             for wl in get_worklogs(key):
                 started = wl.get("started")
                 if not started:
                     continue
-
                 dt_local = parse_jira_dt(started).astimezone(LONDON)
-
                 if start <= dt_local < end:
                     total_seconds += int(wl.get("timeSpentSeconds", 0))
 
             if total_seconds:
                 worklog_totals[key] = total_seconds
 
-            # Status transitions from changelog
+            # ---- Status transitions (changelog) ----
             histories = jira_get(
                 f"{req_env('JIRA_BASE_URL').rstrip('/')}/rest/api/3/issue/{key}",
                 params={"expand": "changelog"},
@@ -193,18 +203,19 @@ def build_daily_history(issues):
 
                 for item in h.get("items", []):
                     if item.get("field") == "status":
-                        transitions.append(
-                            f"• {issue_link(key)}: {item.get('fromString')} → {item.get('toString')}"
-                        )
+                        frm = item.get("fromString") or ""
+                        to = item.get("toString") or ""
+                        transitions.append(f"• {issue_link(key)} — {summary}: {frm} → {to}")
 
-        block = f"🗓 {day.strftime('%A %d %b')}\n\n"
+        block = f"📅 {day.strftime('%A %d %b')}\n\n"
 
         block += "⏱ Work logged\n"
         if worklog_totals:
             # sort by most time spent that day
             sorted_items = sorted(worklog_totals.items(), key=lambda x: x[1], reverse=True)
             for k, sec in sorted_items[:MAX_LINES]:
-                block += f"• {issue_link(k)} – {seconds_to_pretty(sec)}\n"
+                s = summary_by_key.get(k, "")
+                block += f"• {issue_link(k)} — {s} ({seconds_to_pretty(sec)})\n"
             if len(sorted_items) > MAX_LINES:
                 block += f"• +{len(sorted_items) - MAX_LINES} more…\n"
         else:
@@ -228,9 +239,9 @@ def build_daily_history(issues):
 # Digest builder
 # ----------------
 def build_digest():
-    issues = sprint_issues()
-
     sp_field = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()
+
+    issues = sprint_issues(sp_field)
 
     total_sp = 0.0
     for i in issues:
@@ -242,10 +253,12 @@ def build_digest():
     overage = total_sp - capacity
 
     msg = "📊 *Sprint Health Digest*\n\n"
+
     msg += "🧮 Capacity vs Commitment\n"
     msg += f"• Remaining capacity: {capacity:.0f}h\n"
     msg += f"• Committed (SP): {total_sp:.1f}h\n"
-    msg += (f"⚠ Over capacity by {overage:.1f}h\n" if overage > 0 else "✅ Within capacity\n")
+    msg += ("⚠ Over capacity by %.1fh\n" % overage if overage > 0 else "✅ Within capacity\n")
+
     msg += "\n──────────────────────────────\n\n"
     msg += "\n\n".join(build_daily_history(issues))
 
@@ -260,6 +273,7 @@ def send_chat(text: str):
 
 if __name__ == "__main__":
     print("[env] SPRINT_ANCHOR_DATE =", present("SPRINT_ANCHOR_DATE"))
+    print("[env] JIRA_STORY_POINTS_FIELD =", present("JIRA_STORY_POINTS_FIELD"))
 
     digest = build_digest()
     send_chat(digest)
