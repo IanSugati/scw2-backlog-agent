@@ -5,14 +5,13 @@
 #   JIRA_EMAIL
 #   JIRA_API_TOKEN
 #   CHAT_WEBHOOK_URL
-#
-# REQUIRED:
 #   SPRINT_ANCHOR_DATE (YYYY-MM-DD)
 #
-# OPTIONAL:
+# OPTIONAL (but recommended):
 #   JIRA_STORY_POINTS_FIELD (default customfield_10016)
 
 import os
+import time
 import requests
 from datetime import datetime, timedelta, date
 from zoneinfo import ZoneInfo
@@ -27,6 +26,10 @@ HOURS_PER_DAY = 7
 
 MAX_HISTORY_DAYS = 9
 MAX_LINES = 6
+
+# Jira rate-limit hardening
+MAX_RETRIES = 6
+BACKOFF_BASE_SECONDS = 2
 
 
 def req_env(name: str) -> str:
@@ -45,17 +48,54 @@ def jira_auth():
     return (req_env("JIRA_EMAIL"), req_env("JIRA_API_TOKEN"))
 
 
+def _raise_http(r: requests.Response):
+    if r.ok:
+        return
+    snippet = (r.text or "")[:500]
+    raise requests.HTTPError(f"{r.status_code} {r.reason} :: {snippet}")
+
+
+def request_with_retry(method: str, url: str, **kwargs):
+    """
+    Retries on 429 and transient 5xx. Respects Retry-After when present.
+    """
+    for attempt in range(1, MAX_RETRIES + 1):
+        r = requests.request(method, url, auth=jira_auth(), timeout=30, **kwargs)
+
+        if r.status_code == 429:
+            retry_after = r.headers.get("Retry-After")
+            if retry_after and retry_after.isdigit():
+                sleep_s = int(retry_after)
+            else:
+                sleep_s = BACKOFF_BASE_SECONDS * (2 ** (attempt - 1))
+            time.sleep(min(sleep_s, 60))
+            continue
+
+        if 500 <= r.status_code < 600:
+            sleep_s = BACKOFF_BASE_SECONDS * (2 ** (attempt - 1))
+            time.sleep(min(sleep_s, 60))
+            continue
+
+        _raise_http(r)
+        return r
+
+    # last response was not OK
+    _raise_http(r)
+    return r  # unreachable
+
+
 def jira_get(url, **kwargs):
-    r = requests.get(url, auth=jira_auth(), timeout=30, **kwargs)
-    if not r.ok:
-        raise requests.HTTPError(f"{r.status_code} {r.reason} :: {r.text[:500]}")
+    r = request_with_retry("GET", url, headers={"Accept": "application/json"}, **kwargs)
     return r.json()
 
 
 def jira_post(url, payload):
-    r = requests.post(url, auth=jira_auth(), json=payload, timeout=30)
-    if not r.ok:
-        raise requests.HTTPError(f"{r.status_code} {r.reason} :: {r.text[:500]}")
+    r = request_with_retry(
+        "POST",
+        url,
+        headers={"Accept": "application/json", "Content-Type": "application/json"},
+        json=payload,
+    )
     return r.json()
 
 
@@ -66,7 +106,7 @@ def jira_search(jql: str, fields=None, max_results=200):
     payload = {
         "jql": " ".join(jql.split()),
         "maxResults": max_results,
-        "fields": fields or ["summary", "status", "duedate", "timespent"],
+        "fields": fields or ["summary", "status"],
     }
 
     return jira_post(url, payload).get("issues", [])
@@ -122,20 +162,8 @@ def remaining_capacity_hours() -> int:
 
 
 # ----------------
-# Data collection
+# Jira helpers
 # ----------------
-def sprint_issues_all(sp_field: str):
-    # IMPORTANT: request SP explicitly so totals work
-    fields = ["summary", "status", "duedate", "timespent", sp_field]
-
-    jql = f"""
-        project = {PROJECT_KEY}
-        AND sprint in openSprints()
-        ORDER BY Rank ASC
-    """
-    return jira_search(jql, fields=fields, max_results=500)
-
-
 def get_worklogs(issue_key: str):
     base = req_env("JIRA_BASE_URL").rstrip("/")
     url = f"{base}/rest/api/3/issue/{issue_key}/worklog"
@@ -151,9 +179,9 @@ def get_changelog_histories(issue_key: str):
 def status_category_key(issue) -> str:
     """
     Jira statusCategory keys:
-      - 'new'          => To Do
-      - 'indeterminate'=> In Progress
-      - 'done'         => Done
+      - 'new'           => To Do
+      - 'indeterminate' => In Progress
+      - 'done'          => Done
     """
     f = issue.get("fields", {}) or {}
     st = f.get("status") or {}
@@ -166,62 +194,109 @@ def get_sp_hours(issue, sp_field: str) -> float:
     return float(v) if isinstance(v, (int, float)) else 0.0
 
 
+def sprint_issues_all(sp_field: str):
+    # Grab ALL issues in the open sprint for summary totals + history selection
+    fields = ["summary", "status", sp_field]
+    jql = f"""
+        project = {PROJECT_KEY}
+        AND sprint in openSprints()
+        ORDER BY Rank ASC
+    """
+    return jira_search(jql, fields=fields, max_results=500)
+
+
+def keys_with_worklogs_on_day(day_offset: int):
+    """
+    day_offset=1 => yesterday
+    Uses Jira relative functions so we don't need timezone math in JQL.
+    """
+    start = f"startOfDay(-{day_offset})"
+    end = "startOfDay()" if day_offset == 0 else f"startOfDay(-{day_offset - 1})"
+    jql = f"""
+        project = {PROJECT_KEY}
+        AND sprint in openSprints()
+        AND worklogDate >= {start}
+        AND worklogDate < {end}
+    """
+    issues = jira_search(jql, fields=["summary"], max_results=500)
+    return {i["key"] for i in issues}
+
+
+def keys_with_status_changes_on_day(day_offset: int):
+    start = f"startOfDay(-{day_offset})"
+    end = "startOfDay()" if day_offset == 0 else f"startOfDay(-{day_offset - 1})"
+    jql = f"""
+        project = {PROJECT_KEY}
+        AND sprint in openSprints()
+        AND status CHANGED DURING ({start}, {end})
+    """
+    issues = jira_search(jql, fields=["summary"], max_results=500)
+    return {i["key"] for i in issues}
+
+
 # ----------------
-# History builder
+# History builder (rate-limit safe)
 # ----------------
-def build_daily_history(issues):
+def build_daily_history(summary_by_key: dict[str, str]):
     today = datetime.now(LONDON).date()
 
-    days = []
+    # Build list of last N working days and their offsets
+    day_offsets = []
     d = today
-    while len(days) < MAX_HISTORY_DAYS:
+    offset = 0
+    while len(day_offsets) < MAX_HISTORY_DAYS:
         if d.weekday() < 5:
-            days.append(d)
+            # offset from today in whole days
+            delta = (today - d).days
+            # delta=0 => today, 1 => yesterday ...
+            day_offsets.append((d, delta))
         d -= timedelta(days=1)
 
-    history_blocks = []
+    blocks = []
 
-    summary_by_key = {}
-    for it in issues:
-        k = it.get("key")
-        f = it.get("fields", {}) or {}
-        summary_by_key[k] = (f.get("summary") or "").strip()
-
-    for day in days:
+    for day, delta in day_offsets:
         start = datetime.combine(day, datetime.min.time(), tzinfo=LONDON)
         end = start + timedelta(days=1)
+
+        # Only fetch details for issues that actually had activity that day
+        wl_keys = keys_with_worklogs_on_day(delta) if delta > 0 else set()
+        st_keys = keys_with_status_changes_on_day(delta) if delta > 0 else set()
+        active_keys = wl_keys.union(st_keys)
 
         worklog_totals: dict[str, int] = {}
         status_moves_by_key: dict[str, list[tuple[datetime, str, str]]] = {}
 
-        for issue in issues:
-            key = issue["key"]
+        # If no activity at all, keep the day but show "None"
+        if active_keys:
+            for key in sorted(active_keys):
+                summary = summary_by_key.get(key, "").strip()
 
-            # ---- Worklogs (ALL authors) ----
-            total_seconds = 0
-            for wl in get_worklogs(key):
-                started = wl.get("started")
-                if not started:
-                    continue
-                dt_local = parse_jira_dt(started).astimezone(LONDON)
-                if start <= dt_local < end:
-                    total_seconds += int(wl.get("timeSpentSeconds", 0))
+                # Worklogs (all authors)
+                total_seconds = 0
+                if key in wl_keys:
+                    for wl in get_worklogs(key):
+                        started = wl.get("started")
+                        if not started:
+                            continue
+                        dt_local = parse_jira_dt(started).astimezone(LONDON)
+                        if start <= dt_local < end:
+                            total_seconds += int(wl.get("timeSpentSeconds", 0))
+                if total_seconds:
+                    worklog_totals[key] = total_seconds
 
-            if total_seconds:
-                worklog_totals[key] = total_seconds
+                # Status changes
+                if key in st_keys:
+                    for h in get_changelog_histories(key):
+                        created = parse_jira_dt(h["created"]).astimezone(LONDON)
+                        if not (start <= created < end):
+                            continue
+                        for item in h.get("items", []):
+                            if item.get("field") == "status":
+                                frm = (item.get("fromString") or "").strip()
+                                to = (item.get("toString") or "").strip()
+                                status_moves_by_key.setdefault(key, []).append((created, frm, to))
 
-            # ---- Status transitions (changelog) ----
-            for h in get_changelog_histories(key):
-                created = parse_jira_dt(h["created"]).astimezone(LONDON)
-                if not (start <= created < end):
-                    continue
-                for item in h.get("items", []):
-                    if item.get("field") == "status":
-                        frm = (item.get("fromString") or "").strip()
-                        to = (item.get("toString") or "").strip()
-                        status_moves_by_key.setdefault(key, []).append((created, frm, to))
-
-        # Collapse moves per issue/day into: start -> end (+N moves)
+        # Collapse status changes per issue/day
         collapsed_lines = []
         for key, moves in status_moves_by_key.items():
             moves_sorted = sorted(moves, key=lambda x: x[0])
@@ -233,7 +308,6 @@ def build_daily_history(issues):
             extra = f" (+{hops} moves)" if hops > 1 else ""
             collapsed_lines.append(f"• {issue_link(key)} — {summary}: {start_status} → {end_status}{extra}")
 
-        # Stable-ish order: more hops first, then by key
         def hops_count(line: str) -> int:
             if "(+" in line and " moves)" in line:
                 try:
@@ -241,7 +315,7 @@ def build_daily_history(issues):
                     return int(inside)
                 except Exception:
                     return 0
-            return 1  # single move
+            return 1
 
         collapsed_lines.sort(key=lambda s: (-hops_count(s), s))
 
@@ -267,9 +341,9 @@ def build_daily_history(issues):
         else:
             block += "• None\n"
 
-        history_blocks.append(block.rstrip())
+        blocks.append(block.rstrip())
 
-    return history_blocks
+    return blocks
 
 
 # ----------------
@@ -278,6 +352,12 @@ def build_daily_history(issues):
 def build_digest():
     sp_field = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()
     issues = sprint_issues_all(sp_field)
+
+    summary_by_key: dict[str, str] = {}
+    for it in issues:
+        k = it.get("key")
+        f = it.get("fields", {}) or {}
+        summary_by_key[k] = (f.get("summary") or "").strip()
 
     total_hours = 0.0
     done_hours = 0.0
@@ -294,14 +374,11 @@ def build_digest():
         elif cat == "indeterminate":
             inprog_hours += h
         else:
-            # treat anything else as "To Do" bucket (covers 'new' and any odd returns)
             todo_hours += h
 
     remaining_hours = total_hours - done_hours
 
     capacity = float(remaining_capacity_hours())
-
-    # Pressure should be compared against "Unstarted" (To Do)
     unstarted_over = todo_hours - capacity
 
     msg = "📊 *Sprint Health Digest*\n\n"
@@ -320,7 +397,7 @@ def build_digest():
         msg += f"✅ Unstarted within capacity (buffer {abs(unstarted_over):.1f}h)\n"
 
     msg += "\n──────────────────────────────\n\n"
-    msg += "\n\n".join(build_daily_history(issues))
+    msg += "\n\n".join(build_daily_history(summary_by_key))
 
     return msg
 
@@ -337,5 +414,4 @@ if __name__ == "__main__":
 
     digest = build_digest()
     send_chat(digest)
-
     print("Sprint digest sent ✅")
