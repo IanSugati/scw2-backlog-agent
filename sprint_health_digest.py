@@ -124,14 +124,13 @@ def remaining_capacity_hours() -> int:
 # ----------------
 # Data collection
 # ----------------
-def sprint_issues(sp_field: str):
-    # IMPORTANT: request Story Points explicitly so "Committed (SP)" is not 0.0
+def sprint_issues_all(sp_field: str):
+    # IMPORTANT: request SP explicitly so totals work
     fields = ["summary", "status", "duedate", "timespent", sp_field]
 
     jql = f"""
         project = {PROJECT_KEY}
         AND sprint in openSprints()
-        AND statusCategory != Done
         ORDER BY Rank ASC
     """
     return jira_search(jql, fields=fields, max_results=500)
@@ -141,6 +140,30 @@ def get_worklogs(issue_key: str):
     base = req_env("JIRA_BASE_URL").rstrip("/")
     url = f"{base}/rest/api/3/issue/{issue_key}/worklog"
     return jira_get(url, params={"maxResults": 5000}).get("worklogs", [])
+
+
+def get_changelog_histories(issue_key: str):
+    base = req_env("JIRA_BASE_URL").rstrip("/")
+    url = f"{base}/rest/api/3/issue/{issue_key}"
+    return jira_get(url, params={"expand": "changelog"}).get("changelog", {}).get("histories", [])
+
+
+def status_category_key(issue) -> str:
+    """
+    Jira statusCategory keys:
+      - 'new'          => To Do
+      - 'indeterminate'=> In Progress
+      - 'done'         => Done
+    """
+    f = issue.get("fields", {}) or {}
+    st = f.get("status") or {}
+    cat = st.get("statusCategory") or {}
+    return (cat.get("key") or "").strip().lower()
+
+
+def get_sp_hours(issue, sp_field: str) -> float:
+    v = (issue.get("fields", {}) or {}).get(sp_field)
+    return float(v) if isinstance(v, (int, float)) else 0.0
 
 
 # ----------------
@@ -158,7 +181,6 @@ def build_daily_history(issues):
 
     history_blocks = []
 
-    # build quick lookup for summaries to avoid re-parsing everywhere
     summary_by_key = {}
     for it in issues:
         k = it.get("key")
@@ -169,13 +191,11 @@ def build_daily_history(issues):
         start = datetime.combine(day, datetime.min.time(), tzinfo=LONDON)
         end = start + timedelta(days=1)
 
-        # key -> seconds (total work logged that day)
         worklog_totals: dict[str, int] = {}
-        transitions: list[str] = []
+        status_moves_by_key: dict[str, list[tuple[datetime, str, str]]] = {}
 
         for issue in issues:
             key = issue["key"]
-            summary = summary_by_key.get(key, "")
 
             # ---- Worklogs (ALL authors) ----
             total_seconds = 0
@@ -191,27 +211,44 @@ def build_daily_history(issues):
                 worklog_totals[key] = total_seconds
 
             # ---- Status transitions (changelog) ----
-            histories = jira_get(
-                f"{req_env('JIRA_BASE_URL').rstrip('/')}/rest/api/3/issue/{key}",
-                params={"expand": "changelog"},
-            ).get("changelog", {}).get("histories", [])
-
-            for h in histories:
+            for h in get_changelog_histories(key):
                 created = parse_jira_dt(h["created"]).astimezone(LONDON)
                 if not (start <= created < end):
                     continue
-
                 for item in h.get("items", []):
                     if item.get("field") == "status":
-                        frm = item.get("fromString") or ""
-                        to = item.get("toString") or ""
-                        transitions.append(f"• {issue_link(key)} — {summary}: {frm} → {to}")
+                        frm = (item.get("fromString") or "").strip()
+                        to = (item.get("toString") or "").strip()
+                        status_moves_by_key.setdefault(key, []).append((created, frm, to))
+
+        # Collapse moves per issue/day into: start -> end (+N moves)
+        collapsed_lines = []
+        for key, moves in status_moves_by_key.items():
+            moves_sorted = sorted(moves, key=lambda x: x[0])
+            start_status = moves_sorted[0][1] or "?"
+            end_status = moves_sorted[-1][2] or "?"
+            hops = len(moves_sorted)
+
+            summary = summary_by_key.get(key, "")
+            extra = f" (+{hops} moves)" if hops > 1 else ""
+            collapsed_lines.append(f"• {issue_link(key)} — {summary}: {start_status} → {end_status}{extra}")
+
+        # Stable-ish order: more hops first, then by key
+        def hops_count(line: str) -> int:
+            if "(+" in line and " moves)" in line:
+                try:
+                    inside = line.split("(+")[1].split(" moves)")[0]
+                    return int(inside)
+                except Exception:
+                    return 0
+            return 1  # single move
+
+        collapsed_lines.sort(key=lambda s: (-hops_count(s), s))
 
         block = f"📅 {day.strftime('%A %d %b')}\n\n"
 
         block += "⏱ Work logged\n"
         if worklog_totals:
-            # sort by most time spent that day
             sorted_items = sorted(worklog_totals.items(), key=lambda x: x[1], reverse=True)
             for k, sec in sorted_items[:MAX_LINES]:
                 s = summary_by_key.get(k, "")
@@ -222,11 +259,11 @@ def build_daily_history(issues):
             block += "• None\n"
 
         block += "\n🔁 Status moves\n"
-        if transitions:
-            for line in transitions[:MAX_LINES]:
+        if collapsed_lines:
+            for line in collapsed_lines[:MAX_LINES]:
                 block += f"{line}\n"
-            if len(transitions) > MAX_LINES:
-                block += f"• +{len(transitions) - MAX_LINES} more…\n"
+            if len(collapsed_lines) > MAX_LINES:
+                block += f"• +{len(collapsed_lines) - MAX_LINES} more…\n"
         else:
             block += "• None\n"
 
@@ -240,24 +277,47 @@ def build_daily_history(issues):
 # ----------------
 def build_digest():
     sp_field = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()
+    issues = sprint_issues_all(sp_field)
 
-    issues = sprint_issues(sp_field)
+    total_hours = 0.0
+    done_hours = 0.0
+    inprog_hours = 0.0
+    todo_hours = 0.0
 
-    total_sp = 0.0
-    for i in issues:
-        sp = (i.get("fields", {}) or {}).get(sp_field)
-        if isinstance(sp, (int, float)):
-            total_sp += float(sp)
+    for it in issues:
+        h = get_sp_hours(it, sp_field)
+        total_hours += h
 
-    capacity = remaining_capacity_hours()
-    overage = total_sp - capacity
+        cat = status_category_key(it)
+        if cat == "done":
+            done_hours += h
+        elif cat == "indeterminate":
+            inprog_hours += h
+        else:
+            # treat anything else as "To Do" bucket (covers 'new' and any odd returns)
+            todo_hours += h
+
+    remaining_hours = total_hours - done_hours
+
+    capacity = float(remaining_capacity_hours())
+
+    # Pressure should be compared against "Unstarted" (To Do)
+    unstarted_over = todo_hours - capacity
 
     msg = "📊 *Sprint Health Digest*\n\n"
 
-    msg += "🧮 Capacity vs Commitment\n"
+    msg += "🧮 Capacity vs Commitment (SP = hours)\n"
     msg += f"• Remaining capacity: {capacity:.0f}h\n"
-    msg += f"• Committed (SP): {total_sp:.1f}h\n"
-    msg += ("⚠ Over capacity by %.1fh\n" % overage if overage > 0 else "✅ Within capacity\n")
+    msg += f"• Total in sprint: {total_hours:.1f}h\n"
+    msg += f"• Done: {done_hours:.1f}h\n"
+    msg += f"• In progress: {inprog_hours:.1f}h\n"
+    msg += f"• Unstarted (To Do): {todo_hours:.1f}h\n"
+    msg += f"• Remaining (not Done): {remaining_hours:.1f}h\n"
+
+    if unstarted_over > 0:
+        msg += f"⚠ Unstarted over capacity by {unstarted_over:.1f}h\n"
+    else:
+        msg += f"✅ Unstarted within capacity (buffer {abs(unstarted_over):.1f}h)\n"
 
     msg += "\n──────────────────────────────\n\n"
     msg += "\n\n".join(build_daily_history(issues))
