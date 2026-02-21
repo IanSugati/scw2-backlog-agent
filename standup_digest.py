@@ -8,11 +8,13 @@
 #
 # Optional:
 #   ENFORCE_9AM_LONDON=true|false  (default false)
+#   JIRA_START_DATE_FIELD=customfield_XXXXX   (optional; if not set we’ll use due date only)
+#   UPCOMING_DAYS=2                           (default 2)
 
 import os
 import sys
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from zoneinfo import ZoneInfo
 
 # ---- Config ----
@@ -94,6 +96,26 @@ def parse_jira_dt(started: str) -> datetime:
     return datetime.fromisoformat(started)
 
 
+def parse_jira_date(d: str) -> date | None:
+    """
+    Jira date fields (e.g. duedate, start date) often return 'YYYY-MM-DD'
+    """
+    if not d:
+        return None
+    try:
+        return datetime.fromisoformat(d).date()
+    except Exception:
+        try:
+            return datetime.strptime(d, "%Y-%m-%d").date()
+        except Exception:
+            return None
+
+
+def pretty_date(d: date) -> str:
+    # e.g. Tue 23 Feb
+    return d.strftime("%a %d %b")
+
+
 def yesterday_window_london():
     now = datetime.now(LONDON)
     start_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -121,7 +143,6 @@ def seconds_to_pretty(seconds: int) -> str:
 def zombie_indicator(days: int) -> str:
     zombies = min(days // 10, 10)  # cap at 100 days
     skulls = (days // 100) if days >= 100 else 0
-    # no extra spaces at the end
     return ("🧟" * zombies) + ((" " + ("💀" * skulls)) if skulls else "")
 
 
@@ -150,8 +171,8 @@ def time_logged_yesterday(auth, base_url: str):
             started = wl.get("started")
             if not started:
                 continue
-            dt = parse_jira_dt(started).astimezone(LONDON)
-            if start_y <= dt < start_t:
+            dt_local = parse_jira_dt(started).astimezone(LONDON)
+            if start_y <= dt_local < start_t:
                 total += int(wl.get("timeSpentSeconds", 0))
 
         if total:
@@ -191,7 +212,9 @@ def overdue_all_projects(auth, base_url: str):
         due = i["fields"].get("duedate")
         if not due:
             continue
-        due_date = datetime.fromisoformat(due).date()
+        due_date = parse_jira_date(due)
+        if not due_date:
+            continue
         days = (today - due_date).days
         lines.append(f"• {issue_link(base_url, key)} – {summary} ({days} days {zombie_indicator(days)})")
 
@@ -225,11 +248,79 @@ def sprint_remaining(auth, base_url: str):
     return in_progress[:8], up_next[:8]
 
 
+def upcoming_next_days(auth, base_url: str):
+    """
+    Shows what's starting / due in the next N days (default 2), based on:
+      - due date (system field: duedate)
+      - optional start date (custom field id via JIRA_START_DATE_FIELD, e.g. customfield_10015)
+    """
+    upcoming_days = int(os.environ.get("UPCOMING_DAYS", "2").strip() or "2")
+    start_field = os.environ.get("JIRA_START_DATE_FIELD", "").strip()
+
+    # We’ll use startOfDay(+N+1) so “next 2 days” includes today + tomorrow (and filters cleanly).
+    end_offset = upcoming_days + 1
+
+    if start_field:
+        jql = f"""
+            project = {PROJECT_KEY}
+            AND assignee = {DEV_ACCOUNT_ID}
+            AND statusCategory != Done
+            AND (
+                (duedate >= startOfDay() AND duedate < startOfDay(+{end_offset}))
+                OR
+                ({start_field} >= startOfDay() AND {start_field} < startOfDay(+{end_offset}))
+            )
+            ORDER BY duedate ASC
+        """
+        fields = ["summary", "duedate", start_field]
+    else:
+        jql = f"""
+            project = {PROJECT_KEY}
+            AND assignee = {DEV_ACCOUNT_ID}
+            AND statusCategory != Done
+            AND duedate >= startOfDay()
+            AND duedate < startOfDay(+{end_offset})
+            ORDER BY duedate ASC
+        """
+        fields = ["summary", "duedate"]
+
+    issues = jira_search(auth, base_url, jql, fields=fields, max_results=200)
+
+    today = datetime.now(LONDON).date()
+    end_day = today + timedelta(days=upcoming_days)
+
+    lines = []
+    for i in issues[:12]:
+        key = i["key"]
+        f = i.get("fields", {})
+        summary = f.get("summary") or ""
+
+        due_d = parse_jira_date(f.get("duedate"))
+        start_d = parse_jira_date(f.get(start_field)) if start_field else None
+
+        parts = []
+        if start_d and today <= start_d <= end_day:
+            parts.append(f"Start: {pretty_date(start_d)}")
+        if due_d and today <= due_d <= end_day:
+            parts.append(f"Due: {pretty_date(due_d)}")
+
+        # If Jira returned something weird but issue matched JQL, still show it.
+        suffix = f" ({', '.join(parts)})" if parts else ""
+
+        lines.append(f"• {issue_link(base_url, key)} – {summary}{suffix}")
+
+    return lines
+
+
 def build_digest(auth, base_url: str):
     time_lines = time_logged_yesterday(auth, base_url)
     qa_lines = pushed_to_qa_yesterday(auth, base_url)
     in_prog, next_up = sprint_remaining(auth, base_url)
-    overdue_lines = overdue_all_projects(auth, base_url)  # moved to bottom
+    upcoming_lines = upcoming_next_days(auth, base_url)
+    overdue_lines = overdue_all_projects(auth, base_url)
+
+    upcoming_days = int(os.environ.get("UPCOMING_DAYS", "2").strip() or "2")
+    end_label = (datetime.now(LONDON).date() + timedelta(days=upcoming_days)).strftime("%a %d %b")
 
     msg = f"🧑‍💻 Standup Prep – {DEV_NAME}\n\n"
 
@@ -241,6 +332,10 @@ def build_digest(auth, base_url: str):
     msg += "\n".join(qa_lines) if qa_lines else "• Nothing pushed to QA"
     msg += "\n\n"
 
+    msg += f"📅 Next {upcoming_days} days (through {end_label})\n"
+    msg += "\n".join(upcoming_lines) if upcoming_lines else "• Nothing scheduled (no start/due dates found)"
+    msg += "\n\n"
+
     msg += "📌 Live Sprint – Remaining (SPD)\n\n"
     msg += "🔥 In Progress\n"
     msg += "\n".join(in_prog) if in_prog else "• None"
@@ -249,7 +344,6 @@ def build_digest(auth, base_url: str):
     msg += "\n".join(next_up) if next_up else "• None"
     msg += "\n\n"
 
-    # Overdue at the bottom as requested
     msg += "⚠️ Overdue (all projects)\n"
     msg += "\n".join(overdue_lines) if overdue_lines else "• No overdue items"
 
@@ -267,6 +361,8 @@ if __name__ == "__main__":
     print("[env] JIRA_EMAIL =", present("JIRA_EMAIL"))
     print("[env] JIRA_API_TOKEN =", present("JIRA_API_TOKEN"))
     print("[env] STAND_UP =", present("STAND_UP"))
+    print("[env] JIRA_START_DATE_FIELD =", present("JIRA_START_DATE_FIELD"))
+    print("[env] UPCOMING_DAYS =", os.environ.get("UPCOMING_DAYS", "2"))
 
     base_url = req_env("JIRA_BASE_URL").strip().rstrip("/")
     email = req_env("JIRA_EMAIL").strip()
@@ -279,7 +375,6 @@ if __name__ == "__main__":
         print("Not 9am London (or weekend) — exiting.")
         sys.exit(0)
 
-    # Auth sanity
     me = api_get(auth, base_url, "/rest/api/3/myself")
     print(f"[sanity] Auth OK. API user={me.get('displayName')} accountId={me.get('accountId')}")
 
