@@ -795,7 +795,9 @@ def build_digest() -> str:
     print(f"[sanity] Auth OK. API user={me.get('displayName')} accountId={me.get('accountId')}")
 
     project_key = opt_env("PROJECT_KEY", "SPD").strip()
-    sp_field = opt_env("JIRA_STORY_POINTS_FIELD", "customfield_10016").strip()
+
+    # ✅ HARD-CODED story points field (Story point estimate)
+    sp_field = "customfield_10016"
 
     anchor = date.fromisoformat(req_env("SPRINT_ANCHOR_DATE"))
     today = datetime.now(LONDON).date()
