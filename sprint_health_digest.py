@@ -7,14 +7,22 @@
 #   CHAT_WEBHOOK_URL
 #   SPRINT_ANCHOR_DATE (YYYY-MM-DD)
 #
-# OPTIONAL (but recommended):
+# OPTIONAL (recommended):
 #   JIRA_STORY_POINTS_FIELD (default customfield_10016)
 
 import os
 import time
+import random
 import requests
 from datetime import datetime, timedelta, date
 from zoneinfo import ZoneInfo
+
+from requests.exceptions import (
+    ChunkedEncodingError,
+    ConnectionError,
+    ReadTimeout,
+    Timeout,
+)
 
 LONDON = ZoneInfo("Europe/London")
 
@@ -27,9 +35,10 @@ HOURS_PER_DAY = 7
 MAX_HISTORY_DAYS = 9
 MAX_LINES = 6
 
-# Jira rate-limit hardening
-MAX_RETRIES = 6
+# HTTP hardening
+MAX_RETRIES = 8
 BACKOFF_BASE_SECONDS = 2
+TIMEOUT_SECONDS = 45
 
 
 def req_env(name: str) -> str:
@@ -51,41 +60,74 @@ def jira_auth():
 def _raise_http(r: requests.Response):
     if r.ok:
         return
-    snippet = (r.text or "")[:500]
+    snippet = (r.text or "")[:800]
     raise requests.HTTPError(f"{r.status_code} {r.reason} :: {snippet}")
+
+
+def _sleep_with_jitter(attempt: int, cap: int = 60):
+    # exponential backoff with jitter
+    base = BACKOFF_BASE_SECONDS * (2 ** (attempt - 1))
+    jitter = random.uniform(0, 1.0)
+    time.sleep(min(base + jitter, cap))
 
 
 def request_with_retry(method: str, url: str, **kwargs):
     """
-    Retries on 429 and transient 5xx. Respects Retry-After when present.
+    Retries on:
+      - 429 (rate limit) respecting Retry-After if present
+      - transient 5xx
+      - network flakiness (ChunkedEncodingError / ProtocolError surfaced as ChunkedEncodingError)
+      - ConnectionError / Timeout
     """
+    headers = kwargs.pop("headers", {})
+    headers.setdefault("Accept", "application/json")
+
     for attempt in range(1, MAX_RETRIES + 1):
-        r = requests.request(method, url, auth=jira_auth(), timeout=30, **kwargs)
+        try:
+            r = requests.request(
+                method,
+                url,
+                auth=jira_auth(),
+                headers=headers,
+                timeout=TIMEOUT_SECONDS,
+                **kwargs,
+            )
 
-        if r.status_code == 429:
-            retry_after = r.headers.get("Retry-After")
-            if retry_after and retry_after.isdigit():
-                sleep_s = int(retry_after)
-            else:
-                sleep_s = BACKOFF_BASE_SECONDS * (2 ** (attempt - 1))
-            time.sleep(min(sleep_s, 60))
+            if r.status_code == 429:
+                retry_after = r.headers.get("Retry-After")
+                if retry_after and retry_after.isdigit():
+                    time.sleep(min(int(retry_after), 60))
+                else:
+                    _sleep_with_jitter(attempt)
+                continue
+
+            if 500 <= r.status_code < 600:
+                _sleep_with_jitter(attempt)
+                continue
+
+            _raise_http(r)
+            return r
+
+        except (ChunkedEncodingError, ConnectionError, ReadTimeout, Timeout):
+            # Treat as transient network issue
+            _sleep_with_jitter(attempt)
             continue
 
-        if 500 <= r.status_code < 600:
-            sleep_s = BACKOFF_BASE_SECONDS * (2 ** (attempt - 1))
-            time.sleep(min(sleep_s, 60))
-            continue
-
-        _raise_http(r)
-        return r
-
-    # last response was not OK
+    # Last attempt failed – re-run once to raise the real exception/response
+    r = requests.request(
+        method,
+        url,
+        auth=jira_auth(),
+        headers=headers,
+        timeout=TIMEOUT_SECONDS,
+        **kwargs,
+    )
     _raise_http(r)
-    return r  # unreachable
+    return r
 
 
 def jira_get(url, **kwargs):
-    r = request_with_retry("GET", url, headers={"Accept": "application/json"}, **kwargs)
+    r = request_with_retry("GET", url, **kwargs)
     return r.json()
 
 
@@ -195,7 +237,6 @@ def get_sp_hours(issue, sp_field: str) -> float:
 
 
 def sprint_issues_all(sp_field: str):
-    # Grab ALL issues in the open sprint for summary totals + history selection
     fields = ["summary", "status", sp_field]
     jql = f"""
         project = {PROJECT_KEY}
@@ -206,10 +247,6 @@ def sprint_issues_all(sp_field: str):
 
 
 def keys_with_worklogs_on_day(day_offset: int):
-    """
-    day_offset=1 => yesterday
-    Uses Jira relative functions so we don't need timezone math in JQL.
-    """
     start = f"startOfDay(-{day_offset})"
     end = "startOfDay()" if day_offset == 0 else f"startOfDay(-{day_offset - 1})"
     jql = f"""
@@ -235,20 +272,16 @@ def keys_with_status_changes_on_day(day_offset: int):
 
 
 # ----------------
-# History builder (rate-limit safe)
+# History builder
 # ----------------
 def build_daily_history(summary_by_key: dict[str, str]):
     today = datetime.now(LONDON).date()
 
-    # Build list of last N working days and their offsets
     day_offsets = []
     d = today
-    offset = 0
     while len(day_offsets) < MAX_HISTORY_DAYS:
         if d.weekday() < 5:
-            # offset from today in whole days
-            delta = (today - d).days
-            # delta=0 => today, 1 => yesterday ...
+            delta = (today - d).days  # 0=today, 1=yesterday...
             day_offsets.append((d, delta))
         d -= timedelta(days=1)
 
@@ -258,7 +291,7 @@ def build_daily_history(summary_by_key: dict[str, str]):
         start = datetime.combine(day, datetime.min.time(), tzinfo=LONDON)
         end = start + timedelta(days=1)
 
-        # Only fetch details for issues that actually had activity that day
+        # Only fetch heavy details for issues that actually had activity that day
         wl_keys = keys_with_worklogs_on_day(delta) if delta > 0 else set()
         st_keys = keys_with_status_changes_on_day(delta) if delta > 0 else set()
         active_keys = wl_keys.union(st_keys)
@@ -266,11 +299,8 @@ def build_daily_history(summary_by_key: dict[str, str]):
         worklog_totals: dict[str, int] = {}
         status_moves_by_key: dict[str, list[tuple[datetime, str, str]]] = {}
 
-        # If no activity at all, keep the day but show "None"
         if active_keys:
             for key in sorted(active_keys):
-                summary = summary_by_key.get(key, "").strip()
-
                 # Worklogs (all authors)
                 total_seconds = 0
                 if key in wl_keys:
@@ -284,7 +314,7 @@ def build_daily_history(summary_by_key: dict[str, str]):
                 if total_seconds:
                     worklog_totals[key] = total_seconds
 
-                # Status changes
+                # Status changes (collapsed)
                 if key in st_keys:
                     for h in get_changelog_histories(key):
                         created = parse_jira_dt(h["created"]).astimezone(LONDON)
@@ -296,7 +326,6 @@ def build_daily_history(summary_by_key: dict[str, str]):
                                 to = (item.get("toString") or "").strip()
                                 status_moves_by_key.setdefault(key, []).append((created, frm, to))
 
-        # Collapse status changes per issue/day
         collapsed_lines = []
         for key, moves in status_moves_by_key.items():
             moves_sorted = sorted(moves, key=lambda x: x[0])
@@ -382,7 +411,6 @@ def build_digest():
     unstarted_over = todo_hours - capacity
 
     msg = "📊 *Sprint Health Digest*\n\n"
-
     msg += "🧮 Capacity vs Commitment (SP = hours)\n"
     msg += f"• Remaining capacity: {capacity:.0f}h\n"
     msg += f"• Total in sprint: {total_hours:.1f}h\n"
@@ -403,9 +431,9 @@ def build_digest():
 
 
 def send_chat(text: str):
-    r = requests.post(req_env("CHAT_WEBHOOK_URL"), json={"text": text}, timeout=30)
+    r = requests.post(req_env("CHAT_WEBHOOK_URL"), json={"text": text}, timeout=TIMEOUT_SECONDS)
     if not r.ok:
-        raise requests.HTTPError(f"Chat error {r.status_code}: {r.text[:500]}")
+        raise requests.HTTPError(f"Chat error {r.status_code}: {r.text[:800]}")
 
 
 if __name__ == "__main__":
