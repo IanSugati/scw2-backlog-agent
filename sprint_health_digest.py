@@ -26,7 +26,7 @@
 #   JIRA_BASE_URL            (e.g. https://sugatitravel.atlassian.net)
 #   JIRA_EMAIL
 #   JIRA_API_TOKEN
-#   CHAT_WEBHOOK_URL         (Google Chat incoming webhook)
+#   PRODUCT_SPRINT_WEBHOOK   (Google Chat incoming webhook)
 #   SPRINT_ANCHOR_DATE       (YYYY-MM-DD) e.g. 2026-02-12
 #
 # Optional:
@@ -777,7 +777,7 @@ def build_daily_history(
 
 
 def post_to_chat(text: str):
-    webhook = req_env("CHAT_WEBHOOK_URL")
+    webhook = req_env("PRODUCT_SPRINT_WEBHOOK")
     r = request_with_retry(
         "POST",
         webhook,
@@ -795,7 +795,7 @@ def build_digest() -> str:
     print("[env] JIRA_BASE_URL =", present("JIRA_BASE_URL"))
     print("[env] JIRA_EMAIL =", present("JIRA_EMAIL"))
     print("[env] JIRA_API_TOKEN =", present("JIRA_API_TOKEN"))
-    print("[env] CHAT_WEBHOOK_URL =", present("CHAT_WEBHOOK_URL"))
+    print("[env] PRODUCT_SPRINT_WEBHOOK =", present("PRODUCT_SPRINT_WEBHOOK"))
     print("[env] SPRINT_ANCHOR_DATE =", present("SPRINT_ANCHOR_DATE"))
     print("[env] TEAM_ACCOUNT_IDS =", "SET" if os.environ.get("TEAM_ACCOUNT_IDS", "").strip() else "MISSING (will count all worklogs)")
 
