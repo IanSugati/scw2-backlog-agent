@@ -13,20 +13,16 @@
 #   - If there are NO status changes in the window: POST NOTHING
 #
 # Required env vars (GitHub Secrets):
-#   JIRA_BASE_URL        e.g. https://sugatitravel.atlassian.net
+#   JIRA_BASE_URL
 #   JIRA_EMAIL
 #   JIRA_API_TOKEN
-#   CHAT_WEBHOOK_URL
+#   PRODUCT_SPRINT_WEBHOOK
 #
 # Optional env vars:
-#   PROJECT_KEY          default "SPD"
-#   LOOKBACK_HOURS       default "2"
-#   MAX_ISSUES           default "100"   (caps how many updated issues we inspect each run)
-#   ENFORCE_WEEKDAYS     true|false (default false) - if true, exits on Sat/Sun (London time)
-#
-# Notes:
-# - Uses JQL updated >= -Nh AND sprint in openSprints() to keep it relevant.
-# - Fetches changelog per issue to reliably detect status transitions + author.
+#   PROJECT_KEY
+#   LOOKBACK_HOURS
+#   MAX_ISSUES
+#   ENFORCE_WEEKDAYS
 
 from __future__ import annotations
 
@@ -64,8 +60,6 @@ def as_bool(name: str, default: str = "false") -> bool:
 
 
 def parse_jira_dt(dt_str: str) -> datetime:
-    # Jira: 2026-02-21T09:15:22.123+0000
-    # Py:   2026-02-21T09:15:22.123+00:00
     s = dt_str
     if len(s) >= 5 and (s[-5] in ["+", "-"]) and s[-2:].isdigit():
         s = s[:-2] + ":" + s[-2:]
@@ -178,17 +172,12 @@ def jira_post(path: str, *, payload: Dict[str, Any]) -> Dict[str, Any]:
 
 def jira_search(jql: str, *, fields: List[str], max_results: int) -> List[Dict[str, Any]]:
     jql_clean = " ".join(line.strip() for line in jql.splitlines() if line.strip())
-    payload = {
-        "jql": jql_clean,
-        "maxResults": max_results,
-        "fields": fields,
-    }
+    payload = {"jql": jql_clean, "maxResults": max_results, "fields": fields}
     data = jira_post("/rest/api/3/search/jql", payload=payload)
     return data.get("issues", []) or []
 
 
 def jira_issue_changelog(issue_key: str, *, max_results: int = 200) -> List[Dict[str, Any]]:
-    # paginate in case there are more than max_results entries
     start_at = 0
     out: List[Dict[str, Any]] = []
     while True:
@@ -198,11 +187,10 @@ def jira_issue_changelog(issue_key: str, *, max_results: int = 200) -> List[Dict
         )
         values = data.get("values", []) or []
         out.extend(values)
-        is_last = bool(data.get("isLast", False))
-        if is_last or len(values) == 0:
+        if bool(data.get("isLast", False)) or not values:
             break
         start_at += len(values)
-        if start_at > 2000:  # hard safety cap
+        if start_at > 2000:
             break
     return out
 
@@ -212,11 +200,11 @@ def jira_issue_changelog(issue_key: str, *, max_results: int = 200) -> List[Dict
 # ----------------------------
 
 def post_to_chat(text: str) -> None:
-    webhook = req_env("CHAT_WEBHOOK_URL")
+    webhook = req_env("PRODUCT_SPRINT_WEBHOOK")
     request_with_retry(
         "POST",
         webhook,
-        auth=("", ""),  # not used for webhooks
+        auth=("", ""),
         headers={"Content-Type": "application/json"},
         json_body={"text": text},
         timeout=30,
@@ -225,8 +213,6 @@ def post_to_chat(text: str) -> None:
 
 
 def issue_link_text(summary: str, key: str) -> str:
-    # clickable task name
-    # <url|text>
     return f"<{jira_base_url()}/browse/{key}|{summary} ({key})>"
 
 
@@ -235,8 +221,6 @@ def issue_link_text(summary: str, key: str) -> str:
 # ----------------------------
 
 def build_jql(project_key: str, lookback_hours: int) -> str:
-    # Only open sprint issues that were updated recently.
-    # (We still inspect changelog to ensure it was a status change.)
     return f"""
         project = {project_key}
         AND sprint in openSprints()
@@ -250,9 +234,6 @@ def extract_status_changes_in_window(
     window_start: datetime,
     window_end: datetime,
 ) -> List[Tuple[datetime, str, str, str]]:
-    """
-    Returns list of (created_dt, author_name, from_status, to_status) sorted by created_dt.
-    """
     moves: List[Tuple[datetime, str, str, str]] = []
 
     for h in histories:
@@ -290,7 +271,6 @@ def main() -> int:
     window_end = now
     window_start = now - timedelta(hours=lookback_hours)
 
-    # Search issues updated recently in open sprint
     issues = jira_search(
         build_jql(project_key, lookback_hours),
         fields=["summary", "updated"],
@@ -310,14 +290,12 @@ def main() -> int:
         try:
             histories = jira_issue_changelog(key)
         except Exception:
-            # If one issue fails, don't kill the digest
             continue
 
         moves = extract_status_changes_in_window(histories, window_start, window_end)
         if not moves:
             continue
 
-        # Collapse: first -> last within the window
         first = moves[0]
         last = moves[-1]
         author_last = last[1]
@@ -326,7 +304,6 @@ def main() -> int:
 
         lines.append(f"• {author_last} changed {issue_link_text(summary, key)} from *{from_status}* to *{to_status}*")
 
-    # If no status changes: post nothing
     if not lines:
         return 0
 
