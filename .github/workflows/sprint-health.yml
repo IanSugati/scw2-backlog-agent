@@ -34,7 +34,7 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          CHAT_WEBHOOK_URL: ${{ secrets.CHAT_WEBHOOK_URL }}
+          PRODUCT_SPRINT_WEBHOOK: ${{ secrets.PRODUCT_SPRINT_WEBHOOK }}
           SPRINT_ANCHOR_DATE: ${{ secrets.SPRINT_ANCHOR_DATE }}
           JIRA_STORY_POINTS_FIELD: ${{ secrets.JIRA_STORY_POINTS_FIELD }}
         run: |
@@ -42,7 +42,7 @@ jobs:
           echo "[env] JIRA_BASE_URL=$([ -n "$JIRA_BASE_URL" ] && echo SET || echo MISSING)"
           echo "[env] JIRA_EMAIL=$([ -n "$JIRA_EMAIL" ] && echo SET || echo MISSING)"
           echo "[env] JIRA_API_TOKEN=$([ -n "$JIRA_API_TOKEN" ] && echo SET || echo MISSING)"
-          echo "[env] CHAT_WEBHOOK_URL=$([ -n "$CHAT_WEBHOOK_URL" ] && echo SET || echo MISSING)"
+          echo "[env] PRODUCT_SPRINT_WEBHOOK=$([ -n "$PRODUCT_SPRINT_WEBHOOK" ] && echo SET || echo MISSING)"
           echo "[env] SPRINT_ANCHOR_DATE=$([ -n "$SPRINT_ANCHOR_DATE" ] && echo SET || echo MISSING)"
           echo "[env] JIRA_STORY_POINTS_FIELD=$([ -n "$JIRA_STORY_POINTS_FIELD" ] && echo SET || echo MISSING)"
 
@@ -51,7 +51,7 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          CHAT_WEBHOOK_URL: ${{ secrets.CHAT_WEBHOOK_URL }}
+          PRODUCT_SPRINT_WEBHOOK: ${{ secrets.PRODUCT_SPRINT_WEBHOOK }}
           SPRINT_ANCHOR_DATE: ${{ secrets.SPRINT_ANCHOR_DATE }}
           JIRA_STORY_POINTS_FIELD: ${{ secrets.JIRA_STORY_POINTS_FIELD }}
         run: python sprint_health_digest.py
