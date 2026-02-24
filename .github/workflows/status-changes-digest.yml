@@ -2,7 +2,7 @@ name: Status Changes Digest
 
 on:
   schedule:
-    - cron: "0 */2 * * 1-5"   # Every 2 hours (weekdays)
+    - cron: "0 */2 * * 1-5"   # Every 2 hours, weekdays
   workflow_dispatch:
 
 concurrency:
@@ -28,12 +28,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Env sanity (no values printed)
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          PRODUCT_SPRINT_WEBHOOK: ${{ secrets.PRODUCT_SPRINT_WEBHOOK }}
+        run: |
+          set -e
+          echo "[env] JIRA_BASE_URL=$([ -n "$JIRA_BASE_URL" ] && echo SET || echo MISSING)"
+          echo "[env] JIRA_EMAIL=$([ -n "$JIRA_EMAIL" ] && echo SET || echo MISSING)"
+          echo "[env] JIRA_API_TOKEN=$([ -n "$JIRA_API_TOKEN" ] && echo SET || echo MISSING)"
+          echo "[env] PRODUCT_SPRINT_WEBHOOK=$([ -n "$PRODUCT_SPRINT_WEBHOOK" ] && echo SET || echo MISSING)"
+
       - name: Run Status Changes Digest
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          CHAT_WEBHOOK_URL: ${{ secrets.CHAT_WEBHOOK_URL }}
-          PROJECT_KEY: "SPD"
-          LOOKBACK_HOURS: "2"
+          PRODUCT_SPRINT_WEBHOOK: ${{ secrets.PRODUCT_SPRINT_WEBHOOK }}
         run: python status_changes_digest.py
