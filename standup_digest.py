@@ -2,32 +2,36 @@
 """
 standup_digest.py
 
-REQUIRED Secrets / env vars (EXACT):
+REQUIRED Secrets / env vars:
   JIRA_BASE_URL
   JIRA_EMAIL
   JIRA_API_TOKEN
-  ANDY_STANDUP
-  STAND_UP
-  SPRINT_ANCHOR_DATE (YYYY-MM-DD)
+  ANDY_STANDUP          (personal Google Chat webhook)
+  SPRINT_ANCHOR_DATE    (YYYY-MM-DD)
 
 Optional:
-  ENFORCE_9AM_LONDON=true|false   (default false)
-  UPCOMING_DAYS=2                 (default 2)
-  JIRA_STORY_POINTS_FIELD=customfield_10016 (default customfield_10016)
+  ENFORCE_9AM_LONDON=true|false        (default false)
+  JIRA_STORY_POINTS_FIELD              (default customfield_10016)
+  STANDUP_LOOKBACK_DAYS=14             (default 14 - max days to look back for last worked day)
 
-Behaviour:
-- Yesterday time logged (BUG FIX: now uses worklogs filtered to yesterday, not timespent field)
-- Capacity vs Estimate (Live Sprint)
-- Live Sprint - In Progress
-- Live Sprint - Up Next
+Fixes applied vs original:
+  1. BUG FIX - "Yesterday" section now uses worklogs filtered to the specific day,
+     not i["fields"]["timespent"] which is the all-time total for the ticket.
+  2. SMART LOOKBACK - instead of always looking at "yesterday", the script finds
+     the last day the developer actually logged time. This handles:
+       - Weekends (Monday automatically shows Friday)
+       - Public holidays
+       - Days off / leave
+     It walks backwards day by day (up to STANDUP_LOOKBACK_DAYS) until it finds
+     a day with logged time, then shows that day with a clear label.
 """
 
 import os
 import sys
 import requests
-from datetime import datetime, timedelta, date, timezone
+from datetime import datetime, timedelta, date
 from zoneinfo import ZoneInfo
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Tuple
 
 # -----------------------
 # Config
@@ -44,6 +48,7 @@ HOURS_PER_DAY = 7
 LONDON = ZoneInfo("Europe/London")
 
 MAX_LINES = 12
+
 
 # -----------------------
 # Env helpers
@@ -68,7 +73,7 @@ def should_run_now() -> bool:
     if not enforce_9am_london():
         return True
     now = datetime.now(LONDON)
-    return now.weekday() < 5 and now.hour == 9
+    return now.weekday() < 5 and now.hour == 8
 
 
 # -----------------------
@@ -149,84 +154,93 @@ def count_workdays(start: date, end: date) -> int:
 def remaining_capacity_hours() -> int:
     anchor = date.fromisoformat(req_env("SPRINT_ANCHOR_DATE"))
     today = datetime.now(LONDON).date()
-
     cycle = SPRINT_WORKDAYS + SPRINT_GAP_DAYS
     pos = count_workdays(anchor, today) % cycle
-
     if pos >= SPRINT_WORKDAYS:
         return 0
-
     remaining_days = SPRINT_WORKDAYS - pos
     return remaining_days * HOURS_PER_DAY
 
 
 # -----------------------
-# Worklog fetch (the fix)
+# Worklog helpers
 # -----------------------
 def fetch_worklogs_for_issue(issue_key: str) -> List[Dict[str, Any]]:
-    """Fetch all worklogs for a given issue."""
     base = req_env("JIRA_BASE_URL").rstrip("/")
     data = api_get(base, f"/rest/api/3/issue/{issue_key}/worklog", params={"maxResults": 5000})
     return data.get("worklogs", []) or []
 
 
-def get_yesterday_seconds_for_issue(issue_key: str, yesterday_start: datetime, yesterday_end: datetime) -> int:
-    """
-    Fetch worklogs for an issue and sum seconds logged by DEV_ACCOUNT_ID
-    within yesterday's window (London time).
-
-    FIX: Previously used i["fields"]["timespent"] which is the TOTAL all-time
-    seconds logged on the ticket. This now correctly filters to yesterday only.
-    """
+def get_seconds_logged_on_day(issue_key: str, day_start: datetime, day_end: datetime) -> int:
+    """Sum seconds logged by DEV_ACCOUNT_ID within a specific day window."""
     worklogs = fetch_worklogs_for_issue(issue_key)
     total = 0
     for wl in worklogs:
         author_id = (wl.get("author") or {}).get("accountId")
         if author_id != DEV_ACCOUNT_ID:
             continue
-
         started_raw = wl.get("started")
         if not started_raw:
             continue
-
         try:
             started_dt = parse_jira_dt(started_raw).astimezone(LONDON)
         except Exception:
             continue
-
-        if yesterday_start <= started_dt < yesterday_end:
+        if day_start <= started_dt < day_end:
             total += int(wl.get("timeSpentSeconds") or 0)
-
     return total
 
 
-# -----------------------
-# Sections
-# -----------------------
-def time_logged_yesterday() -> List[str]:
-    """
-    Return lines for time logged by DEV_ACCOUNT_ID yesterday.
-
-    BUG FIX: The original implementation used i["fields"]["timespent"] which
-    returns the TOTAL cumulative time ever logged on the ticket — not just
-    yesterday's time. For example, "Morning Meetings February 2026" was showing
-    18h 54m because that was the all-time total, not yesterday's contribution.
-
-    This version fetches worklogs per issue and sums only entries where:
-      - author == DEV_ACCOUNT_ID
-      - started timestamp falls within yesterday (London time)
-    """
-    now_london = datetime.now(LONDON)
-    today_london = now_london.replace(hour=0, minute=0, second=0, microsecond=0)
-    yesterday_start = today_london - timedelta(days=1)
-    yesterday_end = today_london
-
-    # Find issues that had worklogs yesterday (Jira JQL worklogDate filter)
-    yesterday_date_str = yesterday_start.date().isoformat()
+def any_time_logged_on_date(check_date: date) -> bool:
+    """Quick check via JQL: did DEV_ACCOUNT_ID log any time on check_date?"""
     jql = f"""
         project = {PROJECT_KEY}
         AND worklogAuthor = {DEV_ACCOUNT_ID}
-        AND worklogDate = "{yesterday_date_str}"
+        AND worklogDate = "{check_date.isoformat()}"
+    """
+    return len(jira_search(jql, ["summary"])) > 0
+
+
+def find_last_worked_day(max_lookback: int = 14) -> Tuple[date, str]:
+    """
+    Walk backwards from yesterday until a day with logged time is found.
+
+    Handles weekends, public holidays, and days off automatically.
+    Returns (date, friendly label string).
+
+    Examples:
+      Monday morning  -> finds Friday, returns "Friday 28 Feb"
+      After 3 days off -> returns "Wednesday 26 Feb (last worked day - 3 days ago)"
+    """
+    today = datetime.now(LONDON).date()
+    max_lookback = int(os.environ.get("STANDUP_LOOKBACK_DAYS", str(max_lookback)))
+
+    check = today - timedelta(days=1)
+
+    for _ in range(max_lookback):
+        if any_time_logged_on_date(check):
+            days_ago = (today - check).days
+            if days_ago == 1:
+                label = check.strftime("%A %d %b")
+            else:
+                label = f"{check.strftime('%A %d %b')} (last worked day — {days_ago} days ago)"
+            return check, label
+        check -= timedelta(days=1)
+
+    # Fallback — nothing found in lookback window
+    yesterday = today - timedelta(days=1)
+    return yesterday, f"{yesterday.strftime('%A %d %b')} (no time logged in last {max_lookback} days)"
+
+
+def time_logged_on_day(target_date: date) -> List[Tuple[int, str, str]]:
+    """Return (seconds, key, summary) tuples for all issues worked on target_date."""
+    day_start = datetime(target_date.year, target_date.month, target_date.day, 0, 0, 0, tzinfo=LONDON)
+    day_end = day_start + timedelta(days=1)
+
+    jql = f"""
+        project = {PROJECT_KEY}
+        AND worklogAuthor = {DEV_ACCOUNT_ID}
+        AND worklogDate = "{target_date.isoformat()}"
     """
     issues = jira_search(jql, ["summary"])
 
@@ -234,22 +248,17 @@ def time_logged_yesterday() -> List[str]:
     for i in issues:
         key = i["key"]
         summary = (i["fields"].get("summary") or "").strip()
-
-        # Fetch actual worklogs and filter to yesterday + this dev only
-        spent_seconds = get_yesterday_seconds_for_issue(key, yesterday_start, yesterday_end)
-
+        spent_seconds = get_seconds_logged_on_day(key, day_start, day_end)
         if spent_seconds > 0:
             lines.append((spent_seconds, key, summary))
 
-    # Sort by most time first
     lines.sort(reverse=True, key=lambda x: x[0])
-
-    return [
-        f"• {issue_link(key)} – {summary} ({seconds_to_pretty(secs)})"
-        for secs, key, summary in lines[:MAX_LINES]
-    ]
+    return lines[:MAX_LINES]
 
 
+# -----------------------
+# Sprint section
+# -----------------------
 def sprint_remaining() -> Tuple[List[str], List[str], float]:
     sp_field = os.environ.get("JIRA_STORY_POINTS_FIELD", "customfield_10016")
 
@@ -268,7 +277,7 @@ def sprint_remaining() -> Tuple[List[str], List[str], float]:
         summary = f["summary"]
         status = f["status"]["name"].lower()
         sp = f.get(sp_field) or 0
-        spent = f.get("timespent") or 0  # total spent shown here for context only
+        spent = f.get("timespent") or 0  # all-time total, for context only
 
         if isinstance(sp, (int, float)):
             total_sp += float(sp)
@@ -293,20 +302,23 @@ def sprint_remaining() -> Tuple[List[str], List[str], float]:
 # Build + send
 # -----------------------
 def build_digest() -> str:
-    yesterday_lines = time_logged_yesterday()
+    last_worked_date, day_label = find_last_worked_day()
+    worked_lines = time_logged_on_day(last_worked_date)
+
     in_prog, next_up, total_sp = sprint_remaining()
 
     capacity = remaining_capacity_hours()
     overage = total_sp - capacity
 
-    now_london = datetime.now(LONDON)
-    yesterday = (now_london - timedelta(days=1)).strftime("%a %d %b")
-
     msg = f"🧑‍💻 Standup Prep – {DEV_NAME}\n\n"
 
-    msg += f"⏱ Yesterday ({yesterday})\n"
-    msg += "\n".join(yesterday_lines) if yesterday_lines else "• No time logged"
-    msg += "\n\n"
+    msg += f"⏱ Last worked: {day_label}\n"
+    if worked_lines:
+        for secs, key, summary in worked_lines:
+            msg += f"• {issue_link(key)} – {summary} ({seconds_to_pretty(secs)})\n"
+    else:
+        msg += "• No time logged\n"
+    msg += "\n"
 
     msg += "🧮 Capacity vs Estimate\n"
     msg += f"• Remaining capacity: {capacity}h\n"
