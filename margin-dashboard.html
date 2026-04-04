@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS Margin Dashboard</title>
+<style>
+  :root {
+    --sunset: #FFC543;
+    --warm-black: #1C1C1A;
+    --green: #2D8A4E;
+    --green-bg: #EAF7EE;
+    --amber: #D97706;
+    --amber-bg: #FEF9EC;
+    --red: #C0392B;
+    --red-bg: #FDEDEC;
+    --neutral: #6B7280;
+    --light-grey: #F4F4F2;
+    --mid-grey: #9B9B9B;
+    --border: #E5E5E2;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--light-grey); color: var(--warm-black); min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: var(--warm-black); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header-left h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+  .header-left p { font-size: 12px; color: #999; margin-top: 2px; }
+  .fy-badge { background: var(--sunset); color: var(--warm-black); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+
+  /* SUMMARY BAR */
+  .summary-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; gap: 36px; flex-wrap: wrap; }
+  .summary-stat { display: flex; flex-direction: column; }
+  .s-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid-grey); margin-bottom: 2px; }
+  .s-value { font-size: 20px; font-weight: 700; color: var(--warm-black); line-height: 1; }
+  .s-value.good { color: var(--green); }
+  .s-value.warn { color: var(--amber); }
+  .s-value.bad  { color: var(--red); }
+
+  /* TABS */
+  .tab-bar { background: var(--white); border-bottom: 2px solid var(--border); display: flex; padding: 0 32px; }
+  .tab-btn { background: none; border: none; border-bottom: 3px solid transparent; padding: 14px 20px; font-size: 13px; font-weight: 600; color: var(--mid-grey); cursor: pointer; margin-bottom: -2px; transition: color 0.15s, border-color 0.15s; }
+  .tab-btn:hover { color: var(--warm-black); }
+  .tab-btn.active { color: var(--warm-black); border-bottom-color: var(--sunset); }
+  .count { background: var(--light-grey); color: var(--mid-grey); font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
+  .tab-btn.active .count { background: var(--sunset); color: var(--warm-black); }
+
+  /* CONTENT */
+  .tab-content { display: none; padding: 28px 32px; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+  .card { background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border: 1px solid var(--border); }
+  .card-stripe { height: 5px; }
+  .card.green  .card-stripe { background: var(--green); }
+  .card.amber  .card-stripe { background: var(--amber); }
+  .card.red    .card-stripe { background: var(--red); }
+  .card.neutral .card-stripe { background: #D1D5DB; }
+  .card-body { padding: 16px 18px 18px; }
+  .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .client-name { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid-grey); font-weight: 600; }
+  .status-pill { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+  .pill-live    { background: #E8F4FD; color: #1A6FA8; }
+  .pill-backlog { background: #F3F4F6; color: #6B7280; }
+  .pill-done    { background: var(--green-bg); color: var(--green); }
+  .epic-name { font-size: 14px; font-weight: 600; color: var(--warm-black); line-height: 1.35; margin-bottom: 16px; }
+  .stats { display: flex; gap: 10px; margin-bottom: 16px; }
+  .stat-box { flex: 1; background: var(--light-grey); border-radius: 7px; padding: 9px 11px; }
+  .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--mid-grey); margin-bottom: 3px; }
+  .stat-value { font-size: 20px; font-weight: 700; line-height: 1; }
+  .stat-sub { font-size: 10px; color: var(--mid-grey); margin-top: 2px; }
+  .card.green  .margin-val { color: var(--green); }
+  .card.amber  .margin-val { color: var(--amber); }
+  .card.red    .margin-val { color: var(--red); }
+  .card.neutral .margin-val { color: var(--neutral); }
+  .budget-section { margin-bottom: 14px; }
+  .budget-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
+  .bl-left { color: var(--mid-grey); }
+  .bl-right { font-weight: 600; color: var(--warm-black); }
+  .bl-right.over { color: var(--red); }
+  .budget-track { height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .budget-fill { height: 100%; border-radius: 4px; }
+  .card.green  .budget-fill { background: var(--green); }
+  .card.amber  .budget-fill { background: var(--amber); }
+  .card.red    .budget-fill { background: var(--red); }
+  .card.neutral .budget-fill { background: #D1D5DB; }
+  .card-footer { border-top: 1px solid var(--border); padding-top: 10px; }
+  .jira-link { font-size: 11px; color: var(--mid-grey); text-decoration: none; }
+  .jira-link:hover { color: var(--warm-black); text-decoration: underline; }
+
+  /* TABLE */
+  .table-wrap { background: var(--white); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: #F8F8F7; padding: 12px 16px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--mid-grey); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  thead th.num { text-align: right; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FAFAF9; }
+  tbody td { padding: 11px 16px; vertical-align: middle; }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .rag-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; flex-shrink: 0; vertical-align: middle; }
+  .rag-dot.green  { background: var(--green); }
+  .rag-dot.amber  { background: var(--amber); }
+  .rag-dot.red    { background: var(--red); }
+  .rag-dot.neutral { background: #D1D5DB; }
+  .epic-cell { display: flex; align-items: center; }
+  .mpct { font-weight: 700; }
+  .mpct.green  { color: var(--green); }
+  .mpct.amber  { color: var(--amber); }
+  .mpct.red    { color: var(--red); }
+  .mpct.neutral { color: var(--neutral); }
+  .client-cell { color: var(--mid-grey); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--mid-grey); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Professional Services · Margin Dashboard</h1>
+    <p>SCW2 Epics · Activity Timeline Apr 2025 – Mar 2026</p>
+  </div>
+  <span class="fy-badge">FY 25/26</span>
+</div>
+
+<div class="summary-bar" id="summary-bar"></div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="live">Live Projects <span class="count" id="cnt-live">0</span></button>
+  <button class="tab-btn" data-tab="completed">Completed <span class="count" id="cnt-completed">0</span></button>
+  <button class="tab-btn" data-tab="backlog">Backlog <span class="count" id="cnt-backlog">0</span></button>
+</div>
+
+<div id="live" class="tab-content active">
+  <div class="cards-grid" id="live-cards"></div>
+</div>
+<div id="completed" class="tab-content">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Epic</th>
+          <th>Client</th>
+          <th class="num">Sold</th>
+          <th class="num">Days Logged</th>
+          <th class="num">£ Margin</th>
+          <th class="num">Margin %</th>
+        </tr>
+      </thead>
+      <tbody id="completed-rows"></tbody>
+    </table>
+  </div>
+</div>
+<div id="backlog" class="tab-content">
+  <div class="cards-grid" id="backlog-cards"></div>
+</div>
+
+<script>
+// Data loaded from data.json (auto-refreshed every 12 hours by GitHub Action)
+let RAW = [];
+let DATA_TIMESTAMP = null;
+
+async function loadData() {
+  try {
+    // Cache-bust to always get latest data
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('Failed to load data.json');
+    const payload = await resp.json();
+    RAW = payload.epics || [];
+    DATA_TIMESTAMP = payload.generated_at || null;
+    renderDashboard();
+  } catch (e) {
+    console.error('Could not load data.json, using empty dataset:', e);
+    document.getElementById('summary-bar').innerHTML =
+      '<div class="summary-stat"><span class="s-label">Status</span><span class="s-value bad">Data not loaded — check data.json exists</span></div>';
+  }
+}
+
+function renderDashboard() {
+
+function rag(pct, hasData) {
+  if (!hasData) return 'neutral';
+  if (pct >= 65) return 'green';
+  if (pct >= 50) return 'amber';
+  return 'red';
+}
+function fmtGbp(n) {
+  if (n < 0) return '-\xA3' + Math.abs(Math.round(n)).toLocaleString();
+  return '\xA3' + Math.round(n).toLocaleString();
+}
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+function getClient(s) {
+  const manual = {'Jenssen Mobility':'Jenssen Mobility','RBR Group (Phase 1)':'RBR Group','JourneySmith HTML':'JourneySmith'};
+  if (manual[s]) return manual[s];
+  const m = s.match(/^([^-\u2013]+)\s*[-\u2013]/);
+  return m ? m[1].trim() : s.split(' ')[0];
+}
+function getEpicShort(s) {
+  const m = s.match(/^[^-\u2013]+\s*[-\u2013]\s*/);
+  return m ? s.slice(m[0].length) : s;
+}
+
+function buildCard(d) {
+  const client = getClient(d.summary);
+  const short = getEpicShort(d.summary);
+  const r = rag(d.monetary_margin_pct, d.has_data);
+  const isOver = d.has_data && d.logged_days > d.sold_days;
+  const budgetPct = d.has_data ? Math.min(100, (d.logged_days / d.sold_days) * 100) : 0;
+  const pill = d.status === 'In Progress' ? 'pill-live' : d.status === 'Done' ? 'pill-done' : 'pill-backlog';
+  const pillTxt = d.status === 'In Progress' ? 'Live' : d.status;
+  const targetNote = !d.has_data ? 'Not started'
+    : d.monetary_margin_pct >= 65 ? 'Target \u2713'
+    : d.monetary_margin_pct >= 50 ? 'Below target'
+    : 'Needs attention';
+  const budgetTxt = !d.has_data ? 'No time logged'
+    : isOver ? d.logged_days.toFixed(1) + ' of ' + d.sold_days.toFixed(1) + ' days \u2014 OVER'
+    : d.logged_days.toFixed(1) + ' of ' + d.sold_days.toFixed(1) + ' days';
+  const marginTxt = d.has_data ? fmtPct(d.monetary_margin_pct) : '\u2014';
+  const sterlingTxt = d.has_data ? fmtGbp(d.monetary_margin) : fmtGbp(d.amount);
+  const sterlingSubTxt = d.has_data ? 'of ' + fmtGbp(d.amount) + ' sold' : 'Pipeline value';
+
+  return `<div class="card ${r}">
+  <div class="card-stripe"></div>
+  <div class="card-body">
+    <div class="card-meta">
+      <span class="client-name">${client}</span>
+      <span class="status-pill ${pill}">${pillTxt}</span>
+    </div>
+    <div class="epic-name">${short}</div>
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-label">Margin</div>
+        <div class="stat-value margin-val">${marginTxt}</div>
+        <div class="stat-sub">${targetNote}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">\xA3 Margin</div>
+        <div class="stat-value">${sterlingTxt}</div>
+        <div class="stat-sub">${sterlingSubTxt}</div>
+      </div>
+    </div>
+    <div class="budget-section">
+      <div class="budget-label">
+        <span class="bl-left">Budget used</span>
+        <span class="bl-right${isOver ? ' over' : ''}">${budgetTxt}</span>
+      </div>
+      <div class="budget-track"><div class="budget-fill" style="width:${budgetPct}%"></div></div>
+    </div>
+    <div class="card-footer">
+      <a href="https://sugatitravel.atlassian.net/browse/${d.key}" class="jira-link" target="_blank">${d.key} \u2197</a>
+    </div>
+  </div>
+</div>`;
+}
+
+function buildRow(d) {
+  const client = getClient(d.summary);
+  const short = getEpicShort(d.summary);
+  const r = rag(d.monetary_margin_pct, d.has_data);
+  return `<tr>
+    <td><div class="epic-cell"><span class="rag-dot ${r}"></span><a href="https://sugatitravel.atlassian.net/browse/${d.key}" style="color:inherit;text-decoration:none;" target="_blank">${short}</a></div></td>
+    <td class="client-cell">${client}</td>
+    <td class="num">${fmtGbp(d.amount)}</td>
+    <td class="num">${d.has_data ? d.logged_days.toFixed(1) : '\u2014'}</td>
+    <td class="num">${d.has_data ? fmtGbp(d.monetary_margin) : '\u2014'}</td>
+    <td class="num mpct ${r}">${d.has_data ? fmtPct(d.monetary_margin_pct) : '\u2014'}</td>
+  </tr>`;
+}
+
+function buildSummary(data, label) {
+  const wd = data.filter(d => d.has_data);
+  const totalSold = data.reduce((s,d) => s + d.amount, 0);
+  const totalMargin = wd.reduce((s,d) => s + d.monetary_margin, 0);
+  const avgPct = wd.length ? wd.reduce((s,d) => s + d.monetary_margin_pct, 0) / wd.length : null;
+  const avgClass = avgPct === null ? '' : avgPct >= 65 ? 'good' : avgPct >= 50 ? 'warn' : 'bad';
+  return `
+    <div class="summary-stat"><span class="s-label">Projects</span><span class="s-value">${data.length} ${label}</span></div>
+    <div class="summary-stat"><span class="s-label">Total Sold</span><span class="s-value">${fmtGbp(totalSold)}</span></div>
+    ${wd.length ? `<div class="summary-stat"><span class="s-label">\xA3 Margin (to date)</span><span class="s-value">${fmtGbp(totalMargin)}</span></div>` : ''}
+    ${avgPct !== null ? `<div class="summary-stat"><span class="s-label">Avg Margin %</span><span class="s-value ${avgClass}">${fmtPct(avgPct)}</span></div>` : ''}`;
+}
+
+const live      = RAW.filter(d => d.status === 'In Progress').sort((a,b) => {
+  if (!a.has_data && !b.has_data) return b.amount - a.amount;
+  if (!a.has_data) return 1;
+  if (!b.has_data) return -1;
+  return a.monetary_margin_pct - b.monetary_margin_pct;
+});
+const completed = RAW.filter(d => d.status === 'Done').sort((a,b) => a.monetary_margin_pct - b.monetary_margin_pct);
+const backlog   = RAW.filter(d => d.status === 'Backlog').sort((a,b) => b.amount - a.amount);
+
+  document.getElementById('cnt-live').textContent      = live.length;
+  document.getElementById('cnt-completed').textContent = completed.length;
+  document.getElementById('cnt-backlog').textContent   = backlog.length;
+
+  document.getElementById('live-cards').innerHTML     = live.map(buildCard).join('') || '<div class="empty-state">No live projects</div>';
+  document.getElementById('completed-rows').innerHTML = completed.map(buildRow).join('');
+  document.getElementById('backlog-cards').innerHTML  = backlog.map(buildCard).join('') || '<div class="empty-state">No backlog items</div>';
+  document.getElementById('summary-bar').innerHTML    = buildSummary(live, 'live');
+
+  // Show last-refreshed timestamp
+  if (DATA_TIMESTAMP) {
+    const d = new Date(DATA_TIMESTAMP);
+    document.querySelector('.header-left p').textContent =
+      'SCW2 Epics · Last refreshed: ' + d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.getElementById(tab).classList.add('active');
+      const data = tab === 'live' ? live : tab === 'completed' ? completed : backlog;
+      const label = tab === 'live' ? 'live' : tab === 'completed' ? 'completed' : 'in backlog';
+      document.getElementById('summary-bar').innerHTML = buildSummary(data, label);
+    });
+  });
+} // end renderDashboard
+
+// Boot
+loadData();
+</script>
+</body>
+</html>
