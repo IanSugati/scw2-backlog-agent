@@ -30,6 +30,9 @@ JIRA_API_TOKEN = os.environ["JIRA_API_TOKEN"].strip()
 
 TZ = ZoneInfo("Europe/London")
 
+# Amount custom field (discovered 4 Apr 2026)
+AMOUNT_FIELD_ID = "customfield_10640"
+
 # Rate card (£ per hour)
 RATE_CARD = {
     "default": 62.50,  # Ian, Naval, Shivam, and anyone else
@@ -57,42 +60,9 @@ def jira_headers():
 
 
 # ──────────────────────────────────────────────
-# Field discovery
-# ──────────────────────────────────────────────
-def discover_amount_field_id() -> str:
-    """
-    Calls /rest/api/3/field to find the custom field ID for "Amount".
-    Falls back to common IDs if not found.
-    """
-    url = f"{JIRA_BASE_URL}/rest/api/3/field"
-    r = requests.get(url, headers=jira_headers(), timeout=30)
-    r.raise_for_status()
-
-    fields = r.json()
-    for f in fields:
-        name = (f.get("name") or "").strip().lower()
-        if name == "amount":
-            field_id = f.get("id") or f.get("key")
-            print(f"[INFO] Found Amount field: {field_id} (name: {f.get('name')})")
-            return field_id
-
-    # If not found by exact name, try "Story Points" as last resort
-    print("[WARN] Could not find 'Amount' field by name. Listing candidates...")
-    for f in fields:
-        name = (f.get("name") or "").lower()
-        if "amount" in name:
-            print(f"  Candidate: {f.get('id')} — {f.get('name')}")
-
-    raise RuntimeError(
-        "Could not find the 'Amount' custom field. "
-        "Check Jira Admin → Custom Fields for the exact name."
-    )
-
-
-# ──────────────────────────────────────────────
 # Jira API helpers
 # ──────────────────────────────────────────────
-def search_epics(amount_field_id: str) -> list[dict]:
+def search_epics() -> list[dict]:
     """
     Search for all SCW2 Epics that have an amount set.
     Returns raw Jira issue dicts.
@@ -105,12 +75,13 @@ def search_epics(amount_field_id: str) -> list[dict]:
     start_at = 0
 
     while True:
-        url = f"{JIRA_BASE_URL}/rest/api/3/search"
+        # Use the newer /search/jql endpoint (Jira deprecated /search with 410 Gone)
+        url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
         params = {
             "jql": jql,
             "startAt": start_at,
             "maxResults": 100,
-            "fields": f"summary,status,{amount_field_id}",
+            "fields": f"summary,status,{AMOUNT_FIELD_ID}",
         }
         r = requests.get(url, headers=jira_headers(), params=params, timeout=60)
         r.raise_for_status()
@@ -148,7 +119,7 @@ def fetch_child_issues(epic_key: str) -> list[str]:
     start_at = 0
 
     while True:
-        url = f"{JIRA_BASE_URL}/rest/api/3/search"
+        url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
         params = {
             "jql": jql,
             "startAt": start_at,
@@ -226,8 +197,8 @@ def classify_status(status_name: str) -> str:
 def build_dashboard_data() -> list[dict]:
     """Pull all data from Jira and compute margin for each Epic."""
 
-    amount_field_id = discover_amount_field_id()
-    epics = search_epics(amount_field_id)
+    print(f"[INFO] Using Amount field: {AMOUNT_FIELD_ID}")
+    epics = search_epics()
 
     results = []
 
@@ -243,7 +214,7 @@ def build_dashboard_data() -> list[dict]:
 
         # Amount (sold value in £)
         amount = 0
-        amount_val = fields.get(amount_field_id)
+        amount_val = fields.get(AMOUNT_FIELD_ID)
         if amount_val is not None:
             try:
                 amount = float(amount_val)
