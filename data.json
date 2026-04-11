@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-10T14:29:34.704638+01:00",
+  "generated_at": "2026-04-11T03:53:55.155032+01:00",
   "target_margin_pct": 65.0,
   "summary": {
-    "total_epics": 38,
-    "total_sold_gbp": 200100.0,
-    "total_margin_gbp": 128721.06,
-    "avg_margin_pct": 57.86
+    "total_epics": 40,
+    "total_sold_gbp": 203600.0,
+    "total_margin_gbp": 130985.64,
+    "avg_margin_pct": 58.72
   },
   "epics": [
     {
@@ -33,6 +33,30 @@
       "has_data": true
     },
     {
+      "key": "SCW2-1263",
+      "summary": "ITV - Flywire Tokenization",
+      "status": "In Progress",
+      "amount": 2000.0,
+      "sold_days": 2.0,
+      "logged_days": 3.49167,
+      "total_cost": 1745.83,
+      "monetary_margin": 254.17,
+      "monetary_margin_pct": 12.71,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1241",
+      "summary": "Cruiseline- Exclusive Expeditions Custom update on invoice",
+      "status": "In Progress",
+      "amount": 1000.0,
+      "sold_days": 1.0,
+      "logged_days": 0.07292,
+      "total_cost": 36.46,
+      "monetary_margin": 963.54,
+      "monetary_margin_pct": 96.35,
+      "has_data": true
+    },
+    {
       "key": "SCW2-1225",
       "summary": "Family Twist - Pricing Pop-up",
       "status": "In Progress",
@@ -42,6 +66,18 @@
       "total_cost": 1265.62,
       "monetary_margin": 2734.38,
       "monetary_margin_pct": 68.36,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1166",
+      "summary": "Garmany Golf - Authorize.net Integration",
+      "status": "In Progress",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 0.56042,
+      "total_cost": 280.21,
+      "monetary_margin": 4719.79,
+      "monetary_margin_pct": 94.4,
       "has_data": true
     },
     {
@@ -81,15 +117,15 @@
       "has_data": true
     },
     {
-      "key": "SCW2-330",
-      "summary": "Nordic Luxury - Flywire Setup",
+      "key": "SCW2-703",
+      "summary": "Latin Routes - Custom Work - Custom Invoices",
       "status": "In Progress",
-      "amount": 3000.0,
-      "sold_days": 3.0,
-      "logged_days": 2.27708,
-      "total_cost": 1138.54,
-      "monetary_margin": 1861.46,
-      "monetary_margin_pct": 62.05,
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 5.01042,
+      "total_cost": 2505.21,
+      "monetary_margin": 2494.79,
+      "monetary_margin_pct": 49.9,
       "has_data": true
     },
     {
@@ -273,6 +309,18 @@
       "has_data": true
     },
     {
+      "key": "SCW2-330",
+      "summary": "Nordic Luxury - Flywire Setup",
+      "status": "Done",
+      "amount": 3000.0,
+      "sold_days": 3.0,
+      "logged_days": 2.27708,
+      "total_cost": 1138.54,
+      "monetary_margin": 1861.46,
+      "monetary_margin_pct": 62.05,
+      "has_data": true
+    },
+    {
       "key": "SCW2-326",
       "summary": "See Italy - Custom Agency and Direct Client Invoice",
       "status": "Done",
@@ -417,51 +465,27 @@
       "has_data": true
     },
     {
-      "key": "SCW2-1263",
-      "summary": "ITV - Flywire Tokenization",
-      "status": "Backlog",
-      "amount": 2000.0,
-      "sold_days": 2.0,
-      "logged_days": 3.49167,
-      "total_cost": 1745.83,
-      "monetary_margin": 254.17,
-      "monetary_margin_pct": 12.71,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1241",
-      "summary": "Cruiseline- Exclusive Expeditions Custom update on invoice",
-      "status": "Backlog",
+      "key": "SCW2-1412",
+      "summary": "Grandstand Motorsports - Retrieve Tour Itinerary At Booking Level",
+      "status": "In Progress",
       "amount": 1000.0,
       "sold_days": 1.0,
-      "logged_days": 0.07292,
-      "total_cost": 36.46,
-      "monetary_margin": 963.54,
-      "monetary_margin_pct": 96.35,
-      "has_data": true
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 1000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false
     },
     {
-      "key": "SCW2-1166",
-      "summary": "Garmany Golf - Authorize.net Integration",
-      "status": "Backlog",
-      "amount": 5000.0,
-      "sold_days": 5.0,
-      "logged_days": 0.56042,
-      "total_cost": 280.21,
-      "monetary_margin": 4719.79,
-      "monetary_margin_pct": 94.4,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-703",
-      "summary": "Latin Routes - Custom Work - Custom Invoices",
-      "status": "Backlog",
-      "amount": 5000.0,
-      "sold_days": 5.0,
-      "logged_days": 5.01042,
-      "total_cost": 2505.21,
-      "monetary_margin": 2494.79,
-      "monetary_margin_pct": 49.9,
+      "key": "SCW2-1365",
+      "summary": "Family Twist - Supplier Email Confirmation",
+      "status": "In Progress",
+      "amount": 2500.0,
+      "sold_days": 2.5,
+      "logged_days": 0.47083,
+      "total_cost": 235.42,
+      "monetary_margin": 2264.58,
+      "monetary_margin_pct": 90.58,
       "has_data": true
     }
   ]
