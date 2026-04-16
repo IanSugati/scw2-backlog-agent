@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-15T14:57:41.388213+01:00",
+  "generated_at": "2026-04-16T04:35:46.809532+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 40,
     "total_sold_gbp": 203600.0,
-    "total_margin_gbp": 128780.83,
-    "avg_margin_pct": 58.07
+    "total_margin_gbp": 129765.21,
+    "avg_margin_pct": 59.11
   },
   "epics": [
     {
@@ -470,11 +470,11 @@
       "status": "In Progress",
       "amount": 1000.0,
       "sold_days": 1.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 1000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false
+      "logged_days": 0.03125,
+      "total_cost": 15.62,
+      "monetary_margin": 984.38,
+      "monetary_margin_pct": 98.44,
+      "has_data": true
     },
     {
       "key": "SCW2-1365",
