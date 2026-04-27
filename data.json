@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-27T04:48:29.462036+01:00",
+  "generated_at": "2026-04-27T15:15:19.805053+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 40,
     "total_sold_gbp": 203600.0,
-    "total_margin_gbp": 125016.43,
-    "avg_margin_pct": 55.56
+    "total_margin_gbp": 124985.18,
+    "avg_margin_pct": 55.48
   },
   "epics": [
     {
@@ -42,18 +42,6 @@
       "total_cost": 1782.29,
       "monetary_margin": 217.71,
       "monetary_margin_pct": 10.89,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1241",
-      "summary": "Cruiseline- Exclusive Expeditions Custom update on invoice",
-      "status": "In Progress",
-      "amount": 1000.0,
-      "sold_days": 1.0,
-      "logged_days": 1.09583,
-      "total_cost": 547.92,
-      "monetary_margin": 452.08,
-      "monetary_margin_pct": 45.21,
       "has_data": true
     },
     {
@@ -114,6 +102,18 @@
       "total_cost": 2505.21,
       "monetary_margin": 2494.79,
       "monetary_margin_pct": 49.9,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1241",
+      "summary": "Cruiseline- Exclusive Expeditions Custom update on invoice",
+      "status": "Done",
+      "amount": 1000.0,
+      "sold_days": 1.0,
+      "logged_days": 1.15833,
+      "total_cost": 579.17,
+      "monetary_margin": 420.83,
+      "monetary_margin_pct": 42.08,
       "has_data": true
     },
     {
