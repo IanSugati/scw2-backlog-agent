@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-28T04:53:23.645761+01:00",
+  "generated_at": "2026-04-28T15:34:40.477095+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 40,
     "total_sold_gbp": 203600.0,
-    "total_margin_gbp": 124985.18,
-    "avg_margin_pct": 55.48
+    "total_margin_gbp": 124590.39,
+    "avg_margin_pct": 55.28
   },
   "epics": [
     {
@@ -62,10 +62,10 @@
       "status": "In Progress",
       "amount": 5000.0,
       "sold_days": 5.0,
-      "logged_days": 4.51042,
-      "total_cost": 2255.21,
-      "monetary_margin": 2744.79,
-      "monetary_margin_pct": 54.9,
+      "logged_days": 5.3,
+      "total_cost": 2650.0,
+      "monetary_margin": 2350.0,
+      "monetary_margin_pct": 47.0,
       "has_data": true
     },
     {
