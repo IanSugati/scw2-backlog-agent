@@ -1,13 +1,37 @@
 {
-  "generated_at": "2026-05-17T05:07:12.899834+01:00",
+  "generated_at": "2026-05-17T14:50:15.702125+01:00",
   "target_margin_pct": 65.0,
   "summary": {
-    "total_epics": 40,
-    "total_sold_gbp": 203600.0,
-    "total_margin_gbp": 120106.12,
-    "avg_margin_pct": 53.35
+    "total_epics": 43,
+    "total_sold_gbp": 227600.0,
+    "total_margin_gbp": 138149.87,
+    "avg_margin_pct": 54.74
   },
   "epics": [
+    {
+      "key": "SCW2-1459",
+      "summary": "Butterfield and Robinson - Discovery",
+      "status": "In Progress",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 4.29167,
+      "total_cost": 2145.83,
+      "monetary_margin": 2854.17,
+      "monetary_margin_pct": 57.08,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1350",
+      "summary": "Jenssen - 10-Day Investigation Plan",
+      "status": "In Progress",
+      "amount": 10000.0,
+      "sold_days": 10.0,
+      "logged_days": 6.43333,
+      "total_cost": 3216.67,
+      "monetary_margin": 6783.33,
+      "monetary_margin_pct": 67.83,
+      "has_data": true
+    },
     {
       "key": "SCW2-1339",
       "summary": "TSC - DPO Integration & Extra Items",
@@ -462,6 +486,18 @@
       "total_cost": 2890.63,
       "monetary_margin": 6609.37,
       "monetary_margin_pct": 69.57,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1532",
+      "summary": "Walk Japan - Emails",
+      "status": "Backlog",
+      "amount": 9000.0,
+      "sold_days": 9.0,
+      "logged_days": 1.1875,
+      "total_cost": 593.75,
+      "monetary_margin": 8406.25,
+      "monetary_margin_pct": 93.4,
       "has_data": true
     },
     {
