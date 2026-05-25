@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T05:29:25.074279+01:00",
+  "generated_at": "2026-05-25T16:24:03.113074+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 43,
@@ -9,27 +9,15 @@
   },
   "epics": [
     {
-      "key": "SCW2-1459",
-      "summary": "Butterfield and Robinson - Discovery",
+      "key": "SCW2-1365",
+      "summary": "Family Twist - Supplier Email Confirmation",
       "status": "In Progress",
-      "amount": 5000.0,
-      "sold_days": 5.0,
-      "logged_days": 4.64583,
-      "total_cost": 2322.92,
-      "monetary_margin": 2677.08,
-      "monetary_margin_pct": 53.54,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1350",
-      "summary": "Jenssen - 10-Day Investigation Plan",
-      "status": "In Progress",
-      "amount": 10000.0,
-      "sold_days": 10.0,
-      "logged_days": 6.43333,
-      "total_cost": 3216.67,
-      "monetary_margin": 6783.33,
-      "monetary_margin_pct": 67.83,
+      "amount": 2500.0,
+      "sold_days": 2.5,
+      "logged_days": 1.825,
+      "total_cost": 912.5,
+      "monetary_margin": 1587.5,
+      "monetary_margin_pct": 63.5,
       "has_data": true
     },
     {
@@ -126,6 +114,42 @@
       "total_cost": 2505.21,
       "monetary_margin": 2494.79,
       "monetary_margin_pct": 49.9,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1459",
+      "summary": "Butterfield and Robinson - Discovery",
+      "status": "Done",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 4.64583,
+      "total_cost": 2322.92,
+      "monetary_margin": 2677.08,
+      "monetary_margin_pct": 53.54,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1412",
+      "summary": "Grandstand Motorsports - Retrieve Tour Itinerary At Booking Level",
+      "status": "Done",
+      "amount": 1000.0,
+      "sold_days": 1.0,
+      "logged_days": 0.475,
+      "total_cost": 237.5,
+      "monetary_margin": 762.5,
+      "monetary_margin_pct": 76.25,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1350",
+      "summary": "Jenssen - 10-Day Investigation Plan",
+      "status": "Done",
+      "amount": 10000.0,
+      "sold_days": 10.0,
+      "logged_days": 6.43333,
+      "total_cost": 3216.67,
+      "monetary_margin": 6783.33,
+      "monetary_margin_pct": 67.83,
       "has_data": true
     },
     {
@@ -498,30 +522,6 @@
       "total_cost": 593.75,
       "monetary_margin": 8406.25,
       "monetary_margin_pct": 93.4,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1412",
-      "summary": "Grandstand Motorsports - Retrieve Tour Itinerary At Booking Level",
-      "status": "In Progress",
-      "amount": 1000.0,
-      "sold_days": 1.0,
-      "logged_days": 0.475,
-      "total_cost": 237.5,
-      "monetary_margin": 762.5,
-      "monetary_margin_pct": 76.25,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1365",
-      "summary": "Family Twist - Supplier Email Confirmation",
-      "status": "In Progress",
-      "amount": 2500.0,
-      "sold_days": 2.5,
-      "logged_days": 1.825,
-      "total_cost": 912.5,
-      "monetary_margin": 1587.5,
-      "monetary_margin_pct": 63.5,
       "has_data": true
     }
   ]
