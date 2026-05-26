@@ -1,23 +1,35 @@
 {
-  "generated_at": "2026-05-26T05:14:28.226605+01:00",
+  "generated_at": "2026-05-26T17:00:15.614368+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 43,
     "total_sold_gbp": 227600.0,
-    "total_margin_gbp": 136759.25,
-    "avg_margin_pct": 54.07
+    "total_margin_gbp": 136540.5,
+    "avg_margin_pct": 53.87
   },
   "epics": [
+    {
+      "key": "SCW2-1532",
+      "summary": "Walk Japan - Emails",
+      "status": "In Progress",
+      "amount": 9000.0,
+      "sold_days": 9.0,
+      "logged_days": 1.1875,
+      "total_cost": 593.75,
+      "monetary_margin": 8406.25,
+      "monetary_margin_pct": 93.4,
+      "has_data": true
+    },
     {
       "key": "SCW2-1365",
       "summary": "Family Twist - Supplier Email Confirmation",
       "status": "In Progress",
       "amount": 2500.0,
       "sold_days": 2.5,
-      "logged_days": 1.825,
-      "total_cost": 912.5,
-      "monetary_margin": 1587.5,
-      "monetary_margin_pct": 63.5,
+      "logged_days": 2.2625,
+      "total_cost": 1131.25,
+      "monetary_margin": 1368.75,
+      "monetary_margin_pct": 54.75,
       "has_data": true
     },
     {
@@ -510,18 +522,6 @@
       "total_cost": 2890.63,
       "monetary_margin": 6609.37,
       "monetary_margin_pct": 69.57,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1532",
-      "summary": "Walk Japan - Emails",
-      "status": "Backlog",
-      "amount": 9000.0,
-      "sold_days": 9.0,
-      "logged_days": 1.1875,
-      "total_cost": 593.75,
-      "monetary_margin": 8406.25,
-      "monetary_margin_pct": 93.4,
       "has_data": true
     }
   ]
