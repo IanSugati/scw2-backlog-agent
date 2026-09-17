@@ -1,13 +1,121 @@
 {
-  "generated_at": "2026-09-17T11:38:12.258841+01:00",
+  "generated_at": "2026-09-17T12:42:06.051623+01:00",
   "target_margin_pct": 65.0,
   "summary": {
-    "total_epics": 54,
-    "total_sold_gbp": 375550.0,
-    "total_margin_gbp": 226681.23,
-    "avg_margin_pct": 56.38
+    "total_epics": 55,
+    "total_sold_gbp": 380550.0,
+    "total_margin_gbp": 231649.98,
+    "avg_margin_pct": 57.21
   },
   "epics": [
+    {
+      "key": "SCW2-2042",
+      "summary": "Golden Eagle - Custom Developments",
+      "status": "In Progress",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 5000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false
+    },
+    {
+      "key": "SCW2-1920",
+      "summary": "Mundy - Trust Payments Setup & Activation (Payment Page and Via Sugati Finance)",
+      "status": "In Progress",
+      "amount": 3000.0,
+      "sold_days": 3.0,
+      "logged_days": 0.52083,
+      "total_cost": 260.42,
+      "monetary_margin": 2739.58,
+      "monetary_margin_pct": 91.32,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1918",
+      "summary": "Walk Japan - Additional Custom Development",
+      "status": "In Progress",
+      "amount": 8700.0,
+      "sold_days": 8.7,
+      "logged_days": 1.77292,
+      "total_cost": 531.58,
+      "monetary_margin": 8168.42,
+      "monetary_margin_pct": 93.89,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1917",
+      "summary": "Walk Japan - Custom API",
+      "status": "In Progress",
+      "amount": 10000.0,
+      "sold_days": 10.0,
+      "logged_days": 1.89375,
+      "total_cost": 480.08,
+      "monetary_margin": 9519.92,
+      "monetary_margin_pct": 95.2,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1889",
+      "summary": "Latin Routes - Task Engine",
+      "status": "In Progress",
+      "amount": 3000.0,
+      "sold_days": 3.0,
+      "logged_days": 1.51875,
+      "total_cost": 611.33,
+      "monetary_margin": 2388.67,
+      "monetary_margin_pct": 79.62,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1877",
+      "summary": "ASW - Virtuoso Integration",
+      "status": "In Progress",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 0.0625,
+      "total_cost": 31.25,
+      "monetary_margin": 4968.75,
+      "monetary_margin_pct": 99.38,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1787",
+      "summary": "Ski Club - Membership",
+      "status": "In Progress",
+      "amount": 76000.0,
+      "sold_days": 76.0,
+      "logged_days": 46.50833,
+      "total_cost": 11211.79,
+      "monetary_margin": 64788.21,
+      "monetary_margin_pct": 85.25,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1774",
+      "summary": "Walk Japan - Tour Series Creation & Resource Management",
+      "status": "In Progress",
+      "amount": 30000.0,
+      "sold_days": 30.0,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 30000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false
+    },
+    {
+      "key": "SCW2-1645",
+      "summary": "FT - Manage Mark Up - Pop Up",
+      "status": "In Progress",
+      "amount": 2000.0,
+      "sold_days": 2.0,
+      "logged_days": 2.00625,
+      "total_cost": 490.29,
+      "monetary_margin": 1509.71,
+      "monetary_margin_pct": 75.49,
+      "has_data": true
+    },
     {
       "key": "SCW2-1365",
       "summary": "Family Twist - Supplier Email Confirmation",
@@ -90,6 +198,18 @@
       "total_cost": 70.0,
       "monetary_margin": 430.0,
       "monetary_margin_pct": 86.0,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1650",
+      "summary": "Ski Club - Phase 0 (Membership)",
+      "status": "Done",
+      "amount": 9500.0,
+      "sold_days": 9.5,
+      "logged_days": 8.65625,
+      "total_cost": 4328.12,
+      "monetary_margin": 5171.88,
+      "monetary_margin_pct": 54.44,
       "has_data": true
     },
     {
@@ -546,114 +666,6 @@
       "total_cost": 3072.92,
       "monetary_margin": 6427.08,
       "monetary_margin_pct": 67.65,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-2042",
-      "summary": "Golden Eagle - Custom Developments",
-      "status": "Backlog",
-      "amount": 5000.0,
-      "sold_days": 5.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 5000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false
-    },
-    {
-      "key": "SCW2-1920",
-      "summary": "Mundy - Trust Payments Setup & Activation (Payment Page and Via Sugati Finance)",
-      "status": "Backlog",
-      "amount": 3000.0,
-      "sold_days": 3.0,
-      "logged_days": 0.52083,
-      "total_cost": 260.42,
-      "monetary_margin": 2739.58,
-      "monetary_margin_pct": 91.32,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1918",
-      "summary": "Walk Japan - Additional Custom Development",
-      "status": "Backlog",
-      "amount": 8700.0,
-      "sold_days": 8.7,
-      "logged_days": 1.77292,
-      "total_cost": 531.58,
-      "monetary_margin": 8168.42,
-      "monetary_margin_pct": 93.89,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1917",
-      "summary": "Walk Japan - Custom API",
-      "status": "Backlog",
-      "amount": 10000.0,
-      "sold_days": 10.0,
-      "logged_days": 1.89375,
-      "total_cost": 480.08,
-      "monetary_margin": 9519.92,
-      "monetary_margin_pct": 95.2,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1889",
-      "summary": "Latin Routes - Task Engine",
-      "status": "Backlog",
-      "amount": 3000.0,
-      "sold_days": 3.0,
-      "logged_days": 1.51875,
-      "total_cost": 611.33,
-      "monetary_margin": 2388.67,
-      "monetary_margin_pct": 79.62,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1787",
-      "summary": "Ski Club - Membership",
-      "status": "Backlog",
-      "amount": 76000.0,
-      "sold_days": 76.0,
-      "logged_days": 46.50833,
-      "total_cost": 11211.79,
-      "monetary_margin": 64788.21,
-      "monetary_margin_pct": 85.25,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1774",
-      "summary": "Walk Japan - Tour Series Creation & Resource Management",
-      "status": "Backlog",
-      "amount": 30000.0,
-      "sold_days": 30.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 30000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false
-    },
-    {
-      "key": "SCW2-1650",
-      "summary": "Ski Club - Phase 0 (Membership)",
-      "status": "Backlog",
-      "amount": 9500.0,
-      "sold_days": 9.5,
-      "logged_days": 8.65625,
-      "total_cost": 4328.12,
-      "monetary_margin": 5171.88,
-      "monetary_margin_pct": 54.44,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1645",
-      "summary": "FT - Manage Mark Up - Pop Up",
-      "status": "Backlog",
-      "amount": 2000.0,
-      "sold_days": 2.0,
-      "logged_days": 2.00625,
-      "total_cost": 490.29,
-      "monetary_margin": 1509.71,
-      "monetary_margin_pct": 75.49,
       "has_data": true
     }
   ]
