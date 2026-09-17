@@ -39,6 +39,8 @@ RATE_CARD = {
 }
 OFFSHORE_RATE_NAMES = {"shivam", "kishika"}  # £20.00/hr
 OFFSHORE_RATE = 20.00
+OTHER_RATE_NAMES = {"becky", "laura"}  # £40.00/hr
+OTHER_RATE = 40.00
 LOWER_RATE_NAMES = {"melvin", "constandina"}  # £18.18/hr
 LOWER_RATE = 18.18
 
@@ -108,58 +110,82 @@ def fetch_worklogs(issue_key: str) -> list[dict]:
     url = f"{JIRA_BASE_URL}/rest/api/3/issue/{issue_key}/worklog"
     r = requests.get(url, headers=jira_headers(), timeout=30)
     r.raise_for_status()
-    return (r.json() or {}).get("worklogs", [])
+    logs = (r.json() or {}).get("worklogs", [])
+    for wl in logs:
+        wl["_issue_key"] = issue_key
+    return logs
 
 
-def fetch_child_issues(epic_key: str) -> list[str]:
+def fetch_child_issues(epic_key: str) -> tuple[list[str], list[str]]:
     """
-    Find every descendant of an Epic — direct children AND anything nested
-    beneath them (phase tickets, their sub-tickets, and so on), then return
-    only the ones that actually have time logged.
+    Walk the whole tree beneath an Epic — direct children AND anything nested
+    below them — and harvest linked SPD tickets along the way.
 
-    The previous version looked one level down only, so hours logged on a
-    grandchild ticket never reached the margin calculation.
+    Returns (scw2_keys_with_time, linked_spd_keys_with_time).
+
+    Links come free: the search response already carries issuelinks, so no
+    extra API calls are needed to find them. Only the linked SPD ticket itself
+    is returned, not its own children — package tickets often cover work for
+    more than one client.
     """
 
-    def run_jql(jql: str) -> list[str]:
-        keys, start_at = [], 0
+    def run_jql(jql: str, want_links: bool = False):
+        keys, links, start_at = [], set(), 0
         while True:
             url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
             params = {
                 "jql": jql,
                 "startAt": start_at,
                 "maxResults": 100,
-                "fields": "key",
+                "fields": "key,issuelinks" if want_links else "key",
             }
             r = requests.get(url, headers=jira_headers(), params=params, timeout=30)
             r.raise_for_status()
             data = r.json()
             batch = data.get("issues", [])
-            keys.extend(i["key"] for i in batch)
+            for issue in batch:
+                keys.append(issue["key"])
+                if not want_links:
+                    continue
+                for link in (issue.get("fields") or {}).get("issuelinks") or []:
+                    for side in ("outwardIssue", "inwardIssue"):
+                        other = link.get(side)
+                        if other and other.get("key", "").startswith("SPD-"):
+                            links.add(other["key"])
             if not batch:
                 break
             start_at += len(batch)
             if start_at >= data.get("total", 0):
                 break
-        return keys
+        return keys, links
 
     MAX_DEPTH = 6
     seen = {epic_key}
     descendants: list[str] = []
+    spd_links: set[str] = set()
     frontier = [epic_key]
     depth = 0
 
-    # Walk the tree one level at a time, batching each level into as few
-    # queries as possible rather than one call per ticket.
+    # The epic's own links count too.
+    try:
+        _, epic_links = run_jql(f"key = {epic_key}", want_links=True)
+        spd_links |= epic_links
+    except Exception as e:
+        print(f"    [WARN] Could not read links on {epic_key}: {e}")
+
     while frontier and depth < MAX_DEPTH:
         found: list[str] = []
         if depth == 0:
-            found = run_jql(f'"Epic Link" = {epic_key} OR parent = {epic_key}')
+            found, links = run_jql(
+                f'"Epic Link" = {epic_key} OR parent = {epic_key}', want_links=True)
+            spd_links |= links
         else:
             for i in range(0, len(frontier), 50):
                 chunk = ",".join(frontier[i:i + 50])
                 try:
-                    found.extend(run_jql(f"parent in ({chunk})"))
+                    f2, links = run_jql(f"parent in ({chunk})", want_links=True)
+                    found.extend(f2)
+                    spd_links |= links
                 except Exception as e:
                     print(f"    [WARN] Could not fetch children at depth {depth}: {e}")
         new = [k for k in found if k not in seen]
@@ -169,21 +195,25 @@ def fetch_child_issues(epic_key: str) -> list[str]:
         frontier = new
         depth += 1
 
-    if not descendants:
-        return []
+    def only_with_time(keys: list[str]) -> list[str]:
+        if not keys:
+            return []
+        out: list[str] = []
+        for i in range(0, len(keys), 100):
+            chunk = ",".join(keys[i:i + 100])
+            try:
+                got, _ = run_jql(f"key in ({chunk}) AND timespent > 0")
+                out.extend(got)
+            except Exception as e:
+                print(f"    [WARN] timespent filter failed, checking all: {e}")
+                return keys
+        return out
 
-    # Keep only tickets with time logged — saves a worklog call per empty one.
-    with_time: list[str] = []
-    for i in range(0, len(descendants), 100):
-        chunk = ",".join(descendants[i:i + 100])
-        try:
-            with_time.extend(run_jql(f"key in ({chunk}) AND timespent > 0"))
-        except Exception as e:
-            print(f"    [WARN] timespent filter failed, checking all: {e}")
-            return descendants
-
-    print(f"    {len(descendants)} descendants, {len(with_time)} with time logged")
-    return with_time
+    scw2 = only_with_time(descendants)
+    spds = only_with_time(sorted(spd_links))
+    print(f"    {len(descendants)} descendants ({len(scw2)} with time)"
+          f" · {len(spd_links)} linked SPD ({len(spds)} with time)")
+    return scw2, spds
 
 
 # ──────────────────────────────────────────────
@@ -198,18 +228,24 @@ def get_hourly_rate(display_name: str) -> float:
     for keyword in OFFSHORE_RATE_NAMES:
         if keyword in name_lower:
             return OFFSHORE_RATE
+    for keyword in OTHER_RATE_NAMES:
+        if keyword in name_lower:
+            return OTHER_RATE
     return RATE_CARD["default"]
 
 
-def calculate_cost_from_worklogs(worklogs: list[dict]) -> tuple[float, float]:
+def calculate_cost_from_worklogs(worklogs: list[dict]) -> tuple[float, float, dict, dict, dict]:
     """
-    Calculate total cost and total hours from a list of worklogs,
-    applying the rate card per person.
+    Calculate cost and hours from worklogs, applying the rate card per person.
 
-    Returns (total_cost_gbp, total_hours).
+    Returns (total_cost_gbp, total_hours, by_person, by_ticket, by_month) where
+    the three dicts break the same figures down for the dashboard pop-up.
     """
     total_cost = 0.0
     total_seconds = 0
+    by_person: dict = {}
+    by_ticket: dict = {}
+    by_month: dict = {}
 
     for wl in worklogs:
         seconds = int(wl.get("timeSpentSeconds") or 0)
@@ -217,15 +253,36 @@ def calculate_cost_from_worklogs(worklogs: list[dict]) -> tuple[float, float]:
             continue
 
         author = wl.get("author") or {}
-        display_name = author.get("displayName") or ""
+        display_name = (author.get("displayName") or "Unknown").strip()
         rate = get_hourly_rate(display_name)
 
         hours = seconds / 3600.0
-        total_cost += hours * rate
+        cost = hours * rate
+        total_cost += cost
         total_seconds += seconds
 
-    total_hours = total_seconds / 3600.0
-    return total_cost, total_hours
+        person = by_person.setdefault(
+            display_name, {"hours": 0.0, "cost": 0.0, "rate": rate})
+        person["hours"] += hours
+        person["cost"] += cost
+
+        ticket_key = wl.get("_issue_key") or wl.get("issueKey") or "unknown"
+        ticket = by_ticket.setdefault(ticket_key, {"hours": 0.0, "cost": 0.0})
+        ticket["hours"] += hours
+        ticket["cost"] += cost
+
+        started = (wl.get("started") or "")[:7]  # YYYY-MM
+        if started:
+            month = by_month.setdefault(started, {"hours": 0.0, "cost": 0.0})
+            month["hours"] += hours
+            month["cost"] += cost
+
+    for bucket in (by_person, by_ticket, by_month):
+        for v in bucket.values():
+            v["hours"] = round(v["hours"], 3)
+            v["cost"] = round(v["cost"], 2)
+
+    return total_cost, total_seconds / 3600.0, by_person, by_ticket, by_month
 
 
 # ──────────────────────────────────────────────
@@ -248,18 +305,17 @@ def build_dashboard_data() -> list[dict]:
     epics = search_epics()
 
     results = []
+    spd_claims: dict = {}  # SPD key -> [epic keys], to spot double counting
 
     for i, epic in enumerate(epics):
         key = epic["key"]
         fields = epic.get("fields", {})
         summary = (fields.get("summary") or "").strip()
 
-        # Status
         status_obj = fields.get("status") or {}
         status_name = (status_obj.get("name") or "Open").strip()
         dashboard_status = classify_status(status_name)
 
-        # Amount (sold value in £)
         amount = 0
         amount_val = fields.get(AMOUNT_FIELD_ID)
         if amount_val is not None:
@@ -268,35 +324,41 @@ def build_dashboard_data() -> list[dict]:
             except (TypeError, ValueError):
                 amount = 0
 
-        # Sold days (£1000 = 1 day)
         sold_days = amount / 1000.0 if amount > 0 else 0
 
-        # Fetch worklogs from the Epic itself + all child issues
         print(f"  [{i+1}/{len(epics)}] {key} — {summary}")
         all_worklogs = []
+        spd_worklogs = []
+        spd_keys: list[str] = []
 
-        # Epic-level worklogs
         try:
             all_worklogs.extend(fetch_worklogs(key))
         except Exception as e:
             print(f"    [WARN] Could not fetch worklogs for {key}: {e}")
 
-        # Child issue worklogs
         try:
-            children = fetch_child_issues(key)
+            children, spd_keys = fetch_child_issues(key)
             for child_key in children:
                 try:
                     all_worklogs.extend(fetch_worklogs(child_key))
                 except Exception as e:
                     print(f"    [WARN] Could not fetch worklogs for {child_key}: {e}")
+            for spd_key in spd_keys:
+                spd_claims.setdefault(spd_key, []).append(key)
+                try:
+                    spd_worklogs.extend(fetch_worklogs(spd_key))
+                except Exception as e:
+                    print(f"    [WARN] Could not fetch worklogs for {spd_key}: {e}")
         except Exception as e:
             print(f"    [WARN] Could not fetch children for {key}: {e}")
 
-        # Calculate cost and hours
-        total_cost, total_hours = calculate_cost_from_worklogs(all_worklogs)
+        combined = all_worklogs + spd_worklogs
+        total_cost, total_hours, by_person, by_ticket, by_month = (
+            calculate_cost_from_worklogs(combined))
+        spd_cost, spd_hours, _, _, _ = calculate_cost_from_worklogs(spd_worklogs)
+
         logged_days = total_hours / 8.0  # 8-hour day
 
-        # Margin
         has_data = total_hours > 0
         monetary_margin = amount - total_cost
         monetary_margin_pct = (
@@ -315,7 +377,20 @@ def build_dashboard_data() -> list[dict]:
             "monetary_margin": round(monetary_margin, 2),
             "monetary_margin_pct": round(monetary_margin_pct, 2),
             "has_data": has_data,
+            "by_person": by_person,
+            "by_ticket": by_ticket,
+            "by_month": by_month,
+            "linked_spd": spd_keys,
+            "spd_days": round(spd_hours / 8.0, 5),
+            "spd_cost": round(spd_cost, 2),
         })
+
+    shared = {k: v for k, v in spd_claims.items() if len(v) > 1}
+    if shared:
+        print("[WARN] SPD tickets linked from more than one epic — "
+              "their time is counted against each:")
+        for spd_key, epic_keys in sorted(shared.items()):
+            print(f"  {spd_key} → {', '.join(epic_keys)}")
 
     return results
 
