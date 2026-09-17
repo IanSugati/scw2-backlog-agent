@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-17T10:37:18.020058+01:00",
+  "generated_at": "2026-09-17T11:27:39.900077+01:00",
   "target_margin_pct": 65.0,
   "summary": {
-    "total_epics": 43,
-    "total_sold_gbp": 227600.0,
-    "total_margin_gbp": 135956.57,
-    "avg_margin_pct": 53.33
+    "total_epics": 54,
+    "total_sold_gbp": 375550.0,
+    "total_margin_gbp": 238150.79,
+    "avg_margin_pct": 58.22
   },
   "epics": [
     {
@@ -45,54 +45,6 @@
       "has_data": true
     },
     {
-      "key": "SCW2-1263",
-      "summary": "ITV - Flywire Tokenization",
-      "status": "In Progress",
-      "amount": 2000.0,
-      "sold_days": 2.0,
-      "logged_days": 4.06875,
-      "total_cost": 2034.38,
-      "monetary_margin": -34.38,
-      "monetary_margin_pct": -1.72,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1225",
-      "summary": "Family Twist - Pricing Pop-up",
-      "status": "In Progress",
-      "amount": 4000.0,
-      "sold_days": 4.0,
-      "logged_days": 4.14792,
-      "total_cost": 1688.73,
-      "monetary_margin": 2311.27,
-      "monetary_margin_pct": 57.78,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1166",
-      "summary": "Garmany Golf - Authorize.net Integration",
-      "status": "In Progress",
-      "amount": 5000.0,
-      "sold_days": 5.0,
-      "logged_days": 7.4875,
-      "total_cost": 3743.75,
-      "monetary_margin": 1256.25,
-      "monetary_margin_pct": 25.13,
-      "has_data": true
-    },
-    {
-      "key": "SCW2-1101",
-      "summary": "See Italy- SUG 000002482- Further enhancement to Onboarding",
-      "status": "In Progress",
-      "amount": 2500.0,
-      "sold_days": 2.5,
-      "logged_days": 2.28542,
-      "total_cost": 1057.71,
-      "monetary_margin": 1442.29,
-      "monetary_margin_pct": 57.69,
-      "has_data": true
-    },
-    {
       "key": "SCW2-915",
       "summary": "See Italy - Account/Supplier Contact/Supplier Contact SYNC",
       "status": "In Progress",
@@ -114,6 +66,30 @@
       "total_cost": 2738.42,
       "monetary_margin": 2261.58,
       "monetary_margin_pct": 45.23,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1738",
+      "summary": "A2A - Hiding Pricing in HTML Itinerary",
+      "status": "Done",
+      "amount": 250.0,
+      "sold_days": 0.25,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 250.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false
+    },
+    {
+      "key": "SCW2-1719",
+      "summary": "RBR - Ticketing Deadline Task & Alert",
+      "status": "Done",
+      "amount": 500.0,
+      "sold_days": 0.5,
+      "logged_days": 0.4375,
+      "total_cost": 70.0,
+      "monetary_margin": 430.0,
+      "monetary_margin_pct": 86.0,
       "has_data": true
     },
     {
@@ -165,6 +141,18 @@
       "has_data": true
     },
     {
+      "key": "SCW2-1263",
+      "summary": "ITV - Flywire Tokenization",
+      "status": "Done",
+      "amount": 2000.0,
+      "sold_days": 2.0,
+      "logged_days": 4.06875,
+      "total_cost": 2034.38,
+      "monetary_margin": -34.38,
+      "monetary_margin_pct": -1.72,
+      "has_data": true
+    },
+    {
       "key": "SCW2-1241",
       "summary": "Cruiseline- Exclusive Expeditions Custom update on invoice",
       "status": "Done",
@@ -177,6 +165,18 @@
       "has_data": true
     },
     {
+      "key": "SCW2-1225",
+      "summary": "Family Twist - Pricing Pop-up",
+      "status": "Done",
+      "amount": 4000.0,
+      "sold_days": 4.0,
+      "logged_days": 4.14792,
+      "total_cost": 1688.73,
+      "monetary_margin": 2311.27,
+      "monetary_margin_pct": 57.78,
+      "has_data": true
+    },
+    {
       "key": "SCW2-1168",
       "summary": "Ski Club - Membership Discovery",
       "status": "Done",
@@ -186,6 +186,30 @@
       "total_cost": 1255.21,
       "monetary_margin": 744.79,
       "monetary_margin_pct": 37.24,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1166",
+      "summary": "Garmany Golf - Authorize.net Integration",
+      "status": "Done",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 7.4875,
+      "total_cost": 3743.75,
+      "monetary_margin": 1256.25,
+      "monetary_margin_pct": 25.13,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1101",
+      "summary": "See Italy- SUG 000002482- Further enhancement to Onboarding",
+      "status": "Done",
+      "amount": 2500.0,
+      "sold_days": 2.5,
+      "logged_days": 2.28542,
+      "total_cost": 1057.71,
+      "monetary_margin": 1442.29,
+      "monetary_margin_pct": 57.69,
       "has_data": true
     },
     {
@@ -522,6 +546,114 @@
       "total_cost": 2890.63,
       "monetary_margin": 6609.37,
       "monetary_margin_pct": 69.57,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-2042",
+      "summary": "Golden Eagle - Custom Developments",
+      "status": "Backlog",
+      "amount": 5000.0,
+      "sold_days": 5.0,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 5000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false
+    },
+    {
+      "key": "SCW2-1920",
+      "summary": "Mundy - Trust Payments Setup & Activation (Payment Page and Via Sugati Finance)",
+      "status": "Backlog",
+      "amount": 3000.0,
+      "sold_days": 3.0,
+      "logged_days": 0.52083,
+      "total_cost": 260.42,
+      "monetary_margin": 2739.58,
+      "monetary_margin_pct": 91.32,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1918",
+      "summary": "Walk Japan - Additional Custom Development",
+      "status": "Backlog",
+      "amount": 8700.0,
+      "sold_days": 8.7,
+      "logged_days": 1.77292,
+      "total_cost": 531.58,
+      "monetary_margin": 8168.42,
+      "monetary_margin_pct": 93.89,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1917",
+      "summary": "Walk Japan - Custom API",
+      "status": "Backlog",
+      "amount": 10000.0,
+      "sold_days": 10.0,
+      "logged_days": 1.89375,
+      "total_cost": 480.08,
+      "monetary_margin": 9519.92,
+      "monetary_margin_pct": 95.2,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1889",
+      "summary": "Latin Routes - Task Engine",
+      "status": "Backlog",
+      "amount": 3000.0,
+      "sold_days": 3.0,
+      "logged_days": 1.51875,
+      "total_cost": 611.33,
+      "monetary_margin": 2388.67,
+      "monetary_margin_pct": 79.62,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1787",
+      "summary": "Ski Club - Membership",
+      "status": "Backlog",
+      "amount": 76000.0,
+      "sold_days": 76.0,
+      "logged_days": 7.51042,
+      "total_cost": 3733.96,
+      "monetary_margin": 72266.04,
+      "monetary_margin_pct": 95.09,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1774",
+      "summary": "Walk Japan - Tour Series Creation & Resource Management",
+      "status": "Backlog",
+      "amount": 30000.0,
+      "sold_days": 30.0,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 30000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false
+    },
+    {
+      "key": "SCW2-1650",
+      "summary": "Ski Club - Phase 0 (Membership)",
+      "status": "Backlog",
+      "amount": 9500.0,
+      "sold_days": 9.5,
+      "logged_days": 8.65625,
+      "total_cost": 4328.12,
+      "monetary_margin": 5171.88,
+      "monetary_margin_pct": 54.44,
+      "has_data": true
+    },
+    {
+      "key": "SCW2-1645",
+      "summary": "FT - Manage Mark Up - Pop Up",
+      "status": "Backlog",
+      "amount": 2000.0,
+      "sold_days": 2.0,
+      "logged_days": 2.00625,
+      "total_cost": 490.29,
+      "monetary_margin": 1509.71,
+      "monetary_margin_pct": 75.49,
       "has_data": true
     }
   ]
