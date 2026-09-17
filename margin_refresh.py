@@ -35,8 +35,10 @@ AMOUNT_FIELD_ID = "customfield_10640"
 
 # Rate card (£ per hour)
 RATE_CARD = {
-    "default": 62.50,  # Ian, Naval, Shivam, and anyone else
+    "default": 62.50,  # Ian, Naval, and anyone else
 }
+OFFSHORE_RATE_NAMES = {"shivam", "kishika"}  # £20.00/hr
+OFFSHORE_RATE = 20.00
 LOWER_RATE_NAMES = {"melvin", "constandina"}  # £18.18/hr
 LOWER_RATE = 18.18
 
@@ -151,6 +153,9 @@ def get_hourly_rate(display_name: str) -> float:
     for keyword in LOWER_RATE_NAMES:
         if keyword in name_lower:
             return LOWER_RATE
+    for keyword in OFFSHORE_RATE_NAMES:
+        if keyword in name_lower:
+            return OFFSHORE_RATE
     return RATE_CARD["default"]
 
 
