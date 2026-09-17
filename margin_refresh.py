@@ -113,35 +113,77 @@ def fetch_worklogs(issue_key: str) -> list[dict]:
 
 def fetch_child_issues(epic_key: str) -> list[str]:
     """
-    Find all child issues of an Epic (stories, tasks, sub-tasks, bugs).
-    Returns list of issue keys.
+    Find every descendant of an Epic — direct children AND anything nested
+    beneath them (phase tickets, their sub-tickets, and so on), then return
+    only the ones that actually have time logged.
+
+    The previous version looked one level down only, so hours logged on a
+    grandchild ticket never reached the margin calculation.
     """
-    jql = f'"Epic Link" = {epic_key} OR parent = {epic_key}'
-    keys = []
-    start_at = 0
 
-    while True:
-        url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
-        params = {
-            "jql": jql,
-            "startAt": start_at,
-            "maxResults": 100,
-            "fields": "key",
-        }
-        r = requests.get(url, headers=jira_headers(), params=params, timeout=30)
-        r.raise_for_status()
+    def run_jql(jql: str) -> list[str]:
+        keys, start_at = [], 0
+        while True:
+            url = f"{JIRA_BASE_URL}/rest/api/3/search/jql"
+            params = {
+                "jql": jql,
+                "startAt": start_at,
+                "maxResults": 100,
+                "fields": "key",
+            }
+            r = requests.get(url, headers=jira_headers(), params=params, timeout=30)
+            r.raise_for_status()
+            data = r.json()
+            batch = data.get("issues", [])
+            keys.extend(i["key"] for i in batch)
+            if not batch:
+                break
+            start_at += len(batch)
+            if start_at >= data.get("total", 0):
+                break
+        return keys
 
-        data = r.json()
-        batch = data.get("issues", [])
-        keys.extend([i["key"] for i in batch])
+    MAX_DEPTH = 6
+    seen = {epic_key}
+    descendants: list[str] = []
+    frontier = [epic_key]
+    depth = 0
 
-        if len(batch) == 0:
-            break
-        start_at += len(batch)
-        if start_at >= data.get("total", 0):
-            break
+    # Walk the tree one level at a time, batching each level into as few
+    # queries as possible rather than one call per ticket.
+    while frontier and depth < MAX_DEPTH:
+        found: list[str] = []
+        if depth == 0:
+            found = run_jql(f'"Epic Link" = {epic_key} OR parent = {epic_key}')
+        else:
+            for i in range(0, len(frontier), 50):
+                chunk = ",".join(frontier[i:i + 50])
+                try:
+                    found.extend(run_jql(f"parent in ({chunk})"))
+                except Exception as e:
+                    print(f"    [WARN] Could not fetch children at depth {depth}: {e}")
+        new = [k for k in found if k not in seen]
+        for k in new:
+            seen.add(k)
+            descendants.append(k)
+        frontier = new
+        depth += 1
 
-    return keys
+    if not descendants:
+        return []
+
+    # Keep only tickets with time logged — saves a worklog call per empty one.
+    with_time: list[str] = []
+    for i in range(0, len(descendants), 100):
+        chunk = ",".join(descendants[i:i + 100])
+        try:
+            with_time.extend(run_jql(f"key in ({chunk}) AND timespent > 0"))
+        except Exception as e:
+            print(f"    [WARN] timespent filter failed, checking all: {e}")
+            return descendants
+
+    print(f"    {len(descendants)} descendants, {len(with_time)} with time logged")
+    return with_time
 
 
 # ──────────────────────────────────────────────
