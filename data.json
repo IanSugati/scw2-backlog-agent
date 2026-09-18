@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-17T17:48:49.711482+01:00",
+  "generated_at": "2026-09-18T05:21:48.336200+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 55,
     "total_sold_gbp": 380550.0,
-    "total_margin_gbp": 227193.03,
-    "avg_margin_pct": 55.72
+    "total_margin_gbp": 226952.4,
+    "avg_margin_pct": 55.67
   },
   "epics": [
     {
@@ -90,10 +90,10 @@
       "status": "In Progress",
       "amount": 8700.0,
       "sold_days": 8.7,
-      "logged_days": 4.93333,
-      "total_cost": 2100.54,
-      "monetary_margin": 6599.46,
-      "monetary_margin_pct": 75.86,
+      "logged_days": 5.41458,
+      "total_cost": 2341.17,
+      "monetary_margin": 6358.83,
+      "monetary_margin_pct": 73.09,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -107,8 +107,8 @@
           "rate": 20.0
         },
         "Andy Edmonds": {
-          "hours": 12.133,
-          "cost": 758.33,
+          "hours": 15.55,
+          "cost": 971.88,
           "rate": 62.5
         },
         "Laura McConway": {
@@ -122,8 +122,8 @@
           "rate": 62.5
         },
         "James Win": {
-          "hours": 2.6,
-          "cost": 162.5,
+          "hours": 3.033,
+          "cost": 189.58,
           "rate": 62.5
         }
       },
@@ -157,12 +157,12 @@
           "cost": 388.54
         },
         "SPD-5960": {
-          "hours": 3.933,
-          "cost": 245.83
+          "hours": 4.367,
+          "cost": 272.92
         },
         "SPD-4484": {
-          "hours": 12.917,
-          "cost": 807.29
+          "hours": 16.333,
+          "cost": 1020.83
         }
       },
       "by_month": {
@@ -171,8 +171,8 @@
           "cost": 593.46
         },
         "2026-09": {
-          "hours": 24.283,
-          "cost": 1507.08
+          "hours": 28.133,
+          "cost": 1747.71
         }
       },
       "linked_spd": [
@@ -182,8 +182,8 @@
         "SPD-5960",
         "SPD-4484"
       ],
-      "spd_days": 3.16042,
-      "spd_cost": 1568.96
+      "spd_days": 3.64167,
+      "spd_cost": 1809.58
     },
     {
       "key": "SCW2-1917",
