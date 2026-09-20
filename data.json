@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-20T05:36:01.021447+01:00",
+  "generated_at": "2026-09-20T16:56:12.588275+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 55,
     "total_sold_gbp": 380550.0,
-    "total_margin_gbp": 226138.71,
-    "avg_margin_pct": 55.53
+    "total_margin_gbp": 226321.0,
+    "avg_margin_pct": 55.57
   },
   "epics": [
     {
@@ -691,10 +691,6 @@
           "hours": 9.033,
           "cost": 180.67
         },
-        "SCW2-1812": {
-          "hours": 3.767,
-          "cost": 75.33
-        },
         "SCW2-1808": {
           "hours": 2.0,
           "cost": 125.0
@@ -702,6 +698,10 @@
         "SCW2-1795": {
           "hours": 41.417,
           "cost": 2567.29
+        },
+        "SCW2-1812": {
+          "hours": 3.767,
+          "cost": 75.33
         },
         "SCW2-1811": {
           "hours": 5.117,
@@ -5006,10 +5006,10 @@
       "status": "Done",
       "amount": 9500.0,
       "sold_days": 9.5,
-      "logged_days": 6.51042,
-      "total_cost": 2825.46,
-      "monetary_margin": 6674.54,
-      "monetary_margin_pct": 70.26,
+      "logged_days": 6.14583,
+      "total_cost": 2643.17,
+      "monetary_margin": 6856.83,
+      "monetary_margin_pct": 72.18,
       "has_data": true,
       "by_person": {
         "Laura McConway": {
@@ -5018,8 +5018,8 @@
           "rate": 40.0
         },
         "Ian Fairhurst": {
-          "hours": 16.75,
-          "cost": 1046.88,
+          "hours": 13.833,
+          "cost": 864.58,
           "rate": 62.5
         },
         "Naval Sharma": {
@@ -5041,14 +5041,6 @@
         "SCW2-596": {
           "hours": 0.833,
           "cost": 52.08
-        },
-        "SCW2-568": {
-          "hours": 2.5,
-          "cost": 156.25
-        },
-        "SCW2-567": {
-          "hours": 0.417,
-          "cost": 26.04
         },
         "SCW2-566": {
           "hours": 1.333,
@@ -5169,8 +5161,8 @@
           "cost": 158.88
         },
         "2025-10": {
-          "hours": 5.083,
-          "cost": 317.71
+          "hours": 2.167,
+          "cost": 135.42
         },
         "2025-09": {
           "hours": 14.033,
