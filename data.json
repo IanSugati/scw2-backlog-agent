@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-21T05:34:12.173478+01:00",
+  "generated_at": "2026-09-21T09:52:58.404917+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 55,
     "total_sold_gbp": 380550.0,
-    "total_margin_gbp": 226138.71,
-    "avg_margin_pct": 55.53
+    "total_margin_gbp": 254434.79,
+    "avg_margin_pct": 56.27
   },
   "epics": [
     {
@@ -756,17 +756,53 @@
       "status": "In Progress",
       "amount": 30000.0,
       "sold_days": 30.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 30000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false,
-      "by_person": {},
-      "by_ticket": {},
-      "by_month": {},
-      "linked_spd": [],
-      "spd_days": 0.0,
-      "spd_cost": 0.0
+      "logged_days": 6.51458,
+      "total_cost": 1703.92,
+      "monetary_margin": 28296.08,
+      "monetary_margin_pct": 94.32,
+      "has_data": true,
+      "by_person": {
+        "Andy Edmonds": {
+          "hours": 15.567,
+          "cost": 972.92,
+          "rate": 62.5
+        },
+        "Kishika Sisodia": {
+          "hours": 36.55,
+          "cost": 731.0,
+          "rate": 20.0
+        }
+      },
+      "by_ticket": {
+        "SPD-5642": {
+          "hours": 36.783,
+          "cost": 745.58
+        },
+        "SPD-5619": {
+          "hours": 15.333,
+          "cost": 958.33
+        }
+      },
+      "by_month": {
+        "2026-07": {
+          "hours": 50.833,
+          "cost": 1663.38
+        },
+        "2026-08": {
+          "hours": 0.933,
+          "cost": 18.67
+        },
+        "2026-06": {
+          "hours": 0.35,
+          "cost": 21.88
+        }
+      },
+      "linked_spd": [
+        "SPD-5642",
+        "SPD-5619"
+      ],
+      "spd_days": 6.51458,
+      "spd_cost": 1703.92
     },
     {
       "key": "SCW2-1645",
