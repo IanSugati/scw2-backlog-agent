@@ -10,10 +10,13 @@ NOT in this file — the artifact bakes those in from the Support Monthly
 Opps Won report at build time, which is also where funded vs unfunded
 is decided.
 
-Rules (agreed 21 Sep 2026):
-  - Cohort: every SSH ticket created on/after FY start, ALL orgs
-    (no Support Contract filter — funded/unfunded comes from Salesforce).
-  - Time: all worklogs on cohort tickets, whenever logged.
+Rules (v2, agreed 21 Sep 2026):
+  - Cohort: every SSH ticket created on/after the window start (1 Apr 2025,
+    two financial years), ALL orgs — no Support Contract filter; contract
+    matching happens at build time from the Salesforce reports.
+  - Time: WORKLOG-DATE based. Only worklogs started on/after the window
+    start count, on SSH tickets and linked trees alike, so time can be
+    matched to contract coverage periods at build time.
   - Linked SCW2/SPD: the linked ticket AND its descendants.
   - Linked SCW2 time is tagged with its root epic and whether that epic
     has an Amount (i.e. is already counted in the PS margin view).
@@ -23,7 +26,7 @@ Reuses the rate card, worklog fetch and cost logic from margin_refresh.py.
 Environment variables required (same as margin_refresh.py):
   JIRA_BASE_URL, JIRA_EMAIL, JIRA_API_TOKEN
 Optional:
-  FY_START — override financial year start, e.g. 2026-04-01
+  WINDOW_START — override the window start, e.g. 2025-04-01
 """
 
 import os
@@ -48,14 +51,14 @@ EPIC_LINK_FIELD_ID = "customfield_10014"  # Epic Link
 MAX_DEPTH = 5
 
 
-def fy_start() -> str:
-    """1 April of the current FY, unless overridden by FY_START."""
-    override = os.environ.get("FY_START", "").strip()
+def window_start() -> str:
+    """1 April of the PREVIOUS FY (two-year window), unless overridden."""
+    override = os.environ.get("WINDOW_START", "").strip()
     if override:
         return override
     today = dt.date.today()
     year = today.year if today.month >= 4 else today.year - 1
-    return f"{year}-04-01"
+    return f"{year - 1}-04-01"
 
 
 # ──────────────────────────────────────────────
@@ -260,9 +263,9 @@ def paid_epic_set() -> set[str]:
 # Main pipeline
 # ──────────────────────────────────────────────
 def main():
-    start_date = fy_start()
+    start_date = window_start()
     print(f"[START] Support refresh — {dt.datetime.now(TZ).isoformat()}"
-          f" · FY start {start_date}")
+          f" · window start {start_date}")
 
     orgs_field, support_field = resolve_field_ids()
     directory = fetch_org_directory()
@@ -344,7 +347,10 @@ def main():
     def logs(key: str) -> list[dict]:
         if key not in worklog_cache:
             try:
-                worklog_cache[key] = fetch_worklogs(key)
+                got = fetch_worklogs(key)
+                worklog_cache[key] = [
+                    wl for wl in got
+                    if (wl.get("started") or "")[:10] >= start_date]
             except Exception as e:
                 print(f"    [WARN] worklogs failed for {key}: {e}")
                 worklog_cache[key] = []
@@ -413,7 +419,7 @@ def main():
 
     output = {
         "generated_at": dt.datetime.now(TZ).isoformat(),
-        "fy_start": start_date,
+        "window_start": start_date,
         "summary": {
             "organisations": len(out_orgs),
             "tickets": sum(o["ticket_count"] for o in out_orgs),
