@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-22T17:48:47.778705+01:00",
+  "generated_at": "2026-09-23T05:26:57.999649+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 55,
     "total_sold_gbp": 380550.0,
-    "total_margin_gbp": 249820.15,
-    "avg_margin_pct": 55.11
+    "total_margin_gbp": 249544.11,
+    "avg_margin_pct": 55.1
   },
   "epics": [
     {
@@ -405,15 +405,15 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 53.58125,
-      "total_cost": 13491.67,
-      "monetary_margin": 62508.33,
-      "monetary_margin_pct": 82.25,
+      "logged_days": 54.13333,
+      "total_cost": 13767.71,
+      "monetary_margin": 62232.29,
+      "monetary_margin_pct": 81.88,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 84.217,
-          "cost": 5263.54,
+          "hours": 88.633,
+          "cost": 5539.58,
           "rate": 62.5
         },
         "Kishika Sisodia": {
@@ -453,8 +453,8 @@
           "cost": 140.62
         },
         "SCW2-2074": {
-          "hours": 4.133,
-          "cost": 82.67
+          "hours": 8.55,
+          "cost": 358.71
         },
         "SCW2-2073": {
           "hours": 0.017,
@@ -755,8 +755,8 @@
           "cost": 181.88
         },
         "2026-09": {
-          "hours": 152.3,
-          "cost": 4493.13
+          "hours": 156.717,
+          "cost": 4769.17
         },
         "2026-08": {
           "hours": 135.117,
