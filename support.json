@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-23T11:00:51.910552+01:00",
+  "generated_at": "2026-09-24T11:02:22.357677+01:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
-    "tickets": 1652,
-    "total_hours": 1716.7,
-    "total_cost_gbp": 71810.51
+    "tickets": 1656,
+    "total_hours": 1720.8,
+    "total_cost_gbp": 72042.51
   },
   "organisations": [
     {
@@ -7641,7 +7641,7 @@
           "created": "2026-09-18",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 6000,
+          "timespent_seconds": 9600,
           "linked": [
             "SPD-6375",
             "SPD-6376"
@@ -7650,18 +7650,18 @@
         {
           "key": "SSH-4740",
           "summary": "Creating new helpdesk accounts",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-23",
-          "resolved": null,
+          "resolved": "2026-09-23",
           "support_contract": "Premium",
           "timespent_seconds": 300,
           "linked": []
         }
       ],
       "ssh": {
-        "hours": 67.033,
-        "cost": 2727.73,
+        "hours": 68.033,
+        "cost": 2790.23,
         "by_person": {
           "Melvin Kha": {
             "hours": 30.733,
@@ -7679,8 +7679,8 @@
             "rate": 62.5
           },
           "Tin Aung": {
-            "hours": 2.0,
-            "cost": 125.0,
+            "hours": 3.0,
+            "cost": 187.5,
             "rate": 62.5
           },
           "Alexandra Apilado": {
@@ -8067,8 +8067,8 @@
             "cost": 218.75
           },
           "SSH-4719": {
-            "hours": 1.667,
-            "cost": 104.17
+            "hours": 2.667,
+            "cost": 166.67
           },
           "SSH-4740": {
             "hours": 0.083,
@@ -8145,8 +8145,8 @@
             "cost": 302.65
           },
           "2026-09": {
-            "hours": 7.7,
-            "cost": 448.62
+            "hours": 8.7,
+            "cost": 511.12
           }
         }
       },
@@ -8911,8 +8911,8 @@
         ],
         "paid_epic_cost": 150.0
       },
-      "total_hours": 133.417,
-      "total_cost": 6070.14,
+      "total_hours": 134.417,
+      "total_cost": 6132.64,
       "by_person": {
         "Melvin Kha": {
           "hours": 31.4,
@@ -8930,8 +8930,8 @@
           "rate": 62.5
         },
         "Tin Aung": {
-          "hours": 2.167,
-          "cost": 135.42,
+          "hours": 3.167,
+          "cost": 197.92,
           "rate": 62.5
         },
         "Alexandra Apilado": {
@@ -9030,8 +9030,8 @@
           "cost": 938.73
         },
         "2026-09": {
-          "hours": 8.617,
-          "cost": 466.65
+          "hours": 9.617,
+          "cost": 529.15
         }
       }
     },
@@ -9730,7 +9730,7 @@
         {
           "key": "SSH-4498",
           "summary": "Trip Planner Issues",
-          "status": "Waiting for support",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-07-31",
           "resolved": null,
@@ -9739,7 +9739,8 @@
           "linked": [
             "SPD-5842",
             "SPD-5896",
-            "SPD-6347"
+            "SPD-6347",
+            "SPD-6433"
           ]
         }
       ],
@@ -10206,6 +10207,14 @@
           },
           {
             "key": "SPD-6347",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
+          },
+          {
+            "key": "SPD-6433",
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 0,
@@ -11922,8 +11931,8 @@
         {
           "key": "SSH-4319",
           "summary": "Assistance with Meal Basis in HTML Itinerary",
-          "status": "Closed",
-          "status_category": "Done",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-06-09",
           "resolved": null,
           "support_contract": "Premium",
@@ -12635,7 +12644,7 @@
         {
           "key": "SSH-4643",
           "summary": "Trip Planner v1.5",
-          "status": "Waiting for release",
+          "status": "Pending",
           "status_category": "In Progress",
           "created": "2026-09-04",
           "resolved": null,
@@ -12681,7 +12690,7 @@
         {
           "key": "SSH-4731",
           "summary": "Automating Travelling Countries from Lead conversion",
-          "status": "Waiting for support",
+          "status": "Queued for Resource Allocation",
           "status_category": "In Progress",
           "created": "2026-09-22",
           "resolved": null,
@@ -12694,7 +12703,7 @@
         {
           "key": "SSH-4738",
           "summary": "Best Approach for Managing Staff FAM Trips as Trips in Sugati",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-23",
           "resolved": null,
@@ -15183,7 +15192,7 @@
     },
     {
       "name": "Journeysmiths",
-      "ticket_count": 47,
+      "ticket_count": 48,
       "tickets_with_time": 40,
       "tickets": [
         {
@@ -15523,7 +15532,7 @@
         {
           "key": "SSH-4476",
           "summary": "Images not updating",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-07-27",
           "resolved": "2026-08-06",
@@ -15734,6 +15743,19 @@
           "timespent_seconds": 0,
           "linked": [
             "SPD-6250"
+          ]
+        },
+        {
+          "key": "SSH-4741",
+          "summary": "Inclusions entered into Quotation not pulling through to HTML and only generic inclusions showing on PDF",
+          "status": "Queued for Resource Allocation",
+          "status_category": "In Progress",
+          "created": "2026-09-23",
+          "resolved": null,
+          "support_contract": "Standard",
+          "timespent_seconds": 0,
+          "linked": [
+            "SPD-6418"
           ]
         }
       ],
@@ -16179,6 +16201,14 @@
           },
           {
             "key": "SPD-6250",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
+          },
+          {
+            "key": "SPD-6418",
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 0,
@@ -20981,10 +21011,10 @@
         {
           "key": "SSH-4707",
           "summary": "Payment Error",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-16",
-          "resolved": null,
+          "resolved": "2026-09-24",
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": [
@@ -25639,10 +25669,10 @@
         {
           "key": "SSH-4686",
           "summary": "Travel Designers and Operators not receiving payment confirmations from clients.",
-          "status": "Waiting for support",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-11",
-          "resolved": null,
+          "resolved": "2026-09-23",
           "support_contract": "Premium",
           "timespent_seconds": 0,
           "linked": []
@@ -26410,7 +26440,7 @@
     },
     {
       "name": "RBR Group",
-      "ticket_count": 45,
+      "ticket_count": 46,
       "tickets_with_time": 35,
       "tickets": [
         {
@@ -26855,7 +26885,7 @@
         {
           "key": "SSH-4663",
           "summary": "Inclusions Exclusions glitching and duplicating multiple times",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-08",
           "resolved": null,
@@ -26890,7 +26920,7 @@
         {
           "key": "SSH-4709",
           "summary": "Flights to be issued error",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-17",
           "resolved": null,
@@ -26903,13 +26933,15 @@
         {
           "key": "SSH-4730",
           "summary": "User Login",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-21",
           "resolved": null,
           "support_contract": "Standard",
-          "timespent_seconds": 900,
-          "linked": []
+          "timespent_seconds": 1800,
+          "linked": [
+            "SPD-6417"
+          ]
         },
         {
           "key": "SSH-4733",
@@ -26938,7 +26970,7 @@
         {
           "key": "SSH-4736",
           "summary": "Balance received email / alert",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-22",
           "resolved": null,
@@ -26949,7 +26981,7 @@
         {
           "key": "SSH-4737",
           "summary": "WeTu images broken for One&Only Le Saint Geran Resort",
-          "status": "Queued for Resource Allocation",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-22",
           "resolved": null,
@@ -26958,11 +26990,24 @@
           "linked": [
             "SPD-6413"
           ]
+        },
+        {
+          "key": "SSH-4742",
+          "summary": "Deposit not coming off Final Balance - BR-001895",
+          "status": "Queued for Resource Allocation",
+          "status_category": "In Progress",
+          "created": "2026-09-23",
+          "resolved": null,
+          "support_contract": "Standard",
+          "timespent_seconds": 0,
+          "linked": [
+            "SPD-6419"
+          ]
         }
       ],
       "ssh": {
-        "hours": 15.467,
-        "cost": 456.02,
+        "hours": 15.717,
+        "cost": 460.57,
         "by_person": {
           "Ian Fairhurst": {
             "hours": 0.333,
@@ -26970,8 +27015,8 @@
             "rate": 62.5
           },
           "Melvin Kha": {
-            "hours": 10.083,
-            "cost": 183.31,
+            "hours": 10.333,
+            "cost": 187.86,
             "rate": 18.18
           },
           "Laura McConway": {
@@ -27129,8 +27174,8 @@
             "cost": 25.0
           },
           "SSH-4730": {
-            "hours": 0.25,
-            "cost": 15.62
+            "hours": 0.5,
+            "cost": 20.17
           },
           "SSH-4735": {
             "hours": 0.083,
@@ -27155,8 +27200,8 @@
             "cost": 77.57
           },
           "2026-09": {
-            "hours": 3.467,
-            "cost": 164.08
+            "hours": 3.717,
+            "cost": 168.62
           },
           "2026-08": {
             "hours": 4.883,
@@ -27165,8 +27210,8 @@
         }
       },
       "linked": {
-        "hours": 18.517,
-        "cost": 1139.58,
+        "hours": 20.333,
+        "cost": 1253.13,
         "by_person": {
           "James Win": {
             "hours": 5.4,
@@ -27187,6 +27232,11 @@
             "hours": 0.417,
             "cost": 8.33,
             "rate": 20.0
+          },
+          "Tin Aung": {
+            "hours": 1.817,
+            "cost": 113.54,
+            "rate": 62.5
           }
         },
         "by_ticket": {
@@ -27241,6 +27291,10 @@
           "SPD-6191": {
             "hours": 0.75,
             "cost": 29.17
+          },
+          "SPD-6417": {
+            "hours": 1.817,
+            "cost": 113.54
           }
         },
         "by_month": {
@@ -27257,8 +27311,8 @@
             "cost": 486.46
           },
           "2026-09": {
-            "hours": 6.617,
-            "cost": 395.83
+            "hours": 8.433,
+            "cost": 509.38
           }
         },
         "items": [
@@ -27477,12 +27531,28 @@
             "tree_tickets": 0,
             "hours": 0.0,
             "cost": 0.0
+          },
+          {
+            "key": "SPD-6417",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 1,
+            "hours": 1.817,
+            "cost": 113.54
+          },
+          {
+            "key": "SPD-6419",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 33.983,
-      "total_cost": 1595.61,
+      "total_hours": 36.05,
+      "total_cost": 1713.69,
       "by_person": {
         "Ian Fairhurst": {
           "hours": 0.333,
@@ -27490,8 +27560,8 @@
           "rate": 62.5
         },
         "Melvin Kha": {
-          "hours": 10.083,
-          "cost": 183.31,
+          "hours": 10.333,
+          "cost": 187.86,
           "rate": 18.18
         },
         "Laura McConway": {
@@ -27500,8 +27570,8 @@
           "rate": 40.0
         },
         "Tin Aung": {
-          "hours": 1.583,
-          "cost": 98.96,
+          "hours": 3.4,
+          "cost": 212.5,
           "rate": 62.5
         },
         "Jackielou Pastor": {
@@ -27553,8 +27623,8 @@
           "cost": 162.99
         },
         "2026-09": {
-          "hours": 10.083,
-          "cost": 559.91
+          "hours": 12.15,
+          "cost": 678.0
         },
         "2026-08": {
           "hours": 12.667,
@@ -27802,7 +27872,7 @@
         {
           "key": "SSH-4682",
           "summary": "Quotation page is no longer showing on the PDF",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-10",
           "resolved": null,
@@ -32019,7 +32089,7 @@
         {
           "key": "SSH-4700",
           "summary": "Making fields mandatory - onboarding form",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-15",
           "resolved": null,
@@ -34057,7 +34127,8 @@
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": [
-            "SPD-6228"
+            "SPD-6228",
+            "SPD-6431"
           ]
         },
         {
@@ -35195,6 +35266,14 @@
             "tree_tickets": 1,
             "hours": 1.383,
             "cost": 86.46
+          },
+          {
+            "key": "SPD-6431",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
@@ -36721,8 +36800,8 @@
         {
           "key": "SSH-4571",
           "summary": "The Retreat at Giraffe Manor, Day Pass & Early Bird on Itinerary PDF",
-          "status": "Closed",
-          "status_category": "Done",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-08-19",
           "resolved": "2026-09-22",
           "support_contract": "Premium",
@@ -36777,7 +36856,7 @@
         {
           "key": "SSH-4680",
           "summary": "Room Search -Pop Up Cell View",
-          "status": "Waiting for support",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-09-10",
           "resolved": null,
@@ -36790,7 +36869,7 @@
         {
           "key": "SSH-4694",
           "summary": "Duplicate Emails from Booking Form",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-15",
           "resolved": null,
@@ -37366,8 +37445,8 @@
         }
       },
       "linked": {
-        "hours": 103.867,
-        "cost": 5927.0,
+        "hours": 104.117,
+        "cost": 5942.62,
         "by_person": {
           "Naval Sharma": {
             "hours": 32.083,
@@ -37375,8 +37454,8 @@
             "rate": 62.5
           },
           "Ian Fairhurst": {
-            "hours": 11.25,
-            "cost": 703.12,
+            "hours": 11.5,
+            "cost": 718.75,
             "rate": 62.5
           },
           "Melvin Kha": {
@@ -37632,8 +37711,8 @@
             "cost": 40.67
           },
           "SPD-6229": {
-            "hours": 0.167,
-            "cost": 10.42
+            "hours": 0.417,
+            "cost": 26.04
           }
         },
         "by_month": {
@@ -37694,8 +37773,8 @@
             "cost": 150.0
           },
           "2026-09": {
-            "hours": 3.683,
-            "cost": 143.79
+            "hours": 3.933,
+            "cost": 159.42
           }
         },
         "items": [
@@ -38368,8 +38447,8 @@
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 1,
-            "hours": 0.167,
-            "cost": 10.42
+            "hours": 0.417,
+            "cost": 26.04
           },
           {
             "key": "SPD-6350",
@@ -38414,8 +38493,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 217.417,
-      "total_cost": 10246.98,
+      "total_hours": 217.667,
+      "total_cost": 10262.61,
       "by_person": {
         "Melvin Kha": {
           "hours": 65.05,
@@ -38423,8 +38502,8 @@
           "rate": 18.18
         },
         "Ian Fairhurst": {
-          "hours": 58.233,
-          "cost": 3639.58,
+          "hours": 58.483,
+          "cost": 3655.21,
           "rate": 62.5
         },
         "Tin Aung": {
@@ -38524,8 +38603,8 @@
           "cost": 677.22
         },
         "2026-09": {
-          "hours": 7.567,
-          "cost": 377.88
+          "hours": 7.817,
+          "cost": 393.5
         }
       }
     },
@@ -40260,8 +40339,8 @@
     },
     {
       "name": "Touch of Spice",
-      "ticket_count": 28,
-      "tickets_with_time": 19,
+      "ticket_count": 29,
+      "tickets_with_time": 20,
       "tickets": [
         {
           "key": "SSH-4613",
@@ -40314,10 +40393,10 @@
         {
           "key": "SSH-4630",
           "summary": "itinerary title troubleshooting",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-03",
-          "resolved": null,
+          "resolved": "2026-09-23",
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": [
@@ -40522,12 +40601,12 @@
         {
           "key": "SSH-4693",
           "summary": "Error message when trying to amend 'Holiday Type' from generic on a booked and quoted to client file. File name has changed to name \"Unknown\"",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-15",
           "resolved": null,
           "support_contract": "Standard",
-          "timespent_seconds": 0,
+          "timespent_seconds": 2700,
           "linked": []
         },
         {
@@ -40588,16 +40667,32 @@
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": []
+        },
+        {
+          "key": "SSH-4744",
+          "summary": "Digital Itinerary Displaying Destination Instead of Accommodation Name",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
+          "created": "2026-09-24",
+          "resolved": null,
+          "support_contract": "Premium",
+          "timespent_seconds": 0,
+          "linked": []
         }
       ],
       "ssh": {
-        "hours": 6.45,
-        "cost": 117.26,
+        "hours": 7.2,
+        "cost": 153.06,
         "by_person": {
           "Melvin Kha": {
-            "hours": 6.45,
-            "cost": 117.26,
+            "hours": 6.7,
+            "cost": 121.81,
             "rate": 18.18
+          },
+          "Alexandra Apilado": {
+            "hours": 0.5,
+            "cost": 31.25,
+            "rate": 62.5
           }
         },
         "by_ticket": {
@@ -40665,6 +40760,10 @@
             "hours": 0.25,
             "cost": 4.54
           },
+          "SSH-4693": {
+            "hours": 0.75,
+            "cost": 35.8
+          },
           "SSH-4702": {
             "hours": 0.25,
             "cost": 4.54
@@ -40680,8 +40779,8 @@
         },
         "by_month": {
           "2026-09": {
-            "hours": 6.45,
-            "cost": 117.26
+            "hours": 7.2,
+            "cost": 153.06
           }
         }
       },
@@ -40814,13 +40913,18 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 11.0,
-      "total_cost": 355.09,
+      "total_hours": 11.75,
+      "total_cost": 390.88,
       "by_person": {
         "Melvin Kha": {
-          "hours": 7.117,
-          "cost": 129.38,
+          "hours": 7.367,
+          "cost": 133.93,
           "rate": 18.18
+        },
+        "Alexandra Apilado": {
+          "hours": 0.5,
+          "cost": 31.25,
+          "rate": 62.5
         },
         "Naval Sharma": {
           "hours": 3.217,
@@ -40840,8 +40944,8 @@
       },
       "by_month": {
         "2026-09": {
-          "hours": 11.0,
-          "cost": 355.09
+          "hours": 11.75,
+          "cost": 390.88
         }
       }
     },
@@ -41184,7 +41288,7 @@
     },
     {
       "name": "Walk Japan",
-      "ticket_count": 3,
+      "ticket_count": 4,
       "tickets_with_time": 3,
       "tickets": [
         {
@@ -41221,6 +41325,17 @@
           "resolved": "2026-09-14",
           "support_contract": "Standard",
           "timespent_seconds": 900,
+          "linked": []
+        },
+        {
+          "key": "SSH-4743",
+          "summary": "Adding picklist values to Payment Method",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
+          "created": "2026-09-23",
+          "resolved": null,
+          "support_contract": "Standard",
+          "timespent_seconds": 0,
           "linked": []
         }
       ],
