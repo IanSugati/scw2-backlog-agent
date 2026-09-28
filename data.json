@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-28T06:00:44.731605+01:00",
+  "generated_at": "2026-09-28T20:36:00.874202+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 55,
     "total_sold_gbp": 380550.0,
-    "total_margin_gbp": 248562.37,
-    "avg_margin_pct": 54.98
+    "total_margin_gbp": 252954.95,
+    "avg_margin_pct": 55.64
   },
   "epics": [
     {
@@ -14,14 +14,30 @@
       "status": "In Progress",
       "amount": 5000.0,
       "sold_days": 5.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 5000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false,
-      "by_person": {},
-      "by_ticket": {},
-      "by_month": {},
+      "logged_days": 0.59375,
+      "total_cost": 95.0,
+      "monetary_margin": 4905.0,
+      "monetary_margin_pct": 98.1,
+      "has_data": true,
+      "by_person": {
+        "Shivam Mittal": {
+          "hours": 4.75,
+          "cost": 95.0,
+          "rate": 20.0
+        }
+      },
+      "by_ticket": {
+        "SCW2-2056": {
+          "hours": 4.75,
+          "cost": 95.0
+        }
+      },
+      "by_month": {
+        "2026-09": {
+          "hours": 4.75,
+          "cost": 95.0
+        }
+      },
       "linked_spd": [],
       "spd_days": 0.0,
       "spd_cost": 0.0
@@ -32,15 +48,15 @@
       "status": "In Progress",
       "amount": 3000.0,
       "sold_days": 3.0,
-      "logged_days": 1.33542,
-      "total_cost": 591.58,
-      "monetary_margin": 2408.42,
-      "monetary_margin_pct": 80.28,
+      "logged_days": 1.84167,
+      "total_cost": 764.83,
+      "monetary_margin": 2235.17,
+      "monetary_margin_pct": 74.51,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 6.75,
-          "cost": 421.88,
+          "hours": 7.25,
+          "cost": 453.12,
           "rate": 62.5
         },
         "Becky Hughes": {
@@ -49,8 +65,8 @@
           "rate": 40.0
         },
         "Laura McConway": {
-          "hours": 1.5,
-          "cost": 60.0,
+          "hours": 5.05,
+          "cost": 202.0,
           "rate": 40.0
         },
         "James Win": {
@@ -69,14 +85,14 @@
           "cost": 36.46
         },
         "SPD-5965": {
-          "hours": 5.517,
-          "cost": 268.67
+          "hours": 9.567,
+          "cost": 441.92
         }
       },
       "by_month": {
         "2026-09": {
-          "hours": 7.383,
-          "cost": 450.21
+          "hours": 11.433,
+          "cost": 623.46
         },
         "2026-08": {
           "hours": 3.3,
@@ -86,8 +102,8 @@
       "linked_spd": [
         "SPD-5965"
       ],
-      "spd_days": 0.68958,
-      "spd_cost": 268.67
+      "spd_days": 1.19583,
+      "spd_cost": 441.92
     },
     {
       "key": "SCW2-1918",
@@ -95,10 +111,10 @@
       "status": "In Progress",
       "amount": 8700.0,
       "sold_days": 8.7,
-      "logged_days": 6.04375,
-      "total_cost": 2621.25,
-      "monetary_margin": 6078.75,
-      "monetary_margin_pct": 69.87,
+      "logged_days": 6.13958,
+      "total_cost": 2669.17,
+      "monetary_margin": 6030.83,
+      "monetary_margin_pct": 69.32,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -112,8 +128,8 @@
           "rate": 20.0
         },
         "Andy Edmonds": {
-          "hours": 17.883,
-          "cost": 1117.71,
+          "hours": 18.65,
+          "cost": 1165.62,
           "rate": 62.5
         },
         "Laura McConway": {
@@ -149,6 +165,10 @@
           "hours": 7.183,
           "cost": 143.67
         },
+        "SPD-6401": {
+          "hours": 0.767,
+          "cost": 47.92
+        },
         "SPD-5963": {
           "hours": 1.717,
           "cost": 107.29
@@ -176,19 +196,20 @@
           "cost": 593.46
         },
         "2026-09": {
-          "hours": 33.167,
-          "cost": 2027.79
+          "hours": 33.933,
+          "cost": 2075.71
         }
       },
       "linked_spd": [
+        "SPD-6401",
         "SPD-5963",
         "SPD-5962",
         "SPD-5961",
         "SPD-5960",
         "SPD-4484"
       ],
-      "spd_days": 4.17708,
-      "spd_cost": 2042.79
+      "spd_days": 4.27292,
+      "spd_cost": 2090.71
     },
     {
       "key": "SCW2-1917",
@@ -196,15 +217,15 @@
       "status": "In Progress",
       "amount": 10000.0,
       "sold_days": 10.0,
-      "logged_days": 3.86667,
-      "total_cost": 1118.04,
-      "monetary_margin": 8881.96,
-      "monetary_margin_pct": 88.82,
+      "logged_days": 4.12292,
+      "total_cost": 1217.83,
+      "monetary_margin": 8782.17,
+      "monetary_margin_pct": 87.82,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 5.167,
-          "cost": 322.92,
+          "hours": 5.667,
+          "cost": 354.17,
           "rate": 62.5
         },
         "Kishika Sisodia": {
@@ -213,9 +234,14 @@
           "rate": 20.0
         },
         "Shivam Mittal": {
-          "hours": 15.683,
-          "cost": 313.67,
+          "hours": 16.35,
+          "cost": 327.0,
           "rate": 20.0
+        },
+        "Andy Edmonds": {
+          "hours": 0.883,
+          "cost": 55.21,
+          "rate": 62.5
         },
         "Naval Sharma": {
           "hours": 6.583,
@@ -233,8 +259,8 @@
           "cost": 70.0
         },
         "SCW2-2089": {
-          "hours": 4.7,
-          "cost": 94.0
+          "hours": 6.75,
+          "cost": 193.79
         },
         "SCW2-2016": {
           "hours": 0.75,
@@ -287,8 +313,8 @@
           "cost": 207.38
         },
         "2026-09": {
-          "hours": 27.117,
-          "cost": 910.67
+          "hours": 29.167,
+          "cost": 1010.46
         }
       },
       "linked_spd": [
@@ -347,20 +373,20 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 56.65833,
-      "total_cost": 14348.79,
-      "monetary_margin": 61651.21,
-      "monetary_margin_pct": 81.12,
+      "logged_days": 57.2625,
+      "total_cost": 14526.92,
+      "monetary_margin": 61473.08,
+      "monetary_margin_pct": 80.89,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 92.8,
-          "cost": 5800.0,
+          "hours": 94.717,
+          "cost": 5919.79,
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 318.833,
-          "cost": 6376.67,
+          "hours": 321.75,
+          "cost": 6435.0,
           "rate": 20.0
         },
         "Shivam Mittal": {
@@ -395,28 +421,28 @@
           "cost": 140.62
         },
         "SCW2-2096": {
-          "hours": 4.167,
-          "cost": 111.67
+          "hours": 4.5,
+          "cost": 132.5
         },
         "SCW2-2090": {
           "hours": 0.75,
           "cost": 15.0
         },
         "SCW2-2088": {
-          "hours": 4.5,
-          "cost": 93.54
+          "hours": 7.167,
+          "cost": 161.04
         },
         "SCW2-2084": {
-          "hours": 4.333,
-          "cost": 86.67
+          "hours": 5.167,
+          "cost": 113.96
         },
         "SCW2-2074": {
           "hours": 12.333,
           "cost": 466.25
         },
         "SCW2-2073": {
-          "hours": 2.683,
-          "cost": 167.71
+          "hours": 3.683,
+          "cost": 230.21
         },
         "SCW2-2070": {
           "hours": 18.55,
@@ -606,14 +632,6 @@
           "hours": 12.367,
           "cost": 273.54
         },
-        "SCW2-1858": {
-          "hours": 5.5,
-          "cost": 159.58
-        },
-        "SCW2-1857": {
-          "hours": 3.2,
-          "cost": 113.58
-        },
         "SCW2-1821": {
           "hours": 5.167,
           "cost": 322.92
@@ -629,6 +647,14 @@
         "SCW2-1795": {
           "hours": 41.417,
           "cost": 2567.29
+        },
+        "SCW2-1858": {
+          "hours": 5.5,
+          "cost": 159.58
+        },
+        "SCW2-1857": {
+          "hours": 3.2,
+          "cost": 113.58
         },
         "SCW2-1855": {
           "hours": 10.183,
@@ -713,8 +739,8 @@
           "cost": 181.88
         },
         "2026-09": {
-          "hours": 176.917,
-          "cost": 5350.25
+          "hours": 181.75,
+          "cost": 5528.38
         },
         "2026-08": {
           "hours": 135.117,
@@ -1104,10 +1130,10 @@
       "status": "In Progress",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 28.69583,
-      "total_cost": 7471.84,
-      "monetary_margin": 3028.16,
-      "monetary_margin_pct": 28.84,
+      "logged_days": 28.77917,
+      "total_cost": 7485.17,
+      "monetary_margin": 3014.83,
+      "monetary_margin_pct": 28.71,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -1126,8 +1152,8 @@
           "rate": 62.5
         },
         "Shivam Mittal": {
-          "hours": 151.883,
-          "cost": 3037.67,
+          "hours": 152.55,
+          "cost": 3051.0,
           "rate": 20.0
         },
         "Andy Edmonds": {
@@ -1147,8 +1173,8 @@
           "cost": 950.0
         },
         "SCW2-2087": {
-          "hours": 0.833,
-          "cost": 52.08
+          "hours": 1.5,
+          "cost": 65.42
         },
         "SCW2-1931": {
           "hours": 7.417,
@@ -1345,8 +1371,8 @@
           "cost": 2225.42
         },
         "2026-09": {
-          "hours": 3.583,
-          "cost": 213.33
+          "hours": 4.25,
+          "cost": 226.67
         },
         "2026-08": {
           "hours": 11.233,
