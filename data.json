@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-30T18:58:03.909860+01:00",
+  "generated_at": "2026-10-01T06:29:32.282509+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 55,
     "total_sold_gbp": 380550.0,
-    "total_margin_gbp": 252575.33,
-    "avg_margin_pct": 55.56
+    "total_margin_gbp": 252492.0,
+    "avg_margin_pct": 55.51
   },
   "epics": [
     {
@@ -53,10 +53,10 @@
       "status": "In Progress",
       "amount": 3000.0,
       "sold_days": 3.0,
-      "logged_days": 1.925,
-      "total_cost": 806.5,
-      "monetary_margin": 2193.5,
-      "monetary_margin_pct": 73.12,
+      "logged_days": 2.09167,
+      "total_cost": 889.83,
+      "monetary_margin": 2110.17,
+      "monetary_margin_pct": 70.34,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -75,8 +75,8 @@
           "rate": 40.0
         },
         "James Win": {
-          "hours": 0.55,
-          "cost": 34.38,
+          "hours": 1.883,
+          "cost": 117.71,
           "rate": 62.5
         }
       },
@@ -90,14 +90,14 @@
           "cost": 36.46
         },
         "SPD-5965": {
-          "hours": 10.233,
-          "cost": 483.58
+          "hours": 11.567,
+          "cost": 566.92
         }
       },
       "by_month": {
         "2026-09": {
-          "hours": 12.1,
-          "cost": 665.12
+          "hours": 13.433,
+          "cost": 748.46
         },
         "2026-08": {
           "hours": 3.3,
@@ -107,8 +107,8 @@
       "linked_spd": [
         "SPD-5965"
       ],
-      "spd_days": 1.27917,
-      "spd_cost": 483.58
+      "spd_days": 1.44583,
+      "spd_cost": 566.92
     },
     {
       "key": "SCW2-1918",
