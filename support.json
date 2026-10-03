@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-02T12:10:06.004997+01:00",
+  "generated_at": "2026-10-03T11:29:51.289729+01:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
-    "tickets": 1706,
-    "total_hours": 1755.2,
-    "total_cost_gbp": 74063.38
+    "tickets": 1712,
+    "total_hours": 1756.3,
+    "total_cost_gbp": 74127.96
   },
   "organisations": [
     {
@@ -6426,7 +6426,7 @@
     },
     {
       "name": "Family Twist",
-      "ticket_count": 103,
+      "ticket_count": 104,
       "tickets_with_time": 96,
       "tickets": [
         {
@@ -7573,7 +7573,8 @@
           "linked": [
             "SCW2-1980",
             "SCW2-2106",
-            "SPD-6458"
+            "SPD-6458",
+            "SPD-6497"
           ]
         },
         {
@@ -7673,6 +7674,17 @@
           "linked": [
             "SPD-6451"
           ]
+        },
+        {
+          "key": "SSH-4801",
+          "summary": "Error when loading Itinerary PDF",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-10-02",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
+          "linked": []
         }
       ],
       "ssh": {
@@ -8955,6 +8967,14 @@
             "tree_tickets": 0,
             "hours": 0.0,
             "cost": 0.0
+          },
+          {
+            "key": "SPD-6497",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 150.0
@@ -9800,7 +9820,9 @@
           "resolved": null,
           "support_contract": "Standard",
           "timespent_seconds": 0,
-          "linked": []
+          "linked": [
+            "SPD-6469"
+          ]
         }
       ],
       "ssh": {
@@ -10283,6 +10305,14 @@
             "tree_tickets": 1,
             "hours": 1.017,
             "cost": 63.54
+          },
+          {
+            "key": "SPD-6469",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
@@ -15329,7 +15359,7 @@
     },
     {
       "name": "Journeysmiths",
-      "ticket_count": 49,
+      "ticket_count": 50,
       "tickets_with_time": 41,
       "tickets": [
         {
@@ -15905,6 +15935,17 @@
           "resolved": null,
           "support_contract": "Standard",
           "timespent_seconds": 600,
+          "linked": []
+        },
+        {
+          "key": "SSH-4803",
+          "summary": "Issue with itinerary PDF Booking Stage 'BOOKED' RF-000997",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-10-02",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
           "linked": []
         }
       ],
@@ -16484,7 +16525,7 @@
     },
     {
       "name": "Latin/Polar Routes",
-      "ticket_count": 237,
+      "ticket_count": 239,
       "tickets_with_time": 220,
       "tickets": [
         {
@@ -19171,7 +19212,7 @@
         {
           "key": "SSH-4776",
           "summary": "Licence clean-up: link existing licences to reduce clutter and duplicates",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-29",
           "resolved": null,
@@ -19231,6 +19272,28 @@
           "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-10-01",
+          "resolved": null,
+          "support_contract": "Premium",
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4798",
+          "summary": "Issue with Sabrina Trabuco viewing flights in TP",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
+          "created": "2026-10-02",
+          "resolved": null,
+          "support_contract": "Premium",
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4799",
+          "summary": "Sabrina Trauco - issues with Related tab",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
+          "created": "2026-10-02",
           "resolved": null,
           "support_contract": "Premium",
           "timespent_seconds": 0,
@@ -22534,8 +22597,8 @@
         {
           "key": "SSH-4791",
           "summary": "Trip Planner – Required Fields for line items",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-10-01",
           "resolved": null,
           "support_contract": "Standard",
@@ -23466,7 +23529,7 @@
     },
     {
       "name": "No organisation",
-      "ticket_count": 44,
+      "ticket_count": 45,
       "tickets_with_time": 35,
       "tickets": [
         {
@@ -23958,6 +24021,17 @@
           "status": "Closed",
           "status_category": "Done",
           "created": "2026-09-02",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4802",
+          "summary": "Photos not loading on an excursion",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-10-02",
           "resolved": null,
           "support_contract": null,
           "timespent_seconds": 0,
@@ -26827,8 +26901,8 @@
     },
     {
       "name": "RBR Group",
-      "ticket_count": 60,
-      "tickets_with_time": 39,
+      "ticket_count": 61,
+      "tickets_with_time": 40,
       "tickets": [
         {
           "key": "SSH-4117",
@@ -27327,7 +27401,7 @@
           "created": "2026-09-21",
           "resolved": "2026-09-25",
           "support_contract": "Standard",
-          "timespent_seconds": 1800,
+          "timespent_seconds": 2400,
           "linked": [
             "SPD-6417"
           ]
@@ -27436,7 +27510,7 @@
         {
           "key": "SSH-4767",
           "summary": "Not all Wetu Sync Hotels show in trip planner",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-28",
           "resolved": null,
@@ -27447,10 +27521,10 @@
         {
           "key": "SSH-4770",
           "summary": "Choose Slideshow images - can we configure this to only show images tagged COVER",
-          "status": "Queued for Resource Allocation",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-29",
-          "resolved": null,
+          "resolved": "2026-10-02",
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": [
@@ -27473,7 +27547,7 @@
         {
           "key": "SSH-4772",
           "summary": "Can all users have access to WeTu Sync",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-29",
           "resolved": null,
@@ -27519,12 +27593,12 @@
         {
           "key": "SSH-4778",
           "summary": "Can we change the word QUOTE on the HTML",
-          "status": "Queued for Resource Allocation",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-29",
           "resolved": null,
           "support_contract": "Standard",
-          "timespent_seconds": 0,
+          "timespent_seconds": 1200,
           "linked": [
             "SPD-6473"
           ]
@@ -27545,7 +27619,7 @@
         {
           "key": "SSH-4788",
           "summary": "Is there a way to retrospectively move a booking from Individual to Agency?",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-01",
           "resolved": null,
@@ -27556,7 +27630,7 @@
         {
           "key": "SSH-4789",
           "summary": "BR-001855 - Booking Form passengers",
-          "status": "Assigned to developer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-01",
           "resolved": null,
@@ -27565,11 +27639,22 @@
           "linked": [
             "SPD-6491"
           ]
+        },
+        {
+          "key": "SSH-4800",
+          "summary": "WETU Sync",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
+          "created": "2026-10-02",
+          "resolved": null,
+          "support_contract": "Premium",
+          "timespent_seconds": 0,
+          "linked": []
         }
       ],
       "ssh": {
-        "hours": 16.55,
-        "cost": 512.65,
+        "hours": 17.05,
+        "cost": 543.9,
         "by_person": {
           "Ian Fairhurst": {
             "hours": 0.333,
@@ -27587,8 +27672,8 @@
             "rate": 40.0
           },
           "Tin Aung": {
-            "hours": 1.583,
-            "cost": 98.96,
+            "hours": 2.083,
+            "cost": 130.21,
             "rate": 62.5
           },
           "Jackielou Pastor": {
@@ -27736,8 +27821,8 @@
             "cost": 25.0
           },
           "SSH-4730": {
-            "hours": 0.5,
-            "cost": 20.17
+            "hours": 0.667,
+            "cost": 30.59
           },
           "SSH-4735": {
             "hours": 0.083,
@@ -27754,6 +27839,10 @@
           "SSH-4775": {
             "hours": 0.25,
             "cost": 15.62
+          },
+          "SSH-4778": {
+            "hours": 0.333,
+            "cost": 20.83
           },
           "SSH-4788": {
             "hours": 0.25,
@@ -27786,14 +27875,14 @@
             "cost": 132.52
           },
           "2026-10": {
-            "hours": 0.25,
-            "cost": 15.62
+            "hours": 0.75,
+            "cost": 46.88
           }
         }
       },
       "linked": {
-        "hours": 24.483,
-        "cost": 1487.71,
+        "hours": 25.017,
+        "cost": 1521.04,
         "by_person": {
           "James Win": {
             "hours": 5.4,
@@ -27806,8 +27895,8 @@
             "rate": 62.5
           },
           "Andy Edmonds": {
-            "hours": 9.883,
-            "cost": 617.71,
+            "hours": 10.417,
+            "cost": 651.04,
             "rate": 62.5
           },
           "Shivam Mittal": {
@@ -27888,8 +27977,8 @@
             "cost": 208.54
           },
           "SPD-6459": {
-            "hours": 0.417,
-            "cost": 26.04
+            "hours": 0.95,
+            "cost": 59.38
           }
         },
         "by_month": {
@@ -27910,8 +27999,8 @@
             "cost": 717.92
           },
           "2026-10": {
-            "hours": 0.417,
-            "cost": 26.04
+            "hours": 0.95,
+            "cost": 59.38
           }
         },
         "items": [
@@ -28168,8 +28257,8 @@
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 1,
-            "hours": 0.417,
-            "cost": 26.04
+            "hours": 0.95,
+            "cost": 59.38
           },
           {
             "key": "SPD-6460",
@@ -28222,8 +28311,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 41.033,
-      "total_cost": 2000.36,
+      "total_hours": 42.067,
+      "total_cost": 2064.94,
       "by_person": {
         "Ian Fairhurst": {
           "hours": 0.5,
@@ -28241,8 +28330,8 @@
           "rate": 40.0
         },
         "Tin Aung": {
-          "hours": 3.4,
-          "cost": 212.5,
+          "hours": 3.9,
+          "cost": 243.75,
           "rate": 62.5
         },
         "Jackielou Pastor": {
@@ -28266,8 +28355,8 @@
           "rate": 62.5
         },
         "Andy Edmonds": {
-          "hours": 9.883,
-          "cost": 617.71,
+          "hours": 10.417,
+          "cost": 651.04,
           "rate": 62.5
         },
         "Shivam Mittal": {
@@ -28302,8 +28391,8 @@
           "cost": 618.98
         },
         "2026-10": {
-          "hours": 0.667,
-          "cost": 41.67
+          "hours": 1.7,
+          "cost": 106.25
         }
       }
     },
@@ -28597,8 +28686,8 @@
         {
           "key": "SSH-4708",
           "summary": "Reefscape - Booking Form not working",
-          "status": "Closed",
-          "status_category": "Done",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-09-17",
           "resolved": "2026-09-25",
           "support_contract": "Standard",
@@ -31359,11 +31448,11 @@
         {
           "key": "SSH-4797",
           "summary": "Supplier Payment Process",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-10-02",
           "resolved": null,
-          "support_contract": null,
+          "support_contract": "Premium",
           "timespent_seconds": 0,
           "linked": []
         }
@@ -32844,7 +32933,7 @@
         {
           "key": "SSH-4766",
           "summary": "Moving my licence across to Kate Enright",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-28",
           "resolved": null,
@@ -37583,7 +37672,7 @@
         {
           "key": "SSH-4571",
           "summary": "The Retreat at Giraffe Manor, Day Pass & Early Bird on Itinerary PDF",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-08-19",
           "resolved": "2026-09-22",
@@ -37639,7 +37728,7 @@
         {
           "key": "SSH-4680",
           "summary": "Room Search -Pop Up Cell View",
-          "status": "Assigned to developer",
+          "status": "Pending",
           "status_category": "In Progress",
           "created": "2026-09-10",
           "resolved": null,
@@ -37704,7 +37793,7 @@
         {
           "key": "SSH-4790",
           "summary": "Inventory Descripancies",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-01",
           "resolved": null,
@@ -41654,8 +41743,8 @@
         {
           "key": "SSH-4793",
           "summary": "Address and Phone number not showing in the Digital itinerary",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
           "created": "2026-10-02",
           "resolved": null,
           "support_contract": "Premium",
@@ -41678,8 +41767,8 @@
         {
           "key": "SSH-4795",
           "summary": "Extra field sets required",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
           "created": "2026-10-02",
           "resolved": null,
           "support_contract": "Premium",
