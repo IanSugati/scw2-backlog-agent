@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T11:29:51.289729+01:00",
+  "generated_at": "2026-10-04T12:12:04.566457+01:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
@@ -27444,8 +27444,8 @@
         {
           "key": "SSH-4737",
           "summary": "WeTu images broken for One&Only Le Saint Geran Resort",
-          "status": "Waiting for support",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-22",
           "resolved": "2026-09-24",
           "support_contract": "Standard",
@@ -27630,10 +27630,10 @@
         {
           "key": "SSH-4789",
           "summary": "BR-001855 - Booking Form passengers",
-          "status": "Waiting for support",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-01",
-          "resolved": null,
+          "resolved": "2026-10-04",
           "support_contract": "Premium",
           "timespent_seconds": 0,
           "linked": [
@@ -37672,7 +37672,7 @@
         {
           "key": "SSH-4571",
           "summary": "The Retreat at Giraffe Manor, Day Pass & Early Bird on Itinerary PDF",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-08-19",
           "resolved": "2026-09-22",
@@ -37728,7 +37728,7 @@
         {
           "key": "SSH-4680",
           "summary": "Room Search -Pop Up Cell View",
-          "status": "Pending",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-09-10",
           "resolved": null,
