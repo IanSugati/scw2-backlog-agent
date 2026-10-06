@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-06T07:02:03.284968+01:00",
+  "generated_at": "2026-10-06T19:18:07.140603+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 58,
     "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 280752.79,
-    "avg_margin_pct": 56.8
+    "total_margin_gbp": 280499.58,
+    "avg_margin_pct": 56.77
   },
   "epics": [
     {
@@ -14,32 +14,32 @@
       "status": "In Progress",
       "amount": 20000.0,
       "sold_days": 20.0,
-      "logged_days": 2.39792,
-      "total_cost": 1198.96,
-      "monetary_margin": 18801.04,
-      "monetary_margin_pct": 94.01,
+      "logged_days": 2.675,
+      "total_cost": 1337.5,
+      "monetary_margin": 18662.5,
+      "monetary_margin_pct": 93.31,
       "has_data": true,
       "by_person": {
         "James Win": {
-          "hours": 19.183,
-          "cost": 1198.96,
+          "hours": 21.4,
+          "cost": 1337.5,
           "rate": 62.5
         }
       },
       "by_ticket": {
         "SPD-6355": {
-          "hours": 0.433,
-          "cost": 27.08
+          "hours": 2.3,
+          "cost": 143.75
         },
         "SPD-5768": {
-          "hours": 18.75,
-          "cost": 1171.88
+          "hours": 19.1,
+          "cost": 1193.75
         }
       },
       "by_month": {
         "2026-10": {
-          "hours": 1.783,
-          "cost": 111.46
+          "hours": 4.0,
+          "cost": 250.0
         },
         "2026-08": {
           "hours": 0.883,
@@ -54,8 +54,8 @@
         "SPD-6355",
         "SPD-5768"
       ],
-      "spd_days": 2.39792,
-      "spd_cost": 1198.96
+      "spd_days": 2.675,
+      "spd_cost": 1337.5
     },
     {
       "key": "SCW2-2042",
@@ -279,10 +279,10 @@
       "status": "In Progress",
       "amount": 10000.0,
       "sold_days": 10.0,
-      "logged_days": 5.64375,
-      "total_cost": 1553.25,
-      "monetary_margin": 8446.75,
-      "monetary_margin_pct": 84.47,
+      "logged_days": 6.26875,
+      "total_cost": 1653.25,
+      "monetary_margin": 8346.75,
+      "monetary_margin_pct": 83.47,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -291,8 +291,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 13.5,
-          "cost": 270.0,
+          "hours": 18.5,
+          "cost": 370.0,
           "rate": 20.0
         },
         "Shivam Mittal": {
@@ -317,8 +317,8 @@
           "cost": 307.29
         },
         "SCW2-2126": {
-          "hours": 10.0,
-          "cost": 200.0
+          "hours": 15.0,
+          "cost": 300.0
         },
         "SCW2-2091": {
           "hours": 3.5,
@@ -383,8 +383,8 @@
           "cost": 1083.37
         },
         "2026-10": {
-          "hours": 11.0,
-          "cost": 262.5
+          "hours": 16.0,
+          "cost": 362.5
         }
       },
       "linked_spd": [
@@ -447,10 +447,10 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 59.4125,
-      "total_cost": 15118.83,
-      "monetary_margin": 60881.17,
-      "monetary_margin_pct": 80.11,
+      "logged_days": 59.50417,
+      "total_cost": 15133.5,
+      "monetary_margin": 60866.5,
+      "monetary_margin_pct": 80.09,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -459,8 +459,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 333.117,
-          "cost": 6662.33,
+          "hours": 333.85,
+          "cost": 6677.0,
           "rate": 20.0
         },
         "Shivam Mittal": {
@@ -497,6 +497,10 @@
         "SCW2-2134": {
           "hours": 1.667,
           "cost": 104.17
+        },
+        "SCW2-2129": {
+          "hours": 0.733,
+          "cost": 14.67
         },
         "SCW2-2119": {
           "hours": 5.667,
@@ -833,8 +837,8 @@
           "cost": 5690.46
         },
         "2026-10": {
-          "hours": 9.45,
-          "cost": 429.83
+          "hours": 10.183,
+          "cost": 444.5
         },
         "2026-08": {
           "hours": 135.117,
