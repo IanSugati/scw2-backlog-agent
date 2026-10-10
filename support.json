@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-09T12:57:39.778692+01:00",
+  "generated_at": "2026-10-10T12:14:34.355240+01:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
     "tickets": 1738,
-    "total_hours": 1786.6,
-    "total_cost_gbp": 75798.96
+    "total_hours": 1787.7,
+    "total_cost_gbp": 75868.75
   },
   "organisations": [
     {
@@ -2715,7 +2715,7 @@
         {
           "key": "SSH-4281",
           "summary": "A2A - Vamoos Question around images",
-          "status": "Pending",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-05-26",
           "resolved": null,
@@ -10095,12 +10095,12 @@
         }
       },
       "linked": {
-        "hours": 31.267,
-        "cost": 1927.13,
+        "hours": 31.667,
+        "cost": 1952.13,
         "by_person": {
           "Naval Sharma": {
-            "hours": 11.467,
-            "cost": 716.67,
+            "hours": 11.867,
+            "cost": 741.67,
             "rate": 62.5
           },
           "Andy Edmonds": {
@@ -10183,8 +10183,8 @@
             "cost": 43.04
           },
           "SPD-6047": {
-            "hours": 4.733,
-            "cost": 295.83
+            "hours": 5.133,
+            "cost": 320.83
           },
           "SPD-6347": {
             "hours": 0.333,
@@ -10237,8 +10237,8 @@
             "cost": 243.04
           },
           "2026-10": {
-            "hours": 3.983,
-            "cost": 248.96
+            "hours": 4.383,
+            "cost": 273.96
           }
         },
         "items": [
@@ -10383,8 +10383,8 @@
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 1,
-            "hours": 4.733,
-            "cost": 295.83
+            "hours": 5.133,
+            "cost": 320.83
           },
           {
             "key": "SPD-6347",
@@ -10413,8 +10413,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 44.783,
-      "total_cost": 2477.09,
+      "total_hours": 45.183,
+      "total_cost": 2502.09,
       "by_person": {
         "Ian Fairhurst": {
           "hours": 6.85,
@@ -10432,8 +10432,8 @@
           "rate": 40.0
         },
         "Naval Sharma": {
-          "hours": 11.467,
-          "cost": 716.67,
+          "hours": 11.867,
+          "cost": 741.67,
           "rate": 62.5
         },
         "Andy Edmonds": {
@@ -10501,8 +10501,8 @@
           "cost": 243.04
         },
         "2026-10": {
-          "hours": 3.983,
-          "cost": 248.96
+          "hours": 4.383,
+          "cost": 273.96
         }
       }
     },
@@ -10917,7 +10917,7 @@
     {
       "name": "Into the Vineyard",
       "ticket_count": 166,
-      "tickets_with_time": 148,
+      "tickets_with_time": 149,
       "tickets": [
         {
           "key": "SSH-3221",
@@ -12837,13 +12837,15 @@
         {
           "key": "SSH-4643",
           "summary": "Trip Planner v1.5",
-          "status": "Waiting for support",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-04",
           "resolved": "2026-10-06",
           "support_contract": "Premium",
-          "timespent_seconds": 0,
-          "linked": []
+          "timespent_seconds": 900,
+          "linked": [
+            "SPD-6533"
+          ]
         },
         {
           "key": "SSH-4701",
@@ -12958,10 +12960,10 @@
         {
           "key": "SSH-4814",
           "summary": "PDF Authorization Required error on live Itinerary",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-06",
-          "resolved": null,
+          "resolved": "2026-10-09",
           "support_contract": "Premium",
           "timespent_seconds": 0,
           "linked": [
@@ -12981,8 +12983,8 @@
         }
       ],
       "ssh": {
-        "hours": 94.417,
-        "cost": 3130.07,
+        "hours": 94.667,
+        "cost": 3145.7,
         "by_person": {
           "Melvin Kha": {
             "hours": 58.317,
@@ -13005,8 +13007,8 @@
             "rate": 40.0
           },
           "Alexandra Apilado": {
-            "hours": 0.583,
-            "cost": 36.46,
+            "hours": 0.833,
+            "cost": 52.08,
             "rate": 62.5
           }
         },
@@ -13587,6 +13589,10 @@
             "hours": 0.25,
             "cost": 15.62
           },
+          "SSH-4643": {
+            "hours": 0.25,
+            "cost": 15.62
+          },
           "SSH-4701": {
             "hours": 0.083,
             "cost": 5.21
@@ -13662,8 +13668,8 @@
             "cost": 940.03
           },
           "2026-10": {
-            "hours": 0.167,
-            "cost": 10.42
+            "hours": 0.417,
+            "cost": 26.04
           }
         }
       },
@@ -15248,12 +15254,20 @@
             "tree_tickets": 0,
             "hours": 0.0,
             "cost": 0.0
+          },
+          {
+            "key": "SPD-6533",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 222.5,
-      "total_cost": 10033.77,
+      "total_hours": 222.75,
+      "total_cost": 10049.4,
       "by_person": {
         "Melvin Kha": {
           "hours": 63.45,
@@ -15276,8 +15290,8 @@
           "rate": 40.0
         },
         "Alexandra Apilado": {
-          "hours": 0.583,
-          "cost": 36.46,
+          "hours": 0.833,
+          "cost": 52.08,
           "rate": 62.5
         },
         "Naval Sharma": {
@@ -15359,8 +15373,8 @@
           "cost": 2368.91
         },
         "2026-10": {
-          "hours": 1.217,
-          "cost": 76.04
+          "hours": 1.467,
+          "cost": 91.67
         }
       }
     },
@@ -16104,7 +16118,7 @@
         {
           "key": "SSH-4803",
           "summary": "Issue with itinerary PDF Booking Stage 'BOOKED' RF-000997",
-          "status": "Queued for Resource Allocation",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-10-02",
           "resolved": "2026-10-06",
@@ -19449,10 +19463,10 @@
         {
           "key": "SSH-4784",
           "summary": "Extracting Customer Addresses",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-30",
-          "resolved": null,
+          "resolved": "2026-10-09",
           "support_contract": "Premium",
           "timespent_seconds": 1500,
           "linked": []
@@ -27151,7 +27165,7 @@
     {
       "name": "RBR Group",
       "ticket_count": 74,
-      "tickets_with_time": 51,
+      "tickets_with_time": 52,
       "tickets": [
         {
           "key": "SSH-4117",
@@ -27646,8 +27660,8 @@
         {
           "key": "SSH-4730",
           "summary": "User Login",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-09-21",
           "resolved": "2026-09-25",
           "support_contract": "Standard",
@@ -28020,7 +28034,7 @@
         {
           "key": "SSH-4827",
           "summary": "Flight Ticketed notifications on a Booking which isn't mine and has no flights on it",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-10-08",
           "resolved": null,
@@ -28031,29 +28045,33 @@
         {
           "key": "SSH-4828",
           "summary": "Error message when saving WeTu images",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-10-09",
           "resolved": null,
-          "support_contract": null,
-          "timespent_seconds": 0,
-          "linked": []
+          "support_contract": "Premium",
+          "timespent_seconds": 900,
+          "linked": [
+            "SPD-6535"
+          ]
         },
         {
           "key": "SSH-4829",
           "summary": "Unable to pull images from Wetu",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-10-09",
           "resolved": null,
-          "support_contract": null,
+          "support_contract": "Premium",
           "timespent_seconds": 0,
-          "linked": []
+          "linked": [
+            "SPD-6535"
+          ]
         }
       ],
       "ssh": {
-        "hours": 19.217,
-        "cost": 679.32,
+        "hours": 19.467,
+        "cost": 694.94,
         "by_person": {
           "Ian Fairhurst": {
             "hours": 0.333,
@@ -28076,8 +28094,8 @@
             "rate": 62.5
           },
           "Alexandra Apilado": {
-            "hours": 2.917,
-            "cost": 182.29,
+            "hours": 3.167,
+            "cost": 197.92,
             "rate": 62.5
           },
           "Jackielou Pastor": {
@@ -28290,6 +28308,10 @@
           "SSH-4827": {
             "hours": 0.25,
             "cost": 15.62
+          },
+          "SSH-4828": {
+            "hours": 0.25,
+            "cost": 15.62
           }
         },
         "by_month": {
@@ -28318,8 +28340,8 @@
             "cost": 132.52
           },
           "2026-10": {
-            "hours": 2.917,
-            "cost": 182.29
+            "hours": 3.167,
+            "cost": 197.92
           }
         }
       },
@@ -28790,12 +28812,20 @@
             "tree_tickets": 1,
             "hours": 1.133,
             "cost": 70.83
+          },
+          {
+            "key": "SPD-6535",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 46.3,
-      "total_cost": 2329.53,
+      "total_hours": 46.55,
+      "total_cost": 2345.15,
       "by_person": {
         "Ian Fairhurst": {
           "hours": 0.5,
@@ -28818,8 +28848,8 @@
           "rate": 62.5
         },
         "Alexandra Apilado": {
-          "hours": 2.917,
-          "cost": 182.29,
+          "hours": 3.167,
+          "cost": 197.92,
           "rate": 62.5
         },
         "Jackielou Pastor": {
@@ -28874,8 +28904,8 @@
           "cost": 618.98
         },
         "2026-10": {
-          "hours": 5.933,
-          "cost": 370.83
+          "hours": 6.183,
+          "cost": 386.46
         }
       }
     },
@@ -29169,7 +29199,7 @@
         {
           "key": "SSH-4708",
           "summary": "Reefscape - Booking Form not working",
-          "status": "Assigned to developer",
+          "status": "Pending",
           "status_category": "In Progress",
           "created": "2026-09-17",
           "resolved": "2026-09-25",
@@ -36041,8 +36071,8 @@
         }
       },
       "linked": {
-        "hours": 66.783,
-        "cost": 3887.93,
+        "hours": 67.0,
+        "cost": 3901.47,
         "by_person": {
           "Ian Fairhurst": {
             "hours": 2.833,
@@ -36060,8 +36090,8 @@
             "rate": 40.0
           },
           "James Win": {
-            "hours": 38.6,
-            "cost": 2412.5,
+            "hours": 38.817,
+            "cost": 2426.04,
             "rate": 62.5
           },
           "Melvin Kha": {
@@ -36222,8 +36252,8 @@
             "cost": 203.12
           },
           "SPD-6204": {
-            "hours": 0.317,
-            "cost": 19.79
+            "hours": 0.533,
+            "cost": 33.33
           },
           "SPD-6205": {
             "hours": 2.217,
@@ -36300,8 +36330,8 @@
             "cost": 598.25
           },
           "2026-10": {
-            "hours": 1.567,
-            "cost": 97.92
+            "hours": 1.783,
+            "cost": 111.46
           }
         },
         "items": [
@@ -36694,8 +36724,8 @@
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 1,
-            "hours": 0.317,
-            "cost": 19.79
+            "hours": 0.533,
+            "cost": 33.33
           },
           {
             "key": "SPD-6205",
@@ -36732,8 +36762,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 113.417,
-      "total_cost": 5090.11,
+      "total_hours": 113.633,
+      "total_cost": 5103.65,
       "by_person": {
         "Melvin Kha": {
           "hours": 36.867,
@@ -36756,8 +36786,8 @@
           "rate": 62.5
         },
         "James Win": {
-          "hours": 38.6,
-          "cost": 2412.5,
+          "hours": 38.817,
+          "cost": 2426.04,
           "rate": 62.5
         },
         "Andy Edmonds": {
@@ -36845,8 +36875,8 @@
           "cost": 755.22
         },
         "2026-10": {
-          "hours": 1.567,
-          "cost": 97.92
+          "hours": 1.783,
+          "cost": 111.46
         }
       }
     },
@@ -38314,7 +38344,7 @@
         {
           "key": "SSH-4680",
           "summary": "Room Search -Pop Up Cell View",
-          "status": "Waiting for customer",
+          "status": "Waiting for release",
           "status_category": "In Progress",
           "created": "2026-09-10",
           "resolved": null,
@@ -38366,7 +38396,7 @@
         {
           "key": "SSH-4765",
           "summary": "Login as Partner Community,  Room Search - Lodge Manager in Sandbox",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-28",
           "resolved": null,
@@ -41332,7 +41362,7 @@
         {
           "key": "SSH-4724",
           "summary": "Send email template to a list Report",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-09-18",
           "resolved": null,
