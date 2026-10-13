@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-12T22:15:22.954500+01:00",
+  "generated_at": "2026-10-13T07:33:31.816930+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 58,
     "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 279054.25,
-    "avg_margin_pct": 56.66
+    "total_margin_gbp": 278965.66,
+    "avg_margin_pct": 56.65
   },
   "epics": [
     {
@@ -460,9 +460,9 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 63.6125,
-      "total_cost": 16088.33,
-      "monetary_margin": 59911.67,
+      "logged_days": 63.6375,
+      "total_cost": 16092.33,
+      "monetary_margin": 59907.67,
       "monetary_margin_pct": 78.83,
       "has_data": true,
       "by_person": {
@@ -472,8 +472,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 358.933,
-          "cost": 7178.67,
+          "hours": 359.133,
+          "cost": 7182.67,
           "rate": 20.0
         },
         "Shivam Mittal": {
@@ -528,8 +528,8 @@
           "cost": 85.0
         },
         "SCW2-2131": {
-          "hours": 6.917,
-          "cost": 138.33
+          "hours": 7.117,
+          "cost": 142.33
         },
         "SCW2-2129": {
           "hours": 3.567,
@@ -870,8 +870,8 @@
           "cost": 5690.46
         },
         "2026-10": {
-          "hours": 43.05,
-          "cost": 1399.33
+          "hours": 43.25,
+          "cost": 1403.33
         },
         "2026-08": {
           "hours": 135.117,
@@ -5468,10 +5468,10 @@
       "status": "Backlog",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 0.26458,
-      "total_cost": 127.33,
-      "monetary_margin": 10372.67,
-      "monetary_margin_pct": 98.79,
+      "logged_days": 0.48333,
+      "total_cost": 211.92,
+      "monetary_margin": 10288.08,
+      "monetary_margin_pct": 97.98,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -5480,9 +5480,14 @@
           "rate": 62.5
         },
         "Shivam Mittal": {
-          "hours": 0.117,
-          "cost": 2.33,
+          "hours": 0.7,
+          "cost": 14.0,
           "rate": 20.0
+        },
+        "Andy Edmonds": {
+          "hours": 1.167,
+          "cost": 72.92,
+          "rate": 62.5
         }
       },
       "by_ticket": {
@@ -5490,20 +5495,34 @@
           "hours": 2.0,
           "cost": 125.0
         },
+        "SCW2-2138": {
+          "hours": 0.25,
+          "cost": 5.0
+        },
         "SCW2-2137": {
           "hours": 0.117,
           "cost": 2.33
+        },
+        "SCW2-2135": {
+          "hours": 0.333,
+          "cost": 6.67
+        },
+        "SPD-5945": {
+          "hours": 1.167,
+          "cost": 72.92
         }
       },
       "by_month": {
         "2026-10": {
-          "hours": 2.117,
-          "cost": 127.33
+          "hours": 3.867,
+          "cost": 211.92
         }
       },
-      "linked_spd": [],
-      "spd_days": 0.0,
-      "spd_cost": 0.0
+      "linked_spd": [
+        "SPD-5945"
+      ],
+      "spd_days": 0.14583,
+      "spd_cost": 72.92
     }
   ]
 }
