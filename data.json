@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-16T17:32:58.372643+01:00",
+  "generated_at": "2026-10-17T05:02:29.084237+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 58,
     "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 277752.0,
-    "avg_margin_pct": 56.48
+    "total_margin_gbp": 277534.5,
+    "avg_margin_pct": 56.45
   },
   "epics": [
     {
@@ -464,10 +464,10 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 66.57708,
-      "total_cost": 16619.33,
-      "monetary_margin": 59380.67,
-      "monetary_margin_pct": 78.13,
+      "logged_days": 66.76458,
+      "total_cost": 16649.33,
+      "monetary_margin": 59350.67,
+      "monetary_margin_pct": 78.09,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -476,8 +476,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 379.233,
-          "cost": 7584.67,
+          "hours": 380.733,
+          "cost": 7614.67,
           "rate": 20.0
         },
         "Shivam Mittal": {
@@ -512,8 +512,8 @@
           "cost": 203.12
         },
         "SCW2-2191": {
-          "hours": 1.5,
-          "cost": 30.0
+          "hours": 3.0,
+          "cost": 60.0
         },
         "SCW2-2189": {
           "hours": 2.0,
@@ -894,8 +894,8 @@
           "cost": 5690.46
         },
         "2026-10": {
-          "hours": 66.767,
-          "cost": 1930.33
+          "hours": 68.267,
+          "cost": 1960.33
         },
         "2026-08": {
           "hours": 135.117,
@@ -5492,10 +5492,10 @@
       "status": "Backlog",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 2.0875,
-      "total_cost": 681.08,
-      "monetary_margin": 9818.92,
-      "monetary_margin_pct": 93.51,
+      "logged_days": 2.4625,
+      "total_cost": 868.58,
+      "monetary_margin": 9631.42,
+      "monetary_margin_pct": 91.73,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -5512,6 +5512,11 @@
           "hours": 8.533,
           "cost": 170.67,
           "rate": 20.0
+        },
+        "Tin Aung": {
+          "hours": 3.0,
+          "cost": 187.5,
+          "rate": 62.5
         }
       },
       "by_ticket": {
@@ -5524,8 +5529,8 @@
           "cost": 5.0
         },
         "SCW2-2137": {
-          "hours": 0.117,
-          "cost": 2.33
+          "hours": 3.117,
+          "cost": 189.83
         },
         "SCW2-2135": {
           "hours": 8.5,
@@ -5538,8 +5543,8 @@
       },
       "by_month": {
         "2026-10": {
-          "hours": 16.7,
-          "cost": 681.08
+          "hours": 19.7,
+          "cost": 868.58
         }
       },
       "linked_spd": [
