@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-22T05:21:25.265553+01:00",
+  "generated_at": "2026-10-22T18:04:09.726023+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 58,
     "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 276555.12,
-    "avg_margin_pct": 56.35
+    "total_margin_gbp": 276367.62,
+    "avg_margin_pct": 56.32
   },
   "epics": [
     {
@@ -5492,10 +5492,10 @@
       "status": "Backlog",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 3.38958,
-      "total_cost": 1091.29,
-      "monetary_margin": 9408.71,
-      "monetary_margin_pct": 89.61,
+      "logged_days": 3.76458,
+      "total_cost": 1278.79,
+      "monetary_margin": 9221.21,
+      "monetary_margin_pct": 87.82,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -5514,8 +5514,8 @@
           "rate": 20.0
         },
         "Tin Aung": {
-          "hours": 3.0,
-          "cost": 187.5,
+          "hours": 6.0,
+          "cost": 375.0,
           "rate": 62.5
         }
       },
@@ -5532,6 +5532,10 @@
           "hours": 3.117,
           "cost": 189.83
         },
+        "SCW2-2136": {
+          "hours": 3.0,
+          "cost": 187.5
+        },
         "SCW2-2135": {
           "hours": 15.167,
           "cost": 360.0
@@ -5543,8 +5547,8 @@
       },
       "by_month": {
         "2026-10": {
-          "hours": 27.117,
-          "cost": 1091.29
+          "hours": 30.117,
+          "cost": 1278.79
         }
       },
       "linked_spd": [
