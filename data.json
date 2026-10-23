@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-23T05:26:30.443042+01:00",
+  "generated_at": "2026-10-23T17:55:45.203248+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 58,
     "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 276364.29,
+    "total_margin_gbp": 276334.29,
     "avg_margin_pct": 56.32
   },
   "epics": [
@@ -5492,10 +5492,10 @@
       "status": "Backlog",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 3.76458,
-      "total_cost": 1278.79,
-      "monetary_margin": 9221.21,
-      "monetary_margin_pct": 87.82,
+      "logged_days": 3.95208,
+      "total_cost": 1308.79,
+      "monetary_margin": 9191.21,
+      "monetary_margin_pct": 87.54,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -5509,8 +5509,8 @@
           "rate": 62.5
         },
         "Shivam Mittal": {
-          "hours": 14.2,
-          "cost": 284.0,
+          "hours": 15.7,
+          "cost": 314.0,
           "rate": 20.0
         },
         "Tin Aung": {
@@ -5525,8 +5525,8 @@
           "cost": 307.29
         },
         "SCW2-2138": {
-          "hours": 0.25,
-          "cost": 5.0
+          "hours": 1.75,
+          "cost": 35.0
         },
         "SCW2-2137": {
           "hours": 3.117,
@@ -5547,8 +5547,8 @@
       },
       "by_month": {
         "2026-10": {
-          "hours": 30.117,
-          "cost": 1278.79
+          "hours": 31.617,
+          "cost": 1308.79
         }
       },
       "linked_spd": [
