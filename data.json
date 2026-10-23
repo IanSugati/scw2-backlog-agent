@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-22T18:04:09.726023+01:00",
+  "generated_at": "2026-10-23T05:26:30.443042+01:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 58,
     "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 276367.62,
+    "total_margin_gbp": 276364.29,
     "avg_margin_pct": 56.32
   },
   "epics": [
@@ -464,9 +464,9 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 67.99375,
-      "total_cost": 17249.75,
-      "monetary_margin": 58750.25,
+      "logged_days": 68.01458,
+      "total_cost": 17253.08,
+      "monetary_margin": 58746.92,
       "monetary_margin_pct": 77.3,
       "has_data": true,
       "by_person": {
@@ -481,8 +481,8 @@
           "rate": 20.0
         },
         "Shivam Mittal": {
-          "hours": 13.317,
-          "cost": 266.33,
+          "hours": 13.483,
+          "cost": 269.67,
           "rate": 20.0
         },
         "Tin Aung": {
@@ -576,8 +576,8 @@
           "cost": 132.5
         },
         "SCW2-2090": {
-          "hours": 7.167,
-          "cost": 143.33
+          "hours": 7.333,
+          "cost": 146.67
         },
         "SCW2-2088": {
           "hours": 7.917,
@@ -894,8 +894,8 @@
           "cost": 5690.46
         },
         "2026-10": {
-          "hours": 78.1,
-          "cost": 2560.75
+          "hours": 78.267,
+          "cost": 2564.08
         },
         "2026-08": {
           "hours": 135.117,
