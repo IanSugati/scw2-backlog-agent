@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T10:34:34.352454+01:00",
+  "generated_at": "2026-10-25T09:53:16.882343+00:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
@@ -7781,7 +7781,7 @@
         {
           "key": "SSH-4852",
           "summary": "Salesforce set up",
-          "status": "Queued for Resource Allocation",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-10-15",
           "resolved": null,
@@ -39877,7 +39877,7 @@
         {
           "key": "SSH-4880",
           "summary": "Converted Amounts & Fiscal Years",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-23",
           "resolved": null,
