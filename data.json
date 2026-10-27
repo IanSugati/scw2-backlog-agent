@@ -1,13 +1,49 @@
 {
-  "generated_at": "2026-10-27T04:42:21.118280+00:00",
+  "generated_at": "2026-10-27T17:55:18.642811+00:00",
   "target_margin_pct": 65.0,
   "summary": {
-    "total_epics": 58,
-    "total_sold_gbp": 412050.0,
-    "total_margin_gbp": 276017.62,
-    "avg_margin_pct": 56.28
+    "total_epics": 59,
+    "total_sold_gbp": 424050.0,
+    "total_margin_gbp": 275830.95,
+    "avg_margin_pct": 56.27
   },
   "epics": [
+    {
+      "key": "SCW2-2214",
+      "summary": "GELT - Leading Trains API",
+      "status": "In Progress",
+      "amount": 12000.0,
+      "sold_days": 12.0,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 12000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false,
+      "by_person": {},
+      "by_ticket": {},
+      "by_month": {},
+      "linked_spd": [],
+      "spd_days": 0.0,
+      "spd_cost": 0.0
+    },
+    {
+      "key": "SCW2-2142",
+      "summary": "See Italy November training",
+      "status": "In Progress",
+      "amount": 1000.0,
+      "sold_days": 1.0,
+      "logged_days": 0.0,
+      "total_cost": 0.0,
+      "monetary_margin": 1000.0,
+      "monetary_margin_pct": 100.0,
+      "has_data": false,
+      "by_person": {},
+      "by_ticket": {},
+      "by_month": {},
+      "linked_spd": [],
+      "spd_days": 0.0,
+      "spd_cost": 0.0
+    },
     {
       "key": "SCW2-2141",
       "summary": "Ebury - Sugati x Ebury Integration",
@@ -56,6 +92,77 @@
       ],
       "spd_days": 3.025,
       "spd_cost": 1512.5
+    },
+    {
+      "key": "SCW2-2111",
+      "summary": "Garmany Golf - Custom Development (custom digital itinerary, costing mechanism, Supplier Confirmation Flow, Booking Journey - PGA Professionals)",
+      "status": "In Progress",
+      "amount": 10500.0,
+      "sold_days": 10.5,
+      "logged_days": 4.4625,
+      "total_cost": 1454.21,
+      "monetary_margin": 9045.79,
+      "monetary_margin_pct": 86.15,
+      "has_data": true,
+      "by_person": {
+        "Ian Fairhurst": {
+          "hours": 7.083,
+          "cost": 442.71,
+          "rate": 62.5
+        },
+        "Andy Edmonds": {
+          "hours": 4.333,
+          "cost": 270.83,
+          "rate": 62.5
+        },
+        "Shivam Mittal": {
+          "hours": 18.283,
+          "cost": 365.67,
+          "rate": 20.0
+        },
+        "Tin Aung": {
+          "hours": 6.0,
+          "cost": 375.0,
+          "rate": 62.5
+        }
+      },
+      "by_ticket": {
+        "SCW2-2111": {
+          "hours": 4.917,
+          "cost": 307.29
+        },
+        "SCW2-2138": {
+          "hours": 2.5,
+          "cost": 71.25
+        },
+        "SCW2-2137": {
+          "hours": 3.45,
+          "cost": 210.67
+        },
+        "SCW2-2136": {
+          "hours": 3.0,
+          "cost": 187.5
+        },
+        "SCW2-2135": {
+          "hours": 18.167,
+          "cost": 448.33
+        },
+        "SPD-5945": {
+          "hours": 3.667,
+          "cost": 229.17
+        }
+      },
+      "by_month": {
+        "2026-10": {
+          "hours": 35.7,
+          "cost": 1454.21
+        }
+      },
+      "linked_spd": [
+        "SPD-5945"
+      ],
+      "spd_days": 0.45833,
+      "spd_cost": 229.17
     },
     {
       "key": "SCW2-2042",
@@ -469,10 +576,10 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 68.95208,
-      "total_cost": 17403.08,
-      "monetary_margin": 58596.92,
-      "monetary_margin_pct": 77.1,
+      "logged_days": 69.79583,
+      "total_cost": 17538.08,
+      "monetary_margin": 58461.92,
+      "monetary_margin_pct": 76.92,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -481,13 +588,13 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 388.233,
-          "cost": 7764.67,
+          "hours": 394.9,
+          "cost": 7898.0,
           "rate": 20.0
         },
         "Shivam Mittal": {
-          "hours": 13.483,
-          "cost": 269.67,
+          "hours": 13.567,
+          "cost": 271.33,
           "rate": 20.0
         },
         "Tin Aung": {
@@ -516,6 +623,10 @@
           "hours": 3.25,
           "cost": 203.12
         },
+        "SCW2-2200": {
+          "hours": 1.5,
+          "cost": 30.0
+        },
         "SCW2-2191": {
           "hours": 4.333,
           "cost": 86.67
@@ -523,6 +634,10 @@
         "SCW2-2189": {
           "hours": 3.5,
           "cost": 70.0
+        },
+        "SCW2-2173": {
+          "hours": 5.167,
+          "cost": 103.33
         },
         "SCW2-2172": {
           "hours": 11.067,
@@ -581,8 +696,8 @@
           "cost": 132.5
         },
         "SCW2-2090": {
-          "hours": 7.333,
-          "cost": 146.67
+          "hours": 7.417,
+          "cost": 148.33
         },
         "SCW2-2088": {
           "hours": 7.917,
@@ -899,8 +1014,8 @@
           "cost": 5690.46
         },
         "2026-10": {
-          "hours": 85.767,
-          "cost": 2714.08
+          "hours": 92.517,
+          "cost": 2849.08
         },
         "2026-08": {
           "hours": 135.117,
@@ -5472,95 +5587,6 @@
       ],
       "spd_days": 0.36458,
       "spd_cost": 160.92
-    },
-    {
-      "key": "SCW2-2142",
-      "summary": "See Italy November training",
-      "status": "Backlog",
-      "amount": 1000.0,
-      "sold_days": 1.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 1000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false,
-      "by_person": {},
-      "by_ticket": {},
-      "by_month": {},
-      "linked_spd": [],
-      "spd_days": 0.0,
-      "spd_cost": 0.0
-    },
-    {
-      "key": "SCW2-2111",
-      "summary": "Garmany Golf - Custom Development (custom digital itinerary, costing mechanism, Supplier Confirmation Flow, Booking Journey - PGA Professionals)",
-      "status": "Backlog",
-      "amount": 10500.0,
-      "sold_days": 10.5,
-      "logged_days": 4.13958,
-      "total_cost": 1402.54,
-      "monetary_margin": 9097.46,
-      "monetary_margin_pct": 86.64,
-      "has_data": true,
-      "by_person": {
-        "Ian Fairhurst": {
-          "hours": 7.083,
-          "cost": 442.71,
-          "rate": 62.5
-        },
-        "Andy Edmonds": {
-          "hours": 4.333,
-          "cost": 270.83,
-          "rate": 62.5
-        },
-        "Shivam Mittal": {
-          "hours": 15.7,
-          "cost": 314.0,
-          "rate": 20.0
-        },
-        "Tin Aung": {
-          "hours": 6.0,
-          "cost": 375.0,
-          "rate": 62.5
-        }
-      },
-      "by_ticket": {
-        "SCW2-2111": {
-          "hours": 4.917,
-          "cost": 307.29
-        },
-        "SCW2-2138": {
-          "hours": 2.25,
-          "cost": 66.25
-        },
-        "SCW2-2137": {
-          "hours": 3.45,
-          "cost": 210.67
-        },
-        "SCW2-2136": {
-          "hours": 3.0,
-          "cost": 187.5
-        },
-        "SCW2-2135": {
-          "hours": 15.833,
-          "cost": 401.67
-        },
-        "SPD-5945": {
-          "hours": 3.667,
-          "cost": 229.17
-        }
-      },
-      "by_month": {
-        "2026-10": {
-          "hours": 33.117,
-          "cost": 1402.54
-        }
-      },
-      "linked_spd": [
-        "SPD-5945"
-      ],
-      "spd_days": 0.45833,
-      "spd_cost": 229.17
     }
   ]
 }
