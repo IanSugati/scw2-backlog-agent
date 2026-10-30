@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-10-29T18:24:23.224881+00:00",
+  "generated_at": "2026-10-30T05:26:55.626054+00:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 59,
     "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 286285.54,
-    "avg_margin_pct": 56.84
+    "total_margin_gbp": 286185.54,
+    "avg_margin_pct": 56.82
   },
   "epics": [
     {
@@ -120,10 +120,10 @@
       "status": "In Progress",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 5.73542,
-      "total_cost": 2019.83,
-      "monetary_margin": 8480.17,
-      "monetary_margin_pct": 80.76,
+      "logged_days": 5.93542,
+      "total_cost": 2119.83,
+      "monetary_margin": 8380.17,
+      "monetary_margin_pct": 79.81,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -147,8 +147,8 @@
           "rate": 62.5
         },
         "Naval Sharma": {
-          "hours": 3.85,
-          "cost": 240.62,
+          "hours": 5.45,
+          "cost": 340.62,
           "rate": 62.5
         }
       },
@@ -174,8 +174,8 @@
           "cost": 210.67
         },
         "SCW2-2136": {
-          "hours": 8.85,
-          "cost": 553.12
+          "hours": 10.45,
+          "cost": 653.12
         },
         "SCW2-2135": {
           "hours": 18.167,
@@ -188,8 +188,8 @@
       },
       "by_month": {
         "2026-10": {
-          "hours": 45.883,
-          "cost": 2019.83
+          "hours": 47.483,
+          "cost": 2119.83
         }
       },
       "linked_spd": [
