@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-31T10:57:50.349926+00:00",
+  "generated_at": "2026-11-01T11:54:58.555424+00:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
-    "tickets": 1824,
+    "tickets": 1825,
     "total_hours": 1885.4,
     "total_cost_gbp": 81191.95
   },
@@ -4094,7 +4094,7 @@
     },
     {
       "name": "Benarrivati Travel Services",
-      "ticket_count": 14,
+      "ticket_count": 15,
       "tickets_with_time": 13,
       "tickets": [
         {
@@ -4264,6 +4264,17 @@
           "linked": [
             "SPD-5911"
           ]
+        },
+        {
+          "key": "SSH-4918",
+          "summary": "Partner licence cancellation request – Benarrivati",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-10-31",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
+          "linked": []
         }
       ],
       "ssh": {
