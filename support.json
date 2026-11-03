@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-02T13:31:41.492999+00:00",
+  "generated_at": "2026-11-03T12:52:00.910819+00:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
-    "tickets": 1826,
-    "total_hours": 1889.2,
-    "total_cost_gbp": 81413.21
+    "tickets": 1828,
+    "total_hours": 1892.4,
+    "total_cost_gbp": 81586.12
   },
   "organisations": [
     {
@@ -7731,7 +7731,7 @@
         {
           "key": "SSH-4535",
           "summary": "Adding pax using amend booking",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-08-07",
           "resolved": null,
@@ -9833,10 +9833,10 @@
         {
           "key": "SSH-4906",
           "summary": "Add new user to Jira",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-28",
-          "resolved": null,
+          "resolved": "2026-11-02",
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": []
@@ -10556,8 +10556,8 @@
         }
       },
       "linked": {
-        "hours": 40.55,
-        "cost": 2507.34,
+        "hours": 40.8,
+        "cost": 2522.97,
         "by_person": {
           "Naval Sharma": {
             "hours": 14.45,
@@ -10575,8 +10575,8 @@
             "rate": 18.18
           },
           "Ian Fairhurst": {
-            "hours": 0.133,
-            "cost": 8.33,
+            "hours": 0.383,
+            "cost": 23.96,
             "rate": 62.5
           },
           "James Win": {
@@ -10667,6 +10667,10 @@
             "hours": 1.3,
             "cost": 81.25
           },
+          "SPD-6647": {
+            "hours": 0.25,
+            "cost": 15.62
+          },
           "SPD-6666": {
             "hours": 1.033,
             "cost": 64.58
@@ -10712,6 +10716,10 @@
           "2026-10": {
             "hours": 13.267,
             "cost": 829.17
+          },
+          "2026-11": {
+            "hours": 0.25,
+            "cost": 15.62
           }
         },
         "items": [
@@ -10911,9 +10919,9 @@
             "key": "SPD-6647",
             "epic": null,
             "paid_epic": false,
-            "tree_tickets": 0,
-            "hours": 0.0,
-            "cost": 0.0
+            "tree_tickets": 1,
+            "hours": 0.25,
+            "cost": 15.62
           },
           {
             "key": "SPD-6666",
@@ -10926,12 +10934,12 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 54.317,
-      "total_cost": 3072.93,
+      "total_hours": 54.567,
+      "total_cost": 3088.55,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 6.85,
-          "cost": 428.12,
+          "hours": 7.1,
+          "cost": 443.75,
           "rate": 62.5
         },
         "Melvin Kha": {
@@ -11021,6 +11029,10 @@
         "2026-09": {
           "hours": 3.967,
           "cost": 243.04
+        },
+        "2026-11": {
+          "hours": 0.25,
+          "cost": 15.62
         }
       }
     },
@@ -13053,7 +13065,7 @@
         {
           "key": "SSH-4520",
           "summary": "Flywire Payment not saving Email Address if unpopulated in contact record",
-          "status": "Waiting for customer",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-08-05",
           "resolved": "2026-09-22",
@@ -16228,8 +16240,8 @@
     },
     {
       "name": "Journeysmiths",
-      "ticket_count": 52,
-      "tickets_with_time": 45,
+      "ticket_count": 53,
+      "tickets_with_time": 46,
       "tickets": [
         {
           "key": "SSH-3104",
@@ -16568,8 +16580,8 @@
         {
           "key": "SSH-4476",
           "summary": "Images not updating",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-07-27",
           "resolved": "2026-08-06",
           "support_contract": "Standard",
@@ -16847,11 +16859,22 @@
             "SPD-6682",
             "SPD-6692"
           ]
+        },
+        {
+          "key": "SSH-4920",
+          "summary": "Can't delete client invoices",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
+          "created": "2026-11-02",
+          "resolved": null,
+          "support_contract": "Standard",
+          "timespent_seconds": 1800,
+          "linked": []
         }
       ],
       "ssh": {
-        "hours": 18.75,
-        "cost": 546.14,
+        "hours": 19.25,
+        "cost": 566.14,
         "by_person": {
           "Melvin Kha": {
             "hours": 12.883,
@@ -16859,8 +16882,8 @@
             "rate": 18.18
           },
           "Laura McConway": {
-            "hours": 2.433,
-            "cost": 97.33,
+            "hours": 2.933,
+            "cost": 117.33,
             "rate": 40.0
           },
           "Ian Fairhurst": {
@@ -17064,6 +17087,10 @@
           "SSH-4908": {
             "hours": 0.25,
             "cost": 15.62
+          },
+          "SSH-4920": {
+            "hours": 0.5,
+            "cost": 20.0
           }
         },
         "by_month": {
@@ -17118,6 +17145,10 @@
           "2026-10": {
             "hours": 1.183,
             "cost": 73.96
+          },
+          "2026-11": {
+            "hours": 0.5,
+            "cost": 20.0
           }
         }
       },
@@ -17414,8 +17445,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 33.517,
-      "total_cost": 1467.55,
+      "total_hours": 34.017,
+      "total_cost": 1487.55,
       "by_person": {
         "Melvin Kha": {
           "hours": 12.883,
@@ -17423,8 +17454,8 @@
           "rate": 18.18
         },
         "Laura McConway": {
-          "hours": 2.5,
-          "cost": 100.0,
+          "hours": 3.0,
+          "cost": 120.0,
           "rate": 40.0
         },
         "Ian Fairhurst": {
@@ -17510,6 +17541,10 @@
         "2026-10": {
           "hours": 5.383,
           "cost": 336.46
+        },
+        "2026-11": {
+          "hours": 0.5,
+          "cost": 20.0
         }
       }
     },
@@ -23470,15 +23505,15 @@
           "created": "2026-10-30",
           "resolved": null,
           "support_contract": "Standard",
-          "timespent_seconds": 300,
+          "timespent_seconds": 600,
           "linked": [
             "SPD-6693"
           ]
         }
       ],
       "ssh": {
-        "hours": 13.45,
-        "cost": 415.89,
+        "hours": 13.533,
+        "cost": 421.1,
         "by_person": {
           "Melvin Kha": {
             "hours": 9.583,
@@ -23496,8 +23531,8 @@
             "rate": 62.5
           },
           "Jackielou Pastor": {
-            "hours": 0.333,
-            "cost": 20.83,
+            "hours": 0.417,
+            "cost": 26.04,
             "rate": 62.5
           },
           "Alexandra Apilado": {
@@ -23664,8 +23699,8 @@
             "cost": 46.88
           },
           "SSH-4915": {
-            "hours": 0.083,
-            "cost": 5.21
+            "hours": 0.167,
+            "cost": 10.42
           }
         },
         "by_month": {
@@ -23736,6 +23771,10 @@
           "2026-10": {
             "hours": 0.833,
             "cost": 52.08
+          },
+          "2026-11": {
+            "hours": 0.083,
+            "cost": 5.21
           }
         }
       },
@@ -23789,8 +23828,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 13.95,
-      "total_cost": 424.98,
+      "total_hours": 14.033,
+      "total_cost": 430.19,
       "by_person": {
         "Melvin Kha": {
           "hours": 10.083,
@@ -23808,8 +23847,8 @@
           "rate": 62.5
         },
         "Jackielou Pastor": {
-          "hours": 0.333,
-          "cost": 20.83,
+          "hours": 0.417,
+          "cost": 26.04,
           "rate": 62.5
         },
         "Alexandra Apilado": {
@@ -23886,6 +23925,10 @@
         "2026-10": {
           "hours": 0.833,
           "cost": 52.08
+        },
+        "2026-11": {
+          "hours": 0.083,
+          "cost": 5.21
         }
       }
     },
@@ -28517,7 +28560,7 @@
     {
       "name": "RBR Group",
       "ticket_count": 95,
-      "tickets_with_time": 70,
+      "tickets_with_time": 72,
       "tickets": [
         {
           "key": "SSH-4117",
@@ -29549,7 +29592,7 @@
           "created": "2026-10-20",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 0,
+          "timespent_seconds": 1200,
           "linked": [
             "SPD-6610"
           ]
@@ -29677,18 +29720,18 @@
         {
           "key": "SSH-4919",
           "summary": "Unable to see Trip Planner",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
           "created": "2026-11-02",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 0,
+          "timespent_seconds": 2400,
           "linked": []
         }
       ],
       "ssh": {
-        "hours": 25.9,
-        "cost": 1091.4,
+        "hours": 26.9,
+        "cost": 1153.9,
         "by_person": {
           "Ian Fairhurst": {
             "hours": 0.333,
@@ -29711,13 +29754,13 @@
             "rate": 62.5
           },
           "Alexandra Apilado": {
-            "hours": 7.5,
-            "cost": 468.75,
+            "hours": 8.333,
+            "cost": 520.83,
             "rate": 62.5
           },
           "Jackielou Pastor": {
-            "hours": 2.05,
-            "cost": 128.12,
+            "hours": 2.217,
+            "cost": 138.54,
             "rate": 62.5
           }
         },
@@ -29966,6 +30009,10 @@
             "hours": 0.083,
             "cost": 5.21
           },
+          "SSH-4865": {
+            "hours": 0.333,
+            "cost": 20.83
+          },
           "SSH-4866": {
             "hours": 0.3,
             "cost": 15.75
@@ -30001,6 +30048,10 @@
           "SSH-4901": {
             "hours": 0.167,
             "cost": 10.42
+          },
+          "SSH-4919": {
+            "hours": 0.667,
+            "cost": 41.67
           }
         },
         "by_month": {
@@ -30031,12 +30082,16 @@
           "2026-10": {
             "hours": 9.6,
             "cost": 594.37
+          },
+          "2026-11": {
+            "hours": 1.0,
+            "cost": 62.5
           }
         }
       },
       "linked": {
-        "hours": 33.4,
-        "cost": 2045.0,
+        "hours": 34.0,
+        "cost": 2082.5,
         "by_person": {
           "James Win": {
             "hours": 6.333,
@@ -30044,8 +30099,8 @@
             "rate": 62.5
           },
           "Naval Sharma": {
-            "hours": 10.75,
-            "cost": 671.88,
+            "hours": 11.35,
+            "cost": 709.38,
             "rate": 62.5
           },
           "Andy Edmonds": {
@@ -30157,6 +30212,10 @@
           "SPD-6610": {
             "hours": 0.4,
             "cost": 25.0
+          },
+          "SPD-6611": {
+            "hours": 0.6,
+            "cost": 37.5
           }
         },
         "by_month": {
@@ -30179,6 +30238,10 @@
           "2026-10": {
             "hours": 9.333,
             "cost": 583.33
+          },
+          "2026-11": {
+            "hours": 0.6,
+            "cost": 37.5
           }
         },
         "items": [
@@ -30586,9 +30649,9 @@
             "key": "SPD-6611",
             "epic": null,
             "paid_epic": false,
-            "tree_tickets": 0,
-            "hours": 0.0,
-            "cost": 0.0
+            "tree_tickets": 1,
+            "hours": 0.6,
+            "cost": 37.5
           },
           {
             "key": "SPD-6612",
@@ -30681,8 +30744,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 59.3,
-      "total_cost": 3136.4,
+      "total_hours": 60.9,
+      "total_cost": 3236.4,
       "by_person": {
         "Ian Fairhurst": {
           "hours": 0.5,
@@ -30705,13 +30768,13 @@
           "rate": 62.5
         },
         "Alexandra Apilado": {
-          "hours": 7.5,
-          "cost": 468.75,
+          "hours": 8.333,
+          "cost": 520.83,
           "rate": 62.5
         },
         "Jackielou Pastor": {
-          "hours": 2.05,
-          "cost": 128.12,
+          "hours": 2.217,
+          "cost": 138.54,
           "rate": 62.5
         },
         "James Win": {
@@ -30720,8 +30783,8 @@
           "rate": 62.5
         },
         "Naval Sharma": {
-          "hours": 10.75,
-          "cost": 671.88,
+          "hours": 11.35,
+          "cost": 709.38,
           "rate": 62.5
         },
         "Andy Edmonds": {
@@ -30763,6 +30826,10 @@
         "2026-10": {
           "hours": 18.933,
           "cost": 1177.71
+        },
+        "2026-11": {
+          "hours": 1.6,
+          "cost": 100.0
         }
       }
     },
@@ -32430,19 +32497,19 @@
           "created": "2026-10-30",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 600,
+          "timespent_seconds": 2400,
           "linked": [
             "SPD-6699"
           ]
         }
       ],
       "ssh": {
-        "hours": 34.383,
-        "cost": 1032.8,
+        "hours": 34.883,
+        "cost": 1052.8,
         "by_person": {
           "Laura McConway": {
-            "hours": 2.267,
-            "cost": 90.67,
+            "hours": 2.767,
+            "cost": 110.67,
             "rate": 40.0
           },
           "Melvin Kha": {
@@ -32693,8 +32760,8 @@
             "cost": 102.84
           },
           "SSH-4914": {
-            "hours": 0.167,
-            "cost": 10.42
+            "hours": 0.667,
+            "cost": 30.42
           }
         },
         "by_month": {
@@ -32773,6 +32840,10 @@
           "2026-10": {
             "hours": 0.667,
             "cost": 41.67
+          },
+          "2026-11": {
+            "hours": 0.5,
+            "cost": 20.0
           }
         }
       },
@@ -33320,12 +33391,12 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 81.383,
-      "total_cost": 3409.8,
+      "total_hours": 81.883,
+      "total_cost": 3429.8,
       "by_person": {
         "Laura McConway": {
-          "hours": 4.667,
-          "cost": 186.67,
+          "hours": 5.167,
+          "cost": 206.67,
           "rate": 40.0
         },
         "Melvin Kha": {
@@ -33450,6 +33521,10 @@
         "2026-10": {
           "hours": 3.75,
           "cost": 234.38
+        },
+        "2026-11": {
+          "hours": 0.5,
+          "cost": 20.0
         }
       }
     },
@@ -34063,7 +34138,7 @@
         {
           "key": "SSH-4818",
           "summary": "Live Occupancy Display",
-          "status": "Waiting for customer",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-10-07",
           "resolved": null,
@@ -39091,8 +39166,8 @@
     },
     {
       "name": "The Safari Collection",
-      "ticket_count": 133,
-      "tickets_with_time": 121,
+      "ticket_count": 134,
+      "tickets_with_time": 122,
       "tickets": [
         {
           "key": "SSH-3082",
@@ -40658,7 +40733,7 @@
         {
           "key": "SSH-4844",
           "summary": "Day Room Itinerary Description",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-14",
           "resolved": null,
@@ -40724,7 +40799,7 @@
         {
           "key": "SSH-4911",
           "summary": "Update on SSH-1950 Masai Mara Park & Conservation Fees",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-29",
           "resolved": null,
@@ -40742,11 +40817,22 @@
           "support_contract": "Premium",
           "timespent_seconds": 1200,
           "linked": []
+        },
+        {
+          "key": "SSH-4921",
+          "summary": "Room Search Error",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
+          "created": "2026-11-03",
+          "resolved": null,
+          "support_contract": "Premium",
+          "timespent_seconds": 300,
+          "linked": []
         }
       ],
       "ssh": {
-        "hours": 125.3,
-        "cost": 5054.36,
+        "hours": 125.383,
+        "cost": 5059.57,
         "by_person": {
           "Melvin Kha": {
             "hours": 62.3,
@@ -40774,8 +40860,8 @@
             "rate": 62.5
           },
           "Jackielou Pastor": {
-            "hours": 0.417,
-            "cost": 26.04,
+            "hours": 0.5,
+            "cost": 31.25,
             "rate": 62.5
           }
         },
@@ -41263,6 +41349,10 @@
           "SSH-4916": {
             "hours": 0.333,
             "cost": 20.83
+          },
+          "SSH-4921": {
+            "hours": 0.083,
+            "cost": 5.21
           }
         },
         "by_month": {
@@ -41339,8 +41429,8 @@
             "cost": 548.96
           },
           "2026-11": {
-            "hours": 0.167,
-            "cost": 10.42
+            "hours": 0.25,
+            "cost": 15.62
           }
         }
       },
@@ -42509,8 +42599,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 241.15,
-      "total_cost": 11470.36,
+      "total_hours": 241.233,
+      "total_cost": 11475.57,
       "by_person": {
         "Melvin Kha": {
           "hours": 65.05,
@@ -42538,8 +42628,8 @@
           "rate": 62.5
         },
         "Jackielou Pastor": {
-          "hours": 0.417,
-          "cost": 26.04,
+          "hours": 0.5,
+          "cost": 31.25,
           "rate": 62.5
         },
         "Naval Sharma": {
@@ -42637,8 +42727,8 @@
           "cost": 934.62
         },
         "2026-11": {
-          "hours": 0.25,
-          "cost": 15.62
+          "hours": 0.333,
+          "cost": 20.83
         }
       }
     },
@@ -43883,13 +43973,13 @@
           "created": "2026-10-28",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 300,
+          "timespent_seconds": 600,
           "linked": []
         }
       ],
       "ssh": {
-        "hours": 41.05,
-        "cost": 2006.0,
+        "hours": 41.133,
+        "cost": 2011.21,
         "by_person": {
           "Melvin Kha": {
             "hours": 12.5,
@@ -43912,8 +44002,8 @@
             "rate": 62.5
           },
           "Alexandra Apilado": {
-            "hours": 0.917,
-            "cost": 57.29,
+            "hours": 1.0,
+            "cost": 62.5,
             "rate": 62.5
           }
         },
@@ -44147,8 +44237,8 @@
             "cost": 20.83
           },
           "SSH-4907": {
-            "hours": 0.083,
-            "cost": 5.21
+            "hours": 0.167,
+            "cost": 10.42
           }
         },
         "by_month": {
@@ -44211,12 +44301,16 @@
           "2026-10": {
             "hours": 1.383,
             "cost": 86.46
+          },
+          "2026-11": {
+            "hours": 0.083,
+            "cost": 5.21
           }
         }
       },
       "linked": {
-        "hours": 19.317,
-        "cost": 1010.5,
+        "hours": 19.4,
+        "cost": 1012.17,
         "by_person": {
           "Ian Fairhurst": {
             "hours": 3.417,
@@ -44224,8 +44318,8 @@
             "rate": 62.5
           },
           "Shivam Mittal": {
-            "hours": 4.083,
-            "cost": 81.67,
+            "hours": 4.167,
+            "cost": 83.33,
             "rate": 20.0
           },
           "Naval Sharma": {
@@ -44278,8 +44372,8 @@
             "cost": 57.29
           },
           "SPD-6373": {
-            "hours": 1.333,
-            "cost": 26.67
+            "hours": 1.417,
+            "cost": 28.33
           },
           "SPD-6395": {
             "hours": 0.117,
@@ -44300,8 +44394,8 @@
             "cost": 212.38
           },
           "2026-11": {
-            "hours": 0.5,
-            "cost": 17.08
+            "hours": 0.583,
+            "cost": 18.75
           },
           "2025-11": {
             "hours": 0.333,
@@ -44414,8 +44508,8 @@
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 1,
-            "hours": 1.333,
-            "cost": 26.67
+            "hours": 1.417,
+            "cost": 28.33
           },
           {
             "key": "SPD-6395",
@@ -44452,8 +44546,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 60.367,
-      "total_cost": 3016.5,
+      "total_hours": 60.533,
+      "total_cost": 3023.37,
       "by_person": {
         "Melvin Kha": {
           "hours": 12.5,
@@ -44476,13 +44570,13 @@
           "rate": 62.5
         },
         "Alexandra Apilado": {
-          "hours": 0.917,
-          "cost": 57.29,
+          "hours": 1.0,
+          "cost": 62.5,
           "rate": 62.5
         },
         "Shivam Mittal": {
-          "hours": 4.083,
-          "cost": 81.67,
+          "hours": 4.167,
+          "cost": 83.33,
           "rate": 20.0
         },
         "Naval Sharma": {
@@ -44558,8 +44652,8 @@
           "cost": 298.83
         },
         "2026-11": {
-          "hours": 0.5,
-          "cost": 17.08
+          "hours": 0.667,
+          "cost": 23.96
         }
       }
     },
@@ -44952,8 +45046,8 @@
         {
           "key": "SSH-4785",
           "summary": "Supplier Reconfirmation Email Template & Mail Merge Functionality",
-          "status": "Waiting for support",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-01",
           "resolved": "2026-10-27",
           "support_contract": "Premium",
@@ -45048,7 +45142,7 @@
         {
           "key": "SSH-4830",
           "summary": "Supplier Request Email Template Updates",
-          "status": "Waiting for support",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-10-11",
           "resolved": null,
