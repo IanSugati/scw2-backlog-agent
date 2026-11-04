@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-03T19:26:39.493714+00:00",
+  "generated_at": "2026-11-04T05:55:51.011151+00:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 59,
     "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 284587.37,
-    "avg_margin_pct": 56.65
+    "total_margin_gbp": 284432.7,
+    "avg_margin_pct": 56.64
   },
   "epics": [
     {
@@ -642,10 +642,10 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 75.03958,
-      "total_cost": 18947.29,
-      "monetary_margin": 57052.71,
-      "monetary_margin_pct": 75.07,
+      "logged_days": 76.00625,
+      "total_cost": 19101.96,
+      "monetary_margin": 56898.04,
+      "monetary_margin_pct": 74.87,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -654,8 +654,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 423.433,
-          "cost": 8468.67,
+          "hours": 431.167,
+          "cost": 8623.33,
           "rate": 20.0
         },
         "Tin Aung": {
@@ -690,8 +690,8 @@
           "cost": 515.62
         },
         "SCW2-2236": {
-          "hours": 3.283,
-          "cost": 65.67
+          "hours": 11.017,
+          "cost": 220.33
         },
         "SCW2-2232": {
           "hours": 1.333,
@@ -1096,8 +1096,8 @@
           "cost": 3799.33
         },
         "2026-11": {
-          "hours": 12.5,
-          "cost": 458.96
+          "hours": 20.233,
+          "cost": 613.62
         },
         "2026-08": {
           "hours": 135.117,
