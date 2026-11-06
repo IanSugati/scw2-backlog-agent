@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-05T19:51:02.607047+00:00",
+  "generated_at": "2026-11-06T06:10:48.149785+00:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 59,
     "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 283382.99,
+    "total_margin_gbp": 283335.07,
     "avg_margin_pct": 56.5
   },
   "epics": [
@@ -91,15 +91,15 @@
       "status": "In Progress",
       "amount": 20000.0,
       "sold_days": 20.0,
-      "logged_days": 3.025,
-      "total_cost": 1512.5,
-      "monetary_margin": 18487.5,
-      "monetary_margin_pct": 92.44,
+      "logged_days": 3.12083,
+      "total_cost": 1560.42,
+      "monetary_margin": 18439.58,
+      "monetary_margin_pct": 92.2,
       "has_data": true,
       "by_person": {
         "James Win": {
-          "hours": 24.2,
-          "cost": 1512.5,
+          "hours": 24.967,
+          "cost": 1560.42,
           "rate": 62.5
         }
       },
@@ -109,8 +109,8 @@
           "cost": 143.75
         },
         "SPD-5768": {
-          "hours": 21.9,
-          "cost": 1368.75
+          "hours": 22.667,
+          "cost": 1416.67
         }
       },
       "by_month": {
@@ -125,14 +125,18 @@
         "2026-09": {
           "hours": 16.517,
           "cost": 1032.29
+        },
+        "2026-11": {
+          "hours": 0.767,
+          "cost": 47.92
         }
       },
       "linked_spd": [
         "SPD-6355",
         "SPD-5768"
       ],
-      "spd_days": 3.025,
-      "spd_cost": 1512.5
+      "spd_days": 3.12083,
+      "spd_cost": 1560.42
     },
     {
       "key": "SCW2-2111",
