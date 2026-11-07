@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-06T13:01:50.929562+00:00",
+  "generated_at": "2026-11-07T11:45:17.832497+00:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
-    "tickets": 1843,
-    "total_hours": 1913.9,
-    "total_cost_gbp": 82801.66
+    "tickets": 1847,
+    "total_hours": 1915.9,
+    "total_cost_gbp": 82915.59
   },
   "organisations": [
     {
@@ -2783,7 +2783,8 @@
             "SCW2-1693",
             "SPD-5904",
             "SPD-6519",
-            "SPD-6520"
+            "SPD-6520",
+            "SPD-6729"
           ]
         },
         {
@@ -3997,6 +3998,14 @@
             "tree_tickets": 1,
             "hours": 1.383,
             "cost": 86.46
+          },
+          {
+            "key": "SPD-6729",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
@@ -4280,10 +4289,10 @@
         {
           "key": "SSH-4918",
           "summary": "Partner licence cancellation request – Benarrivati",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-31",
-          "resolved": null,
+          "resolved": "2026-11-06",
           "support_contract": "Standard",
           "timespent_seconds": 300,
           "linked": []
@@ -9811,7 +9820,7 @@
     },
     {
       "name": "Garmany Golf",
-      "ticket_count": 5,
+      "ticket_count": 6,
       "tickets_with_time": 3,
       "tickets": [
         {
@@ -9869,6 +9878,17 @@
           "status_category": "Done",
           "created": "2026-10-28",
           "resolved": "2026-11-02",
+          "support_contract": "Standard",
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4938",
+          "summary": "Payment Fields - Opportunity level",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
+          "created": "2026-11-06",
+          "resolved": null,
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": []
@@ -10331,7 +10351,7 @@
         {
           "key": "SSH-4497",
           "summary": "Supplier Payments for Tour Extra Items",
-          "status": "Waiting for customer",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-07-31",
           "resolved": null,
@@ -10391,13 +10411,15 @@
         {
           "key": "SSH-4936",
           "summary": "Decimal/Rounding issue with refunds",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-11-05",
           "resolved": null,
           "support_contract": "Standard",
           "timespent_seconds": 300,
-          "linked": []
+          "linked": [
+            "SPD-6732"
+          ]
         }
       ],
       "ssh": {
@@ -10981,6 +11003,14 @@
             "tree_tickets": 1,
             "hours": 2.183,
             "cost": 136.46
+          },
+          {
+            "key": "SPD-6732",
+            "epic": null,
+            "paid_epic": false,
+            "tree_tickets": 0,
+            "hours": 0.0,
+            "cost": 0.0
           }
         ],
         "paid_epic_cost": 0
@@ -13558,8 +13588,8 @@
         {
           "key": "SSH-4816",
           "summary": "New Release Items for ITV production",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-07",
           "resolved": "2026-10-20",
           "support_contract": "Premium",
@@ -20575,7 +20605,7 @@
         {
           "key": "SSH-4878",
           "summary": "Scheduled tasks not populating in bookings",
-          "status": "Assigned to developer",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-10-22",
           "resolved": null,
@@ -20617,7 +20647,7 @@
           "created": "2026-11-03",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 600,
+          "timespent_seconds": 1500,
           "linked": []
         },
         {
@@ -20657,8 +20687,8 @@
         }
       ],
       "ssh": {
-        "hours": 132.833,
-        "cost": 3944.07,
+        "hours": 133.083,
+        "cost": 3959.69,
         "by_person": {
           "Melvin Kha": {
             "hours": 95.2,
@@ -20681,8 +20711,8 @@
             "rate": 62.5
           },
           "Alexandra Apilado": {
-            "hours": 2.75,
-            "cost": 171.88,
+            "hours": 3.0,
+            "cost": 187.5,
             "rate": 62.5
           },
           "Jackielou Pastor": {
@@ -21637,8 +21667,8 @@
             "cost": 31.25
           },
           "SSH-4923": {
-            "hours": 0.167,
-            "cost": 10.42
+            "hours": 0.417,
+            "cost": 26.04
           },
           "SSH-4928": {
             "hours": 0.25,
@@ -21731,8 +21761,8 @@
             "cost": 289.39
           },
           "2026-11": {
-            "hours": 0.833,
-            "cost": 52.08
+            "hours": 1.083,
+            "cost": 67.71
           }
         }
       },
@@ -22732,8 +22762,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 209.333,
-      "total_cost": 8329.05,
+      "total_hours": 209.583,
+      "total_cost": 8344.68,
       "by_person": {
         "Melvin Kha": {
           "hours": 96.95,
@@ -22756,8 +22786,8 @@
           "rate": 62.5
         },
         "Alexandra Apilado": {
-          "hours": 2.75,
-          "cost": 171.88,
+          "hours": 3.0,
+          "cost": 187.5,
           "rate": 62.5
         },
         "Jackielou Pastor": {
@@ -22864,8 +22894,8 @@
           "cost": 376.68
         },
         "2026-11": {
-          "hours": 1.767,
-          "cost": 110.42
+          "hours": 2.017,
+          "cost": 126.04
         }
       }
     },
@@ -22958,12 +22988,12 @@
         {
           "key": "SSH-4894",
           "summary": "Error Saving Costs and Content",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-27",
           "resolved": null,
           "support_contract": "Standard",
-          "timespent_seconds": 2400,
+          "timespent_seconds": 3300,
           "linked": []
         },
         {
@@ -22981,8 +23011,8 @@
         }
       ],
       "ssh": {
-        "hours": 4.133,
-        "cost": 137.84,
+        "hours": 4.383,
+        "cost": 142.38,
         "by_person": {
           "Laura McConway": {
             "hours": 0.267,
@@ -22995,8 +23025,8 @@
             "rate": 62.5
           },
           "Melvin Kha": {
-            "hours": 2.583,
-            "cost": 46.97,
+            "hours": 2.833,
+            "cost": 51.51,
             "rate": 18.18
           },
           "Alexandra Apilado": {
@@ -23036,8 +23066,8 @@
             "cost": 4.54
           },
           "SSH-4894": {
-            "hours": 0.667,
-            "cost": 41.67
+            "hours": 0.917,
+            "cost": 46.21
           },
           "SSH-4903": {
             "hours": 0.2,
@@ -23074,8 +23104,8 @@
             "cost": 28.12
           },
           "2026-11": {
-            "hours": 0.417,
-            "cost": 26.04
+            "hours": 0.667,
+            "cost": 30.59
           }
         }
       },
@@ -23129,8 +23159,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 4.367,
-      "total_cost": 147.17,
+      "total_hours": 4.617,
+      "total_cost": 151.72,
       "by_person": {
         "Laura McConway": {
           "hours": 0.5,
@@ -23143,8 +23173,8 @@
           "rate": 62.5
         },
         "Melvin Kha": {
-          "hours": 2.583,
-          "cost": 46.97,
+          "hours": 2.833,
+          "cost": 51.51,
           "rate": 18.18
         },
         "Alexandra Apilado": {
@@ -23188,8 +23218,8 @@
           "cost": 28.12
         },
         "2026-11": {
-          "hours": 0.417,
-          "cost": 26.04
+          "hours": 0.667,
+          "cost": 30.59
         }
       }
     },
@@ -23700,10 +23730,10 @@
         {
           "key": "SSH-4912",
           "summary": "I need to add text / Outmap in to our PDF Itinerary template",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-29",
-          "resolved": null,
+          "resolved": "2026-11-06",
           "support_contract": "Standard",
           "timespent_seconds": 0,
           "linked": []
@@ -25348,7 +25378,7 @@
     },
     {
       "name": "No organisation",
-      "ticket_count": 44,
+      "ticket_count": 46,
       "tickets_with_time": 35,
       "tickets": [
         {
@@ -25840,6 +25870,28 @@
           "status": "Closed",
           "status_category": "Done",
           "created": "2026-09-02",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4939",
+          "summary": "Sandbox access",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-11-06",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4940",
+          "summary": "Helpdesk log in",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-11-06",
           "resolved": null,
           "support_contract": null,
           "timespent_seconds": 0,
@@ -29708,7 +29760,7 @@
         {
           "key": "SSH-4849",
           "summary": "& on Invoices showing as &amp;",
-          "status": "Waiting for customer",
+          "status": "Assigned to developer",
           "status_category": "In Progress",
           "created": "2026-10-15",
           "resolved": null,
@@ -29785,10 +29837,10 @@
         {
           "key": "SSH-4864",
           "summary": "Error message when pushing to Vamoos BR-001906",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-20",
-          "resolved": null,
+          "resolved": "2026-11-06",
           "support_contract": "Premium",
           "timespent_seconds": 300,
           "linked": [
@@ -29861,10 +29913,10 @@
         {
           "key": "SSH-4881",
           "summary": "Copying an itinerary once a booking has been made",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-10-23",
-          "resolved": null,
+          "resolved": "2026-11-06",
           "support_contract": "Premium",
           "timespent_seconds": 300,
           "linked": []
@@ -29920,7 +29972,7 @@
         {
           "key": "SSH-4901",
           "summary": "Locking down Supplier Costs and FEX rate on confirmed bookings",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-27",
           "resolved": null,
@@ -34267,10 +34319,10 @@
         {
           "key": "SSH-4555",
           "summary": "Booking a mixed couple into a shared room using the API",
-          "status": "Waiting for customer",
-          "status_category": "In Progress",
+          "status": "Closed",
+          "status_category": "Done",
           "created": "2026-08-16",
-          "resolved": null,
+          "resolved": "2026-11-06",
           "support_contract": "Standard",
           "timespent_seconds": 1800,
           "linked": [
@@ -34400,7 +34452,7 @@
         {
           "key": "SSH-4818",
           "summary": "Live Occupancy Display",
-          "status": "Assigned to developer",
+          "status": "Pending",
           "status_category": "In Progress",
           "created": "2026-10-07",
           "resolved": null,
@@ -37859,7 +37911,7 @@
         {
           "key": "SSH-4329",
           "summary": "VAT incorrect on Agency USD opportunity",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-06-12",
           "resolved": null,
@@ -40964,7 +41016,7 @@
         {
           "key": "SSH-4790",
           "summary": "Inventory Descripancies",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-01",
           "resolved": null,
@@ -41069,7 +41121,7 @@
         {
           "key": "SSH-4911",
           "summary": "Update on SSH-1950 Masai Mara Park & Conservation Fees",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-29",
           "resolved": null,
@@ -41106,18 +41158,18 @@
         {
           "key": "SSH-4930",
           "summary": "Ref: SSH-4679 Update Balance Payment Email Notification",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-11-05",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 900,
+          "timespent_seconds": 2700,
           "linked": []
         }
       ],
       "ssh": {
-        "hours": 126.883,
-        "cost": 5153.32,
+        "hours": 127.383,
+        "cost": 5184.57,
         "by_person": {
           "Melvin Kha": {
             "hours": 62.3,
@@ -41130,8 +41182,8 @@
             "rate": 62.5
           },
           "Tin Aung": {
-            "hours": 10.483,
-            "cost": 655.21,
+            "hours": 10.983,
+            "cost": 686.46,
             "rate": 62.5
           },
           "Laura McConway": {
@@ -41640,8 +41692,8 @@
             "cost": 15.62
           },
           "SSH-4930": {
-            "hours": 0.25,
-            "cost": 15.62
+            "hours": 0.75,
+            "cost": 46.88
           }
         },
         "by_month": {
@@ -41718,18 +41770,18 @@
             "cost": 548.96
           },
           "2026-11": {
-            "hours": 1.75,
-            "cost": 109.37
+            "hours": 2.25,
+            "cost": 140.62
           }
         }
       },
       "linked": {
-        "hours": 117.317,
-        "cost": 6507.66,
+        "hours": 118.317,
+        "cost": 6570.16,
         "by_person": {
           "Naval Sharma": {
-            "hours": 37.95,
-            "cost": 2371.87,
+            "hours": 38.95,
+            "cost": 2434.37,
             "rate": 62.5
           },
           "Ian Fairhurst": {
@@ -42014,8 +42066,8 @@
             "cost": 200.0
           },
           "SPD-6723": {
-            "hours": 1.467,
-            "cost": 91.67
+            "hours": 2.467,
+            "cost": 154.17
           }
         },
         "by_month": {
@@ -42048,8 +42100,8 @@
             "cost": 400.92
           },
           "2026-11": {
-            "hours": 1.55,
-            "cost": 96.87
+            "hours": 2.55,
+            "cost": 159.38
           },
           "2025-09": {
             "hours": 7.283,
@@ -42902,14 +42954,14 @@
             "epic": null,
             "paid_epic": false,
             "tree_tickets": 1,
-            "hours": 1.467,
-            "cost": 91.67
+            "hours": 2.467,
+            "cost": 154.17
           }
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 244.2,
-      "total_cost": 11660.98,
+      "total_hours": 245.7,
+      "total_cost": 11754.73,
       "by_person": {
         "Melvin Kha": {
           "hours": 65.05,
@@ -42922,8 +42974,8 @@
           "rate": 62.5
         },
         "Tin Aung": {
-          "hours": 10.983,
-          "cost": 686.46,
+          "hours": 11.483,
+          "cost": 717.71,
           "rate": 62.5
         },
         "Laura McConway": {
@@ -42942,8 +42994,8 @@
           "rate": 62.5
         },
         "Naval Sharma": {
-          "hours": 37.95,
-          "cost": 2371.87,
+          "hours": 38.95,
+          "cost": 2434.37,
           "rate": 62.5
         },
         "Shivam Mittal": {
@@ -43036,8 +43088,8 @@
           "cost": 934.62
         },
         "2026-11": {
-          "hours": 3.3,
-          "cost": 206.25
+          "hours": 4.8,
+          "cost": 300.0
         }
       }
     },
@@ -43538,7 +43590,7 @@
     },
     {
       "name": "Thomson Bike Tours",
-      "ticket_count": 67,
+      "ticket_count": 68,
       "tickets_with_time": 60,
       "tickets": [
         {
@@ -44190,7 +44242,7 @@
         {
           "key": "SSH-4724",
           "summary": "Send email template to a list Report",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-09-18",
           "resolved": null,
@@ -44301,7 +44353,7 @@
         {
           "key": "SSH-4926",
           "summary": "Guest count mismatch between web and Salesforce",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-11-04",
           "resolved": null,
@@ -44310,6 +44362,17 @@
           "linked": [
             "SPD-6714"
           ]
+        },
+        {
+          "key": "SSH-4937",
+          "summary": "New user license",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-11-06",
+          "resolved": null,
+          "support_contract": "Premium",
+          "timespent_seconds": 0,
+          "linked": []
         }
       ],
       "ssh": {
@@ -45505,7 +45568,7 @@
         {
           "key": "SSH-4830",
           "summary": "Supplier Request Email Template Updates",
-          "status": "Assigned to developer",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-10-11",
           "resolved": null,
