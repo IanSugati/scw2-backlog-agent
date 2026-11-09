@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-09T05:53:05.108829+00:00",
+  "generated_at": "2026-11-09T22:16:56.355738+00:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 59,
     "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 282431.0,
-    "avg_margin_pct": 56.44
+    "total_margin_gbp": 282118.5,
+    "avg_margin_pct": 56.43
   },
   "epics": [
     {
@@ -91,15 +91,15 @@
       "status": "In Progress",
       "amount": 20000.0,
       "sold_days": 20.0,
-      "logged_days": 3.16667,
-      "total_cost": 1583.33,
-      "monetary_margin": 18416.67,
-      "monetary_margin_pct": 92.08,
+      "logged_days": 3.39167,
+      "total_cost": 1695.83,
+      "monetary_margin": 18304.17,
+      "monetary_margin_pct": 91.52,
       "has_data": true,
       "by_person": {
         "James Win": {
-          "hours": 25.333,
-          "cost": 1583.33,
+          "hours": 27.133,
+          "cost": 1695.83,
           "rate": 62.5
         }
       },
@@ -109,8 +109,8 @@
           "cost": 143.75
         },
         "SPD-5768": {
-          "hours": 23.033,
-          "cost": 1439.58
+          "hours": 24.833,
+          "cost": 1552.08
         }
       },
       "by_month": {
@@ -127,16 +127,16 @@
           "cost": 1032.29
         },
         "2026-11": {
-          "hours": 1.133,
-          "cost": 70.83
+          "hours": 2.933,
+          "cost": 183.33
         }
       },
       "linked_spd": [
         "SPD-6355",
         "SPD-5768"
       ],
-      "spd_days": 3.16667,
-      "spd_cost": 1583.33
+      "spd_days": 3.39167,
+      "spd_cost": 1695.83
     },
     {
       "key": "SCW2-2111",
@@ -666,10 +666,10 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 79.6,
-      "total_cost": 20070.08,
-      "monetary_margin": 55929.92,
-      "monetary_margin_pct": 73.59,
+      "logged_days": 80.85,
+      "total_cost": 20270.08,
+      "monetary_margin": 55729.92,
+      "monetary_margin_pct": 73.33,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -678,8 +678,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 450.667,
-          "cost": 9013.33,
+          "hours": 460.667,
+          "cost": 9213.33,
           "rate": 20.0
         },
         "Tin Aung": {
@@ -717,9 +717,17 @@
           "hours": 1.6,
           "cost": 32.0
         },
+        "SCW2-2244": {
+          "hours": 1.0,
+          "cost": 20.0
+        },
+        "SCW2-2243": {
+          "hours": 7.0,
+          "cost": 140.0
+        },
         "SCW2-2242": {
-          "hours": 2.0,
-          "cost": 40.0
+          "hours": 4.0,
+          "cost": 80.0
         },
         "SCW2-2241": {
           "hours": 0.333,
@@ -1140,8 +1148,8 @@
           "cost": 3799.33
         },
         "2026-11": {
-          "hours": 48.983,
-          "cost": 1581.75
+          "hours": 58.983,
+          "cost": 1781.75
         },
         "2026-08": {
           "hours": 135.117,
