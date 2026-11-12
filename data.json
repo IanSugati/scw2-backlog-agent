@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-12T06:56:16.324532+00:00",
+  "generated_at": "2026-11-12T19:51:01.729416+00:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 59,
     "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 280995.99,
-    "avg_margin_pct": 56.36
+    "total_margin_gbp": 280848.08,
+    "avg_margin_pct": 56.34
   },
   "epics": [
     {
@@ -14,15 +14,15 @@
       "status": "In Progress",
       "amount": 12000.0,
       "sold_days": 12.0,
-      "logged_days": 4.14583,
-      "total_cost": 1120.21,
-      "monetary_margin": 10879.79,
-      "monetary_margin_pct": 90.66,
+      "logged_days": 4.72917,
+      "total_cost": 1213.54,
+      "monetary_margin": 10786.46,
+      "monetary_margin_pct": 89.89,
       "has_data": true,
       "by_person": {
         "Shivam Mittal": {
-          "hours": 22.417,
-          "cost": 448.33,
+          "hours": 27.083,
+          "cost": 541.67,
           "rate": 20.0
         },
         "Ian Fairhurst": {
@@ -36,17 +36,21 @@
           "hours": 10.833,
           "cost": 655.83
         },
+        "SCW2-2222": {
+          "hours": 4.083,
+          "cost": 81.67
+        },
         "SCW2-2221": {
           "hours": 3.083,
           "cost": 61.67
         },
         "SCW2-2220": {
-          "hours": 5.75,
-          "cost": 115.0
+          "hours": 6.0,
+          "cost": 120.0
         },
         "SCW2-2219": {
-          "hours": 3.167,
-          "cost": 63.33
+          "hours": 3.5,
+          "cost": 70.0
         },
         "SCW2-2216": {
           "hours": 5.583,
@@ -63,8 +67,8 @@
           "cost": 369.17
         },
         "2026-11": {
-          "hours": 23.917,
-          "cost": 751.04
+          "hours": 28.583,
+          "cost": 844.37
         }
       },
       "linked_spd": [],
@@ -148,10 +152,10 @@
       "status": "In Progress",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 6.44167,
-      "total_cost": 2355.25,
-      "monetary_margin": 8144.75,
-      "monetary_margin_pct": 77.57,
+      "logged_days": 6.61458,
+      "total_cost": 2409.83,
+      "monetary_margin": 8090.17,
+      "monetary_margin_pct": 77.05,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
@@ -164,19 +168,19 @@
           "cost": 270.83,
           "rate": 62.5
         },
+        "Naval Sharma": {
+          "hours": 5.617,
+          "cost": 351.04,
+          "rate": 62.5
+        },
         "Shivam Mittal": {
-          "hours": 20.367,
-          "cost": 407.33,
+          "hours": 21.117,
+          "cost": 422.33,
           "rate": 20.0
         },
         "Tin Aung": {
           "hours": 6.0,
           "cost": 375.0,
-          "rate": 62.5
-        },
-        "Naval Sharma": {
-          "hours": 4.983,
-          "cost": 311.46,
           "rate": 62.5
         }
       },
@@ -186,8 +190,12 @@
           "cost": 511.46
         },
         "SCW2-2278": {
+          "hours": 1.383,
+          "cost": 86.46
+        },
+        "SCW2-2264": {
           "hours": 0.75,
-          "cost": 46.88
+          "cost": 15.0
         },
         "SCW2-2253": {
           "hours": 0.417,
@@ -228,8 +236,8 @@
           "cost": 2231.29
         },
         "2026-11": {
-          "hours": 2.267,
-          "cost": 123.96
+          "hours": 3.65,
+          "cost": 178.54
         }
       },
       "linked_spd": [
@@ -785,14 +793,6 @@
           "hours": 3.5,
           "cost": 70.0
         },
-        "SCW2-2173": {
-          "hours": 8.667,
-          "cost": 173.33
-        },
-        "SCW2-2172": {
-          "hours": 11.067,
-          "cost": 221.33
-        },
         "SCW2-2162": {
           "hours": 3.0,
           "cost": 187.5
@@ -832,6 +832,14 @@
         "SCW2-1795": {
           "hours": 41.417,
           "cost": 2567.29
+        },
+        "SCW2-2173": {
+          "hours": 8.667,
+          "cost": 173.33
+        },
+        "SCW2-2172": {
+          "hours": 11.067,
+          "cost": 221.33
         },
         "SCW2-2169": {
           "hours": 2.05,
