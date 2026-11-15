@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-14T12:12:14.365929+00:00",
+  "generated_at": "2026-11-15T12:45:30.410540+00:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
-    "tickets": 1881,
+    "tickets": 1882,
     "total_hours": 1944.6,
     "total_cost_gbp": 84580.89
   },
@@ -10014,7 +10014,7 @@
         {
           "key": "SSH-4938",
           "summary": "Payment Fields - Opportunity level",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-11-06",
           "resolved": "2026-11-12",
@@ -25754,7 +25754,7 @@
     },
     {
       "name": "No organisation",
-      "ticket_count": 45,
+      "ticket_count": 46,
       "tickets_with_time": 35,
       "tickets": [
         {
@@ -26257,6 +26257,17 @@
           "status": "Closed",
           "status_category": "Done",
           "created": "2026-11-10",
+          "resolved": null,
+          "support_contract": null,
+          "timespent_seconds": 0,
+          "linked": []
+        },
+        {
+          "key": "SSH-4975",
+          "summary": "Check-in Time reverting to 2 hours prior again",
+          "status": "Open",
+          "status_category": "To Do",
+          "created": "2026-11-14",
           "resolved": null,
           "support_contract": null,
           "timespent_seconds": 0,
