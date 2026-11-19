@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-18T20:22:07.086704+00:00",
+  "generated_at": "2026-11-19T07:02:57.899455+00:00",
   "target_margin_pct": 65.0,
   "summary": {
     "total_epics": 59,
     "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 280606.36,
-    "avg_margin_pct": 56.2
+    "total_margin_gbp": 280421.58,
+    "avg_margin_pct": 56.17
   },
   "epics": [
     {
@@ -14,15 +14,15 @@
       "status": "In Progress",
       "amount": 12000.0,
       "sold_days": 12.0,
-      "logged_days": 7.13125,
-      "total_cost": 1693.5,
-      "monetary_margin": 10306.5,
-      "monetary_margin_pct": 85.89,
+      "logged_days": 7.27708,
+      "total_cost": 1716.83,
+      "monetary_margin": 10283.17,
+      "monetary_margin_pct": 85.69,
       "has_data": true,
       "by_person": {
         "Shivam Mittal": {
-          "hours": 44.05,
-          "cost": 881.0,
+          "hours": 45.217,
+          "cost": 904.33,
           "rate": 20.0
         },
         "Ian Fairhurst": {
@@ -45,8 +45,8 @@
           "cost": 93.75
         },
         "SCW2-2289": {
-          "hours": 8.667,
-          "cost": 173.33
+          "hours": 9.833,
+          "cost": 196.67
         },
         "SCW2-2229": {
           "hours": 0.833,
@@ -87,8 +87,8 @@
           "cost": 369.17
         },
         "2026-11": {
-          "hours": 47.8,
-          "cost": 1324.33
+          "hours": 48.967,
+          "cost": 1347.67
         }
       },
       "linked_spd": [],
@@ -172,15 +172,15 @@
       "status": "In Progress",
       "amount": 10500.0,
       "sold_days": 10.5,
-      "logged_days": 6.78125,
-      "total_cost": 2493.17,
-      "monetary_margin": 8006.83,
-      "monetary_margin_pct": 76.26,
+      "logged_days": 7.10417,
+      "total_cost": 2654.62,
+      "monetary_margin": 7845.38,
+      "monetary_margin_pct": 74.72,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 17.183,
-          "cost": 1073.96,
+          "hours": 19.767,
+          "cost": 1235.42,
           "rate": 62.5
         },
         "Andy Edmonds": {
@@ -208,6 +208,18 @@
         "SCW2-2111": {
           "hours": 8.183,
           "cost": 511.46
+        },
+        "SCW2-2314": {
+          "hours": 0.333,
+          "cost": 20.83
+        },
+        "SCW2-2305": {
+          "hours": 1.5,
+          "cost": 93.75
+        },
+        "SCW2-2304": {
+          "hours": 0.75,
+          "cost": 46.88
         },
         "SCW2-2278": {
           "hours": 2.717,
@@ -256,8 +268,8 @@
           "cost": 2231.29
         },
         "2026-11": {
-          "hours": 4.983,
-          "cost": 261.87
+          "hours": 7.567,
+          "cost": 423.33
         }
       },
       "linked_spd": [
