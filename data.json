@@ -1,40 +1,74 @@
 {
-  "generated_at": "2026-11-19T07:02:57.899455+00:00",
+  "generated_at": "2026-11-19T13:43:41.216514+00:00",
   "target_margin_pct": 65.0,
   "summary": {
-    "total_epics": 59,
-    "total_sold_gbp": 424050.0,
-    "total_margin_gbp": 280421.58,
-    "avg_margin_pct": 56.17
+    "total_epics": 61,
+    "total_sold_gbp": 435550.0,
+    "total_margin_gbp": 291800.63,
+    "avg_margin_pct": 57.68
   },
   "epics": [
+    {
+      "key": "SCW2-2310",
+      "summary": "See Italy - Custom itinerary pdf",
+      "status": "In Progress",
+      "amount": 7000.0,
+      "sold_days": 7.0,
+      "logged_days": 0.16667,
+      "total_cost": 83.33,
+      "monetary_margin": 6916.67,
+      "monetary_margin_pct": 98.81,
+      "has_data": true,
+      "by_person": {
+        "Ian Fairhurst": {
+          "hours": 1.333,
+          "cost": 83.33,
+          "rate": 62.5
+        }
+      },
+      "by_ticket": {
+        "SCW2-2310": {
+          "hours": 1.333,
+          "cost": 83.33
+        }
+      },
+      "by_month": {
+        "2026-11": {
+          "hours": 1.333,
+          "cost": 83.33
+        }
+      },
+      "linked_spd": [],
+      "spd_days": 0.0,
+      "spd_cost": 0.0
+    },
     {
       "key": "SCW2-2214",
       "summary": "GELT - Leading Trains API",
       "status": "In Progress",
       "amount": 12000.0,
       "sold_days": 12.0,
-      "logged_days": 7.27708,
-      "total_cost": 1716.83,
-      "monetary_margin": 10283.17,
-      "monetary_margin_pct": 85.69,
+      "logged_days": 7.58958,
+      "total_cost": 1823.5,
+      "monetary_margin": 10176.5,
+      "monetary_margin_pct": 84.8,
       "has_data": true,
       "by_person": {
         "Shivam Mittal": {
-          "hours": 45.217,
-          "cost": 904.33,
+          "hours": 46.383,
+          "cost": 927.67,
           "rate": 20.0
         },
         "Ian Fairhurst": {
-          "hours": 13.0,
-          "cost": 812.5,
+          "hours": 14.333,
+          "cost": 895.83,
           "rate": 62.5
         }
       },
       "by_ticket": {
         "SCW2-2214": {
-          "hours": 11.583,
-          "cost": 702.71
+          "hours": 12.917,
+          "cost": 786.04
         },
         "SCW2-2311": {
           "hours": 0.5,
@@ -49,8 +83,8 @@
           "cost": 196.67
         },
         "SCW2-2229": {
-          "hours": 0.833,
-          "cost": 16.67
+          "hours": 2.0,
+          "cost": 40.0
         },
         "SCW2-2228": {
           "hours": 5.333,
@@ -87,28 +121,10 @@
           "cost": 369.17
         },
         "2026-11": {
-          "hours": 48.967,
-          "cost": 1347.67
+          "hours": 51.467,
+          "cost": 1454.33
         }
       },
-      "linked_spd": [],
-      "spd_days": 0.0,
-      "spd_cost": 0.0
-    },
-    {
-      "key": "SCW2-2142",
-      "summary": "See Italy November training",
-      "status": "In Progress",
-      "amount": 1000.0,
-      "sold_days": 1.0,
-      "logged_days": 0.0,
-      "total_cost": 0.0,
-      "monetary_margin": 1000.0,
-      "monetary_margin_pct": 100.0,
-      "has_data": false,
-      "by_person": {},
-      "by_ticket": {},
-      "by_month": {},
       "linked_spd": [],
       "spd_days": 0.0,
       "spd_cost": 0.0
@@ -338,87 +354,20 @@
       "spd_cost": 0.0
     },
     {
-      "key": "SCW2-1920",
-      "summary": "Mundy - Trust Payments Setup & Activation (Payment Page and Via Sugati Finance)",
-      "status": "In Progress",
-      "amount": 3000.0,
-      "sold_days": 3.0,
-      "logged_days": 2.4125,
-      "total_cost": 1050.25,
-      "monetary_margin": 1949.75,
-      "monetary_margin_pct": 64.99,
-      "has_data": true,
-      "by_person": {
-        "Ian Fairhurst": {
-          "hours": 8.583,
-          "cost": 536.46,
-          "rate": 62.5
-        },
-        "Becky Hughes": {
-          "hours": 1.883,
-          "cost": 75.33,
-          "rate": 40.0
-        },
-        "Laura McConway": {
-          "hours": 5.05,
-          "cost": 202.0,
-          "rate": 40.0
-        },
-        "James Win": {
-          "hours": 3.783,
-          "cost": 236.46,
-          "rate": 62.5
-        }
-      },
-      "by_ticket": {
-        "SCW2-1920": {
-          "hours": 5.25,
-          "cost": 328.12
-        },
-        "SCW2-2069": {
-          "hours": 0.583,
-          "cost": 36.46
-        },
-        "SPD-5965": {
-          "hours": 13.467,
-          "cost": 685.67
-        }
-      },
-      "by_month": {
-        "2026-09": {
-          "hours": 14.1,
-          "cost": 790.12
-        },
-        "2026-08": {
-          "hours": 3.3,
-          "cost": 141.38
-        },
-        "2026-10": {
-          "hours": 1.9,
-          "cost": 118.75
-        }
-      },
-      "linked_spd": [
-        "SPD-5965"
-      ],
-      "spd_days": 1.68333,
-      "spd_cost": 685.67
-    },
-    {
       "key": "SCW2-1918",
       "summary": "Walk Japan - Additional Custom Development",
       "status": "In Progress",
       "amount": 8700.0,
       "sold_days": 8.7,
-      "logged_days": 7.03125,
-      "total_cost": 3115.0,
-      "monetary_margin": 5585.0,
-      "monetary_margin_pct": 64.2,
+      "logged_days": 7.4375,
+      "total_cost": 3318.12,
+      "monetary_margin": 5381.88,
+      "monetary_margin_pct": 61.86,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 14.75,
-          "cost": 921.88,
+          "hours": 18.0,
+          "cost": 1125.0,
           "rate": 62.5
         },
         "Shivam Mittal": {
@@ -449,8 +398,8 @@
       },
       "by_ticket": {
         "SCW2-1918": {
-          "hours": 7.0,
-          "cost": 437.5
+          "hours": 10.25,
+          "cost": 640.62
         },
         "SCW2-2218": {
           "hours": 1.0,
@@ -509,6 +458,10 @@
         "2026-10": {
           "hours": 6.883,
           "cost": 430.21
+        },
+        "2026-11": {
+          "hours": 3.25,
+          "cost": 203.12
         }
       },
       "linked_spd": [
@@ -718,9 +671,9 @@
       "status": "In Progress",
       "amount": 76000.0,
       "sold_days": 76.0,
-      "logged_days": 78.84375,
-      "total_cost": 20549.75,
-      "monetary_margin": 55450.25,
+      "logged_days": 78.86042,
+      "total_cost": 20552.42,
+      "monetary_margin": 55447.58,
       "monetary_margin_pct": 72.96,
       "has_data": true,
       "by_person": {
@@ -730,8 +683,8 @@
           "rate": 62.5
         },
         "Kishika Sisodia": {
-          "hours": 430.483,
-          "cost": 8609.67,
+          "hours": 430.617,
+          "cost": 8612.33,
           "rate": 20.0
         },
         "Tin Aung": {
@@ -786,8 +739,8 @@
           "cost": 13.33
         },
         "SCW2-2284": {
-          "hours": 3.5,
-          "cost": 91.25
+          "hours": 3.633,
+          "cost": 93.92
         },
         "SCW2-2273": {
           "hours": 1.833,
@@ -1180,8 +1133,8 @@
           "cost": 3799.33
         },
         "2026-11": {
-          "hours": 87.183,
-          "cost": 3011.58
+          "hours": 87.317,
+          "cost": 3014.25
         },
         "2026-08": {
           "hours": 135.117,
@@ -1197,74 +1150,20 @@
       "spd_cost": 0.0
     },
     {
-      "key": "SCW2-1774",
-      "summary": "Walk Japan - Tour Series Creation & Resource Management",
-      "status": "In Progress",
-      "amount": 30000.0,
-      "sold_days": 30.0,
-      "logged_days": 6.51458,
-      "total_cost": 1703.92,
-      "monetary_margin": 28296.08,
-      "monetary_margin_pct": 94.32,
-      "has_data": true,
-      "by_person": {
-        "Andy Edmonds": {
-          "hours": 15.567,
-          "cost": 972.92,
-          "rate": 62.5
-        },
-        "Kishika Sisodia": {
-          "hours": 36.55,
-          "cost": 731.0,
-          "rate": 20.0
-        }
-      },
-      "by_ticket": {
-        "SPD-5642": {
-          "hours": 36.783,
-          "cost": 745.58
-        },
-        "SPD-5619": {
-          "hours": 15.333,
-          "cost": 958.33
-        }
-      },
-      "by_month": {
-        "2026-07": {
-          "hours": 50.833,
-          "cost": 1663.38
-        },
-        "2026-08": {
-          "hours": 0.933,
-          "cost": 18.67
-        },
-        "2026-06": {
-          "hours": 0.35,
-          "cost": 21.88
-        }
-      },
-      "linked_spd": [
-        "SPD-5642",
-        "SPD-5619"
-      ],
-      "spd_days": 6.51458,
-      "spd_cost": 1703.92
-    },
-    {
       "key": "SCW2-915",
       "summary": "See Italy - Account/Supplier Contact/Supplier Contact SYNC",
       "status": "In Progress",
       "amount": 5000.0,
       "sold_days": 5.0,
-      "logged_days": 6.48333,
-      "total_cost": 2540.93,
-      "monetary_margin": 2459.07,
-      "monetary_margin_pct": 49.18,
+      "logged_days": 6.65,
+      "total_cost": 2624.26,
+      "monetary_margin": 2375.74,
+      "monetary_margin_pct": 47.51,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 18.5,
-          "cost": 1156.25,
+          "hours": 19.833,
+          "cost": 1239.58,
           "rate": 62.5
         },
         "Naval Sharma": {
@@ -1285,8 +1184,12 @@
       },
       "by_ticket": {
         "SCW2-915": {
-          "hours": 11.417,
-          "cost": 713.54
+          "hours": 12.083,
+          "cost": 755.21
+        },
+        "SCW2-2316": {
+          "hours": 0.667,
+          "cost": 41.67
         },
         "SCW2-1945": {
           "hours": 7.817,
@@ -1379,8 +1282,8 @@
           "cost": 307.38
         },
         "2026-11": {
-          "hours": 2.833,
-          "cost": 177.08
+          "hours": 4.167,
+          "cost": 260.42
         },
         "2026-07": {
           "hours": 2.5,
@@ -1533,6 +1436,107 @@
       "spd_cost": 0.0
     },
     {
+      "key": "SCW2-2142",
+      "summary": "See Italy November training",
+      "status": "Done",
+      "amount": 1000.0,
+      "sold_days": 1.0,
+      "logged_days": 0.5,
+      "total_cost": 250.0,
+      "monetary_margin": 750.0,
+      "monetary_margin_pct": 75.0,
+      "has_data": true,
+      "by_person": {
+        "Ian Fairhurst": {
+          "hours": 4.0,
+          "cost": 250.0,
+          "rate": 62.5
+        }
+      },
+      "by_ticket": {
+        "SCW2-2142": {
+          "hours": 4.0,
+          "cost": 250.0
+        }
+      },
+      "by_month": {
+        "2026-11": {
+          "hours": 4.0,
+          "cost": 250.0
+        }
+      },
+      "linked_spd": [],
+      "spd_days": 0.0,
+      "spd_cost": 0.0
+    },
+    {
+      "key": "SCW2-1920",
+      "summary": "Mundy - Trust Payments Setup & Activation (Payment Page and Via Sugati Finance)",
+      "status": "Done",
+      "amount": 3000.0,
+      "sold_days": 3.0,
+      "logged_days": 2.4125,
+      "total_cost": 1050.25,
+      "monetary_margin": 1949.75,
+      "monetary_margin_pct": 64.99,
+      "has_data": true,
+      "by_person": {
+        "Ian Fairhurst": {
+          "hours": 8.583,
+          "cost": 536.46,
+          "rate": 62.5
+        },
+        "Becky Hughes": {
+          "hours": 1.883,
+          "cost": 75.33,
+          "rate": 40.0
+        },
+        "Laura McConway": {
+          "hours": 5.05,
+          "cost": 202.0,
+          "rate": 40.0
+        },
+        "James Win": {
+          "hours": 3.783,
+          "cost": 236.46,
+          "rate": 62.5
+        }
+      },
+      "by_ticket": {
+        "SCW2-1920": {
+          "hours": 5.25,
+          "cost": 328.12
+        },
+        "SCW2-2069": {
+          "hours": 0.583,
+          "cost": 36.46
+        },
+        "SPD-5965": {
+          "hours": 13.467,
+          "cost": 685.67
+        }
+      },
+      "by_month": {
+        "2026-09": {
+          "hours": 14.1,
+          "cost": 790.12
+        },
+        "2026-08": {
+          "hours": 3.3,
+          "cost": 141.38
+        },
+        "2026-10": {
+          "hours": 1.9,
+          "cost": 118.75
+        }
+      },
+      "linked_spd": [
+        "SPD-5965"
+      ],
+      "spd_days": 1.68333,
+      "spd_cost": 685.67
+    },
+    {
       "key": "SCW2-1889",
       "summary": "Latin Routes - Task Engine",
       "status": "Done",
@@ -1607,6 +1611,60 @@
       "linked_spd": [],
       "spd_days": 0.0,
       "spd_cost": 0.0
+    },
+    {
+      "key": "SCW2-1774",
+      "summary": "Walk Japan - Tour Series Creation & Resource Management",
+      "status": "Done",
+      "amount": 30000.0,
+      "sold_days": 30.0,
+      "logged_days": 6.51458,
+      "total_cost": 1703.92,
+      "monetary_margin": 28296.08,
+      "monetary_margin_pct": 94.32,
+      "has_data": true,
+      "by_person": {
+        "Andy Edmonds": {
+          "hours": 15.567,
+          "cost": 972.92,
+          "rate": 62.5
+        },
+        "Kishika Sisodia": {
+          "hours": 36.55,
+          "cost": 731.0,
+          "rate": 20.0
+        }
+      },
+      "by_ticket": {
+        "SPD-5642": {
+          "hours": 36.783,
+          "cost": 745.58
+        },
+        "SPD-5619": {
+          "hours": 15.333,
+          "cost": 958.33
+        }
+      },
+      "by_month": {
+        "2026-07": {
+          "hours": 50.833,
+          "cost": 1663.38
+        },
+        "2026-08": {
+          "hours": 0.933,
+          "cost": 18.67
+        },
+        "2026-06": {
+          "hours": 0.35,
+          "cost": 21.88
+        }
+      },
+      "linked_spd": [
+        "SPD-5642",
+        "SPD-5619"
+      ],
+      "spd_days": 6.51458,
+      "spd_cost": 1703.92
     },
     {
       "key": "SCW2-1738",
@@ -1982,15 +2040,15 @@
       "status": "Done",
       "amount": 2500.0,
       "sold_days": 2.5,
-      "logged_days": 2.2625,
-      "total_cost": 1003.75,
-      "monetary_margin": 1496.25,
-      "monetary_margin_pct": 59.85,
+      "logged_days": 2.3875,
+      "total_cost": 1066.25,
+      "monetary_margin": 1433.75,
+      "monetary_margin_pct": 57.35,
       "has_data": true,
       "by_person": {
         "Ian Fairhurst": {
-          "hours": 15.1,
-          "cost": 943.75,
+          "hours": 16.1,
+          "cost": 1006.25,
           "rate": 62.5
         },
         "Shivam Mittal": {
@@ -2000,6 +2058,10 @@
         }
       },
       "by_ticket": {
+        "SCW2-1365": {
+          "hours": 1.0,
+          "cost": 62.5
+        },
         "SCW2-1686": {
           "hours": 3.5,
           "cost": 91.25
@@ -2026,6 +2088,10 @@
         }
       },
       "by_month": {
+        "2026-11": {
+          "hours": 1.0,
+          "cost": 62.5
+        },
         "2026-05": {
           "hours": 14.333,
           "cost": 768.33
@@ -5769,6 +5835,65 @@
       ],
       "spd_days": 0.36458,
       "spd_cost": 160.92
+    },
+    {
+      "key": "SCW2-2258",
+      "summary": "FT - Document/Email Updates",
+      "status": "Backlog",
+      "amount": 4500.0,
+      "sold_days": 4.5,
+      "logged_days": 1.88125,
+      "total_cost": 329.33,
+      "monetary_margin": 4170.67,
+      "monetary_margin_pct": 92.68,
+      "has_data": true,
+      "by_person": {
+        "Ian Fairhurst": {
+          "hours": 0.667,
+          "cost": 41.67,
+          "rate": 62.5
+        },
+        "Kishika Sisodia": {
+          "hours": 14.383,
+          "cost": 287.67,
+          "rate": 20.0
+        }
+      },
+      "by_ticket": {
+        "SCW2-2258": {
+          "hours": 0.667,
+          "cost": 41.67
+        },
+        "SCW2-2268": {
+          "hours": 3.417,
+          "cost": 68.33
+        },
+        "SCW2-2267": {
+          "hours": 2.0,
+          "cost": 40.0
+        },
+        "SCW2-2266": {
+          "hours": 2.35,
+          "cost": 47.0
+        },
+        "SCW2-2265": {
+          "hours": 2.717,
+          "cost": 54.33
+        },
+        "SCW2-2259": {
+          "hours": 3.9,
+          "cost": 78.0
+        }
+      },
+      "by_month": {
+        "2026-11": {
+          "hours": 15.05,
+          "cost": 329.33
+        }
+      },
+      "linked_spd": [],
+      "spd_days": 0.0,
+      "spd_cost": 0.0
     }
   ]
 }
