@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-27T15:04:04.898329+00:00",
+  "generated_at": "2026-11-28T14:09:38.410657+00:00",
   "window_start": "2025-04-01",
   "summary": {
     "organisations": 41,
     "tickets": 1928,
-    "total_hours": 2009.7,
-    "total_cost_gbp": 88146.7
+    "total_hours": 2010.1,
+    "total_cost_gbp": 88172.75
   },
   "organisations": [
     {
@@ -8209,7 +8209,7 @@
         {
           "key": "SSH-5018",
           "summary": "Issue Removing Cost",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-11-27",
           "resolved": null,
@@ -18396,7 +18396,7 @@
     {
       "name": "Latin/Polar Routes",
       "ticket_count": 268,
-      "tickets_with_time": 251,
+      "tickets_with_time": 252,
       "tickets": [
         {
           "key": "SSH-3080",
@@ -21511,18 +21511,18 @@
         {
           "key": "SSH-5017",
           "summary": "Trip Planner 1.5",
-          "status": "Waiting for support",
+          "status": "Waiting for customer",
           "status_category": "In Progress",
           "created": "2026-11-27",
           "resolved": null,
           "support_contract": "Premium",
-          "timespent_seconds": 0,
+          "timespent_seconds": 1200,
           "linked": []
         }
       ],
       "ssh": {
-        "hours": 138.317,
-        "cost": 4280.78,
+        "hours": 138.65,
+        "cost": 4301.61,
         "by_person": {
           "Melvin Kha": {
             "hours": 95.2,
@@ -21545,8 +21545,8 @@
             "rate": 62.5
           },
           "Alexandra Apilado": {
-            "hours": 5.417,
-            "cost": 338.54,
+            "hours": 5.75,
+            "cost": 359.37,
             "rate": 62.5
           },
           "Jackielou Pastor": {
@@ -22559,6 +22559,10 @@
           "SSH-5008": {
             "hours": 0.083,
             "cost": 5.21
+          },
+          "SSH-5017": {
+            "hours": 0.333,
+            "cost": 20.83
           }
         },
         "by_month": {
@@ -22639,8 +22643,8 @@
             "cost": 289.39
           },
           "2026-11": {
-            "hours": 6.317,
-            "cost": 388.79
+            "hours": 6.65,
+            "cost": 409.62
           }
         }
       },
@@ -23704,8 +23708,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 218.867,
-      "total_cost": 8855.13,
+      "total_hours": 219.2,
+      "total_cost": 8875.97,
       "by_person": {
         "Melvin Kha": {
           "hours": 96.95,
@@ -23728,8 +23732,8 @@
           "rate": 62.5
         },
         "Alexandra Apilado": {
-          "hours": 5.417,
-          "cost": 338.54,
+          "hours": 5.75,
+          "cost": 359.37,
           "rate": 62.5
         },
         "Jackielou Pastor": {
@@ -23836,8 +23840,8 @@
           "cost": 376.68
         },
         "2026-11": {
-          "hours": 11.3,
-          "cost": 636.5
+          "hours": 11.633,
+          "cost": 657.33
         }
       }
     },
@@ -30767,7 +30771,7 @@
         {
           "key": "SSH-4854",
           "summary": "Mark Burton Sampson cannot see a client I can when recreating the exact same steps",
-          "status": "Waiting for customer",
+          "status": "Waiting for support",
           "status_category": "In Progress",
           "created": "2026-10-16",
           "resolved": null,
@@ -31032,7 +31036,7 @@
         {
           "key": "SSH-4965",
           "summary": "Cannot add passengers to a Trip",
-          "status": "Assigned to developer",
+          "status": "Pending",
           "status_category": "In Progress",
           "created": "2026-11-11",
           "resolved": null,
@@ -31144,8 +31148,8 @@
         {
           "key": "SSH-5020",
           "summary": "Invoice Display",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for support",
+          "status_category": "In Progress",
           "created": "2026-11-27",
           "resolved": null,
           "support_contract": "Premium",
@@ -32412,7 +32416,7 @@
     {
       "name": "Reefscape Travel",
       "ticket_count": 39,
-      "tickets_with_time": 38,
+      "tickets_with_time": 39,
       "tickets": [
         {
           "key": "SSH-3085",
@@ -32867,18 +32871,18 @@
         {
           "key": "SSH-5021",
           "summary": "System running really slow",
-          "status": "Open",
-          "status_category": "To Do",
+          "status": "Waiting for customer",
+          "status_category": "In Progress",
           "created": "2026-11-27",
           "resolved": null,
-          "support_contract": null,
-          "timespent_seconds": 0,
+          "support_contract": "Premium",
+          "timespent_seconds": 300,
           "linked": []
         }
       ],
       "ssh": {
-        "hours": 17.667,
-        "cost": 683.4,
+        "hours": 17.75,
+        "cost": 688.61,
         "by_person": {
           "Melvin Kha": {
             "hours": 8.8,
@@ -32906,8 +32910,8 @@
             "rate": 62.5
           },
           "Jackielou Pastor": {
-            "hours": 0.75,
-            "cost": 46.88,
+            "hours": 0.833,
+            "cost": 52.08,
             "rate": 62.5
           }
         },
@@ -33063,6 +33067,10 @@
           "SSH-4972": {
             "hours": 0.5,
             "cost": 31.25
+          },
+          "SSH-5021": {
+            "hours": 0.083,
+            "cost": 5.21
           }
         },
         "by_month": {
@@ -33123,8 +33131,8 @@
             "cost": 121.92
           },
           "2026-11": {
-            "hours": 2.767,
-            "cost": 161.29
+            "hours": 2.85,
+            "cost": 166.5
           }
         }
       },
@@ -33367,8 +33375,8 @@
         ],
         "paid_epic_cost": 0
       },
-      "total_hours": 31.95,
-      "total_cost": 1518.32,
+      "total_hours": 32.033,
+      "total_cost": 1523.53,
       "by_person": {
         "Melvin Kha": {
           "hours": 9.3,
@@ -33396,8 +33404,8 @@
           "rate": 62.5
         },
         "Jackielou Pastor": {
-          "hours": 0.75,
-          "cost": 46.88,
+          "hours": 0.833,
+          "cost": 52.08,
           "rate": 62.5
         },
         "Naval Sharma": {
@@ -33474,8 +33482,8 @@
           "cost": 453.17
         },
         "2026-11": {
-          "hours": 5.45,
-          "cost": 329.0
+          "hours": 5.533,
+          "cost": 334.21
         },
         "2025-11": {
           "hours": 0.5,
